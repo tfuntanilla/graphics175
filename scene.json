@@ -1,0 +1,20 @@
+[
+  { "name" : "scene0",
+    "description" : "This is scene 0",
+    "root" : 
+    [
+         {
+           "type" : "model",
+           "name" : "desk",
+           "filename" : "desk.obj",
+           "matrix" : [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]
+         },
+         {
+           "type" : "model",
+           "name" : "chair",
+           "filename" : "chair.obj",
+           "matrix" : [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0]
+         }
+    ]
+  }
+]
