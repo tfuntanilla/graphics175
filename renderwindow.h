@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QMouseEvent>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -15,12 +16,22 @@ class QOpenGLVertexArrayObject;
 
 class RenderWindow : public OpenGLWindow
 {
+    Q_OBJECT
+
 public:
     RenderWindow();
 
     void initialize();
     void render();
     void checkError(const QString& prefix);
+
+    int angle;
+    int xRot, xTrans, xScale;
+    int yRot, yTrans, yScale;
+    int zRot, zTrans, zScale;
+
+    QPoint lastPos;
+
 
 private:
 
@@ -57,9 +68,21 @@ public:
       return renWin;
   }
 
+  void mousePressEvent(QMouseEvent *event);
+  void mouseMoveEvent(QMouseEvent *event);
+
+public slots:
+    void setXRotation(int angle);
+    void setYRotation(int angle);
+    void setZRotation(int angle);
+
+signals:
+    void xRotationChanged(int angle);
+    void yRotationChanged(int angle);
+    void zRotationChanged(int angle);
+
 private:
   RenderWindow* renWin;
-
 
 };
 

@@ -5,8 +5,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 #include <QScreen>
-#include <QFileDialog>
 #include <QByteArray>
+
 
 #include <cstdlib>
 #include <iostream>
@@ -39,6 +39,10 @@ RenderWindow::RenderWindow()
 {
     setAnimating(true);
     indicesCount = 0;
+    angle = 0;
+    xRot = 0, xTrans = 0, xScale = 0;
+    yRot = 1, yTrans = 0, yScale = 0;
+    zRot = 0, zTrans = -5, zScale = 0;
 }
 
 void RenderWindow::checkError(const QString &prefix)
@@ -76,7 +80,7 @@ void RenderWindow::initialize()
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
 
-    std::string inputfile = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/teapot.obj";
+    std::string inputfile = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/table.obj";
 
     tinyobj::LoadObj(shapes, materials, inputfile.c_str());
 
@@ -246,8 +250,10 @@ void RenderWindow::render()
     /// set up matrix
     QMatrix4x4 model;
     model.setToIdentity(); /// set
-    model.translate(0, 0, -2000); /// place it a certain distance from camera
-    model.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0); /// rotate if animation is on.
+
+    model.translate(xTrans, yTrans, zTrans); /// place it a certain distance from camera
+    model.rotate((float)angle, (float)xRot, (float)yRot, (float)zRot);
+    model.scale((float)xScale, (float)yScale, (float)zScale);
 
     m_program->setUniformValue(m_matrixUniform, projection * view * model);
 
@@ -262,3 +268,61 @@ void RenderWindow::render()
         ++m_frame;
     }
 }
+
+static void qNormalizeAngle(int &angle)
+{
+    while (angle < 0)
+        angle += 360 * 16;
+    while (angle > 360)
+        angle -= 360 * 16;
+}
+
+void RenderWindowWidget::setXRotation(int angle)
+{
+    qNormalizeAngle(angle);
+    if (angle != renWin->xRot) {
+        renWin->xRot = angle;
+        emit xRotationChanged(angle);
+        renWin->render();
+    }
+}
+
+void RenderWindowWidget::setYRotation(int angle)
+{
+    qNormalizeAngle(angle);
+    if (angle != renWin->yRot) {
+        renWin->yRot = angle;
+        emit yRotationChanged(angle);
+        renWin->render();
+    }
+}
+
+void RenderWindowWidget::setZRotation(int angle)
+{
+    qNormalizeAngle(angle);
+    if (angle != renWin->zRot) {
+        renWin->zRot = angle;
+        emit zRotationChanged(angle);
+        renWin->render();
+    }
+}
+
+void RenderWindowWidget::mousePressEvent(QMouseEvent* event) {
+    renWin->lastPos = event->pos();
+}
+
+void RenderWindowWidget::mouseMoveEvent(QMouseEvent *event){
+    int dx = event->x() - renWin->lastPos.x();
+    int dy = event->y() - renWin->lastPos.y();
+
+    if (event->buttons() & Qt::LeftButton) {
+        setXRotation(renWin->xRot + 8 * dy);
+        setYRotation(renWin->yRot + 8 * dx);
+    } else if (event->buttons() & Qt::RightButton) {
+        setXRotation(renWin->xRot + 8 * dy);
+        setZRotation(renWin->zRot + 8 * dx);
+    }
+
+    renWin->lastPos = event->pos();
+}
+
