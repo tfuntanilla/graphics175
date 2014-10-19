@@ -8,7 +8,6 @@
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QPushButton>
-#include <QMouseEvent>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -23,6 +22,7 @@ public:
 
     void initialize();
     void render();
+    void toggleWireFrame(bool c);
     void checkError(const QString& prefix);
 
     int angle;
@@ -30,8 +30,7 @@ public:
     int yRot, yTrans, yScale;
     int zRot, zTrans, zScale;
 
-    QPoint lastPos;
-
+    bool togglePers;
 
 private:
 
@@ -67,19 +66,6 @@ public:
   RenderWindow* GetRenderWindow() {
       return renWin;
   }
-
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-
-public slots:
-    void setXRotation(int angle);
-    void setYRotation(int angle);
-    void setZRotation(int angle);
-
-signals:
-    void xRotationChanged(int angle);
-    void yRotationChanged(int angle);
-    void zRotationChanged(int angle);
 
 private:
   RenderWindow* renWin;

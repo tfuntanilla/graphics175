@@ -43,6 +43,8 @@ RenderWindow::RenderWindow()
     xRot = 0, xTrans = 0, xScale = 0;
     yRot = 1, yTrans = 0, yScale = 0;
     zRot = 0, zTrans = -5, zScale = 0;
+
+    togglePers = false;
 }
 
 void RenderWindow::checkError(const QString &prefix)
@@ -77,12 +79,20 @@ void RenderWindow::checkError(const QString &prefix)
 
 void RenderWindow::initialize()
 {
+
+    /* Load obj files */
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
-
-    std::string inputfile = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/table.obj";
-
+    std::string inputfile = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/chair.obj";
     tinyobj::LoadObj(shapes, materials, inputfile.c_str());
+
+    std::vector<tinyobj::shape_t> shapes2;
+    std::vector<tinyobj::material_t> materials2;
+    std::string inputfile2 = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/desk.obj";
+    tinyobj::LoadObj(shapes2, materials2, inputfile2.c_str());
+
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -122,6 +132,11 @@ void RenderWindow::initialize()
     m_vao->bind();
 
 
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
+    /* Set aside space for vertices of the chairs */
+
     int vlen = 0;
     for (size_t i = 0; i < shapes.size(); i++) {
         vlen += shapes[i].mesh.positions.size();
@@ -144,6 +159,8 @@ void RenderWindow::initialize()
     std::cout << "Total no. of vertices: " << vlen << std::endl;
     */
 
+
+    /* First chair vertices */
     GLfloat vertices[vlen];
     for (size_t i = 0; i < shapes.size(); i++) {
         for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
@@ -153,10 +170,18 @@ void RenderWindow::initialize()
         }
     }
 
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
     int clen = vlen;
     GLfloat colors[clen];
     std::fill_n(colors, clen, 1.0f);
 
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
+
+    /* Set aside space for indices of the chairs */
 
     int ilen = 0;
     for (size_t i = 0; i < shapes.size(); i++) {
@@ -182,7 +207,9 @@ void RenderWindow::initialize()
 
     */
 
+    /* First chair indices */
     indicesCount = ilen;
+
     GLuint indices[ilen];
     for (size_t i = 0; i < shapes.size(); i++) {
         for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
@@ -192,11 +219,14 @@ void RenderWindow::initialize()
         }
     }
 
+
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
     m_vbo->bind();
     m_vbo->allocate((vlen + clen)*sizeof(GLfloat));
     m_vbo->write(0, vertices, vlen * sizeof(GLfloat));
 
-    //m_vbo->write(0, vertices, vlen * sizeof(GLfloat));
     m_vbo->write(vlen*sizeof(GLfloat), colors, clen * sizeof(GLfloat));
 
     checkError("after vertex buffer allocation");
@@ -218,6 +248,16 @@ void RenderWindow::initialize()
 
     checkError("after enabling attributes");
 
+
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
+
+
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
+
     m_vao->release();
     m_program->release();
 }
@@ -232,10 +272,20 @@ void RenderWindow::render()
 
     m_program->bind();
 
+
+    /* *********************************************************************************************** */
+
     /// set up projection
     QMatrix4x4 projection;
     projection.setToIdentity(); /// set
-    projection.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+
+    if (togglePers) {
+        projection.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+    }
+
+    else if (!togglePers) {
+        projection.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+    }
 
     /// set up view
     QMatrix4x4 view;
@@ -259,6 +309,123 @@ void RenderWindow::render()
 
     m_vao->bind();
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+
+    /* *********************************************************************************************** */
+
+    /// set up projection
+    QMatrix4x4 projection2;
+    projection2.setToIdentity(); /// set
+
+    if (togglePers) {
+        projection2.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+    }
+
+    else if (!togglePers) {
+        projection2.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+    }
+
+    /// set up view
+    QMatrix4x4 view2;
+    view2.setToIdentity(); /// set
+
+    QVector3D eye2(0, 0, 1);
+    QVector3D center2(0,0,0);
+    QVector3D up2(0,1,0);
+
+    view2.lookAt(eye2, center2, up2);
+
+    /// set up matrix
+    QMatrix4x4 model2;
+    model2.setToIdentity(); /// set
+
+    model2.translate(xTrans+10, yTrans+10, zTrans-10); /// place it a certain distance from camera
+    model2.rotate((float)angle+25.0, (float)xRot, (float)yRot, (float)zRot);
+    model2.scale((float)xScale, (float)yScale, (float)zScale);
+
+    m_program->setUniformValue(m_matrixUniform, projection2 * view2 * model2);
+
+    m_vao->bind();
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+    /* *********************************************************************************************** */
+
+    /// set up projection
+    QMatrix4x4 projection3;
+    projection3.setToIdentity(); /// set
+
+    if (togglePers) {
+        projection3.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+    }
+
+    else if (!togglePers) {
+        projection3.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+    }
+
+    /// set up view
+    QMatrix4x4 view3;
+    view3.setToIdentity(); /// set
+
+    QVector3D eye3(0, 0, 1);
+    QVector3D center3(0,0,0);
+    QVector3D up3(0,1,0);
+
+    view3.lookAt(eye3, center3, up3);
+
+    /// set up matrix
+    QMatrix4x4 model3;
+    model3.setToIdentity(); /// set
+
+    model3.translate(xTrans-20, yTrans-40, zTrans-10); /// place it a certain distance from camera
+    model3.rotate((float)angle, (float)xRot, (float)yRot, (float)zRot);
+    model3.scale((float)xScale, (float)yScale, (float)zScale);
+
+    m_program->setUniformValue(m_matrixUniform, projection3 * view3 * model3);
+
+    m_vao->bind();
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+    /* *********************************************************************************************** */
+
+    /// set up projection
+    QMatrix4x4 projection4;
+    projection4.setToIdentity(); /// set
+
+    if (togglePers) {
+        projection4.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+    }
+
+    else if (!togglePers) {
+        projection4.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+    }
+
+    /// set up view
+    QMatrix4x4 view4;
+    view4.setToIdentity(); /// set
+
+    QVector3D eye4(0, 0, 1);
+    QVector3D center4(0,0,0);
+    QVector3D up4(0,1,0);
+
+    view4.lookAt(eye4, center4, up4);
+
+    /// set up matrix
+    QMatrix4x4 model4;
+    model4.setToIdentity(); /// set
+
+    model4.translate(xTrans+30, yTrans+50, zTrans-30); /// place it a certain distance from camera
+    model4.rotate((float)angle+25.0, (float)xRot, (float)yRot, (float)zRot);
+    model4.scale((float)xScale, (float)yScale, (float)zScale);
+
+    m_program->setUniformValue(m_matrixUniform, projection4 * view4 * model4);
+
+    m_vao->bind();
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+
+    /* *********************************************************************************************** */
+    /* *********************************************************************************************** */
+
     m_vao->release();
     m_program->release();
 
@@ -269,60 +436,12 @@ void RenderWindow::render()
     }
 }
 
-static void qNormalizeAngle(int &angle)
+void RenderWindow::toggleWireFrame(bool c)
 {
-    while (angle < 0)
-        angle += 360 * 16;
-    while (angle > 360)
-        angle -= 360 * 16;
-}
-
-void RenderWindowWidget::setXRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != renWin->xRot) {
-        renWin->xRot = angle;
-        emit xRotationChanged(angle);
-        renWin->render();
+    if (c) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else {
+       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
-
-void RenderWindowWidget::setYRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != renWin->yRot) {
-        renWin->yRot = angle;
-        emit yRotationChanged(angle);
-        renWin->render();
-    }
-}
-
-void RenderWindowWidget::setZRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != renWin->zRot) {
-        renWin->zRot = angle;
-        emit zRotationChanged(angle);
-        renWin->render();
-    }
-}
-
-void RenderWindowWidget::mousePressEvent(QMouseEvent* event) {
-    renWin->lastPos = event->pos();
-}
-
-void RenderWindowWidget::mouseMoveEvent(QMouseEvent *event){
-    int dx = event->x() - renWin->lastPos.x();
-    int dy = event->y() - renWin->lastPos.y();
-
-    if (event->buttons() & Qt::LeftButton) {
-        setXRotation(renWin->xRot + 8 * dy);
-        setYRotation(renWin->yRot + 8 * dx);
-    } else if (event->buttons() & Qt::RightButton) {
-        setXRotation(renWin->xRot + 8 * dy);
-        setZRotation(renWin->zRot + 8 * dx);
-    }
-
-    renWin->lastPos = event->pos();
-}
-

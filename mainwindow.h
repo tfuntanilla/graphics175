@@ -38,6 +38,10 @@ private slots:
 
     void on_zScaleSlider_valueChanged(int value);
 
+    void on_wireFrameButton_toggled(bool checked);
+
+    void on_projectionButton_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
 };

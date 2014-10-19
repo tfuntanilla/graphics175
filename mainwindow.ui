@@ -24,37 +24,11 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>850</x>
-      <y>10</y>
-      <width>261</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Toggle Wireframe</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>850</x>
-      <y>50</y>
-      <width>261</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Toggle Orthographic Projection</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_translate">
     <property name="geometry">
      <rect>
       <x>950</x>
-      <y>220</y>
+      <y>250</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -72,7 +46,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>260</y>
+      <y>290</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -93,38 +67,13 @@
      <enum>Qt::Horizontal</enum>
     </property>
     <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
+     <enum>QSlider::NoTicks</enum>
     </property>
     <property name="tickInterval">
      <number>10</number>
     </property>
    </widget>
    <widget class="QSlider" name="yTransSlider">
-    <property name="geometry">
-     <rect>
-      <x>870</x>
-      <y>290</y>
-      <width>241</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <number>-100</number>
-    </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
-    </property>
-    <property name="tickInterval">
-     <number>10</number>
-    </property>
-   </widget>
-   <widget class="QSlider" name="zTransSlider">
     <property name="geometry">
      <rect>
       <x>870</x>
@@ -143,7 +92,32 @@
      <enum>Qt::Horizontal</enum>
     </property>
     <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QSlider" name="zTransSlider">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>350</y>
+      <width>241</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-100</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
     </property>
     <property name="tickInterval">
      <number>10</number>
@@ -153,7 +127,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>420</y>
+      <y>450</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -181,7 +155,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>450</y>
+      <y>480</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -206,7 +180,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>480</y>
+      <y>510</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -231,28 +205,6 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>550</y>
-      <width>241</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <number>-100</number>
-    </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
-    </property>
-   </widget>
-   <widget class="QSlider" name="yScaleSlider">
-    <property name="geometry">
-     <rect>
-      <x>870</x>
       <y>580</y>
       <width>241</width>
       <height>22</height>
@@ -268,14 +220,42 @@
      <enum>Qt::Horizontal</enum>
     </property>
     <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QSlider" name="yScaleSlider">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>610</y>
+      <width>241</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-100</number>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
     </property>
    </widget>
    <widget class="QLabel" name="xTransLabel">
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>260</y>
+      <y>290</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -293,7 +273,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>290</y>
+      <y>320</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -311,7 +291,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>320</y>
+      <y>350</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -329,7 +309,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>610</y>
+      <y>640</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -344,14 +324,17 @@
      <enum>Qt::Horizontal</enum>
     </property>
     <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
+     <enum>QSlider::NoTicks</enum>
+    </property>
+    <property name="tickInterval">
+     <number>10</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_rotate">
     <property name="geometry">
      <rect>
       <x>960</x>
-      <y>350</y>
+      <y>380</y>
       <width>61</width>
       <height>31</height>
      </rect>
@@ -369,7 +352,7 @@
     <property name="geometry">
      <rect>
       <x>970</x>
-      <y>510</y>
+      <y>540</y>
       <width>51</width>
       <height>31</height>
      </rect>
@@ -387,7 +370,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>480</y>
+      <y>510</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -405,7 +388,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>420</y>
+      <y>450</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -423,7 +406,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>450</y>
+      <y>480</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -441,7 +424,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>610</y>
+      <y>640</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -459,7 +442,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>550</y>
+      <y>580</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -477,7 +460,7 @@
     <property name="geometry">
      <rect>
       <x>850</x>
-      <y>580</y>
+      <y>610</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -494,10 +477,10 @@
    <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>90</y>
+      <x>860</x>
+      <y>100</y>
       <width>256</width>
-      <height>121</height>
+      <height>141</height>
      </rect>
     </property>
     <item>
@@ -515,7 +498,7 @@
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>390</y>
+      <y>420</y>
       <width>241</width>
       <height>22</height>
      </rect>
@@ -543,7 +526,7 @@
     <property name="geometry">
      <rect>
       <x>810</x>
-      <y>390</y>
+      <y>420</y>
       <width>59</width>
       <height>21</height>
      </rect>
@@ -555,6 +538,48 @@
     </property>
     <property name="text">
      <string>Angle</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="wireFrameButton">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>20</y>
+      <width>271</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Toggle Wire Frame Rendering</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="projectionButton">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>60</y>
+      <width>281</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Toggle Perspective Projection</string>
     </property>
    </widget>
   </widget>

@@ -74,3 +74,16 @@ void MainWindow::on_zScaleSlider_valueChanged(int value)
     ui->renderwindowwidget->GetRenderWindow()->zScale = value;
     ui->renderwindowwidget->GetRenderWindow()->render();
 }
+
+void MainWindow::on_wireFrameButton_toggled(bool checked)
+{
+
+    ui->renderwindowwidget->GetRenderWindow()->toggleWireFrame(checked);
+
+}
+
+void MainWindow::on_projectionButton_toggled(bool checked)
+{
+    ui->renderwindowwidget->GetRenderWindow()->togglePers = checked;
+    ui->renderwindowwidget->GetRenderWindow()->render();
+}
