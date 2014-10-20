@@ -9,6 +9,7 @@
 #include <QJsonObject>
 
 
+
 #include <cstdlib>
 #include <iostream>
 
@@ -141,20 +142,10 @@ void RenderWindow::initialize()
 void RenderWindow::render()
 {
 
-    /*
-    SceneHandler scene;
-    QVector<Scene*> scenes;
+    //SceneHandler scene;
+    //QVector<Scene*> scenes;
 
-    scene.scenedemoRead("/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/scene.json", scenes);
-
-    QJsonObject object;
-
-    object["name"] = scenes[0]->name;
-    object["description"] = scenes[0]->description;
-
-    scene.parseModel(object);
-    */
-
+    //scene.scenedemoRead("/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/scene.json", scenes);
 
 
     /* *********************************************************************************************** */
@@ -477,29 +468,89 @@ void RenderWindow::toggleWireFrame(bool c)
 }
 
 
-void RenderWindowWidget::mousePressEvent(QMouseEvent *event)
+void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
     lastPos = event->pos();
 }
 
-void RenderWindowWidget::mouseMoveEvent(QMouseEvent *event)
+void RenderWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    int dx = event->x() - lastPos.x();
+    int dy = event->y() - lastPos.y();
+
+    if (event->buttons() & Qt::LeftButton) {
+        setXRotation(xRot + 8 * dy);
+        setYRotation(yRot + 8 * dx);
+    } else if (event->buttons() & Qt::RightButton) {
+        setXRotation(xRot + 8 * dy);
+        setZRotation(zRot + 8 * dx);
+    }
+
+    lastPos = event->pos();
+
+}
+
+void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
 {
 
 }
 
-void RenderWindowWidget::mouseReleaseEvent(QMouseEvent *event)
+void RenderWindow::wheelEvent(QWheelEvent *event)
 {
+    lastPos = event->pixelDelta();
 
+    int value = lastPos.manhattanLength();
+
+    if (value > 100) {
+        value = -value;
+    }
+
+    zoom(zTrans + value);
+
+    std::cout << "Total Steps: " << value << std::endl;
 }
 
-void RenderWindowWidget::wheelEvent(QWheelEvent *event)
+void RenderWindow::zoom(int value)
 {
-    lastPos = event->angleDelta();
-    emit zChanged(lastPos.x());
+    emit zChanged(value);
+    render();
 }
 
-void RenderWindowWidget::zoom(int value)
+static void qNormalizeAngle(int &angle)
 {
-    renWin->zTrans += value;
-    renWin->render();
+    while (angle < 0)
+        angle += 360 * 16;
+    while (angle > 360)
+        angle -= 360 * 16;
+}
+
+void RenderWindow::setXRotation(int angle)
+{
+
+    qNormalizeAngle(angle);
+    if (angle != xRot) {
+        xRot = angle;
+        emit xRotationChanged(angle);
+        render();
+    }
+}
+
+void RenderWindow::setYRotation(int angle)
+{
+    qNormalizeAngle(angle);
+    if (angle != yRot) {
+        yRot = angle;
+        emit yRotationChanged(angle);
+        render();
+    }
+}
+
+void RenderWindow::setZRotation(int angle)
+{
+    qNormalizeAngle(angle);
+    if (angle != zRot) {
+        zRot = angle;
+        emit zRotationChanged(angle);
+        render();
+    }
 }

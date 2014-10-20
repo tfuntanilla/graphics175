@@ -34,6 +34,13 @@ public:
     int zRot, zTrans, zScale;
 
     bool togglePers;
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+
+    void mouseReleaseEvent(QMouseEvent* event);
+    void wheelEvent(QWheelEvent* event);
+
+    QPoint lastPos;
 
 private:
 
@@ -59,7 +66,17 @@ private:
 
     GLuint indicesCountChair;
     GLuint indicesCountDesk;
+public slots:
+  void zoom(int value);
+  void setXRotation(int angle);
+  void setYRotation(int angle);
+  void setZRotation(int angle);
 
+signals:
+  void zChanged(int value);
+  void xRotationChanged(int angle);
+  void yRotationChanged(int angle);
+  void zRotationChanged(int angle);
 };
 
 class RenderWindowWidget : public QWidget
@@ -80,20 +97,12 @@ public:
       return renWin;
   }
 
-  void mousePressEvent(QMouseEvent* event);
-  void mouseMoveEvent(QMouseEvent* event);
-  void mouseReleaseEvent(QMouseEvent* event);
-  void wheelEvent(QWheelEvent* event);
 
-public slots:
-  void zoom(int value);
 
-signals:
-  void zChanged(int value);
 
 private:
   RenderWindow* renWin;
-  QPoint lastPos;
+
 
 };
 

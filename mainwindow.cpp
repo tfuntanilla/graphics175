@@ -9,7 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->renderwindowwidget, SIGNAL(zChanged(int)), ui->renderwindowwidget, SLOT(zoom(int)));
+    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zChanged(int)), ui->zTransSlider, SLOT(setValue(int)));
+    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(xRotationChanged(int)), ui->xRotSlider, SLOT(setValue(int)));
+    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yRotationChanged(int)), ui->yRotSlider, SLOT(setValue(int)));
+    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zRotationChanged(int)), ui->zRotSlider, SLOT(setValue(int)));
 }
 
 MainWindow::~MainWindow()
