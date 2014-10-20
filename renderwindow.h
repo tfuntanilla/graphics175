@@ -3,11 +3,14 @@
 
 #include "openglwindow.h"
 #include "tiny_obj_loader.h"
+#include "scenehandler.h"
 
 #include <QWidget>
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QMouseEvent>
+#include <QWheelEvent>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -38,14 +41,24 @@ private:
     GLuint m_colAttr;
     GLuint m_matrixUniform;
 
+    //GLuint m_pos2Attr;
+    //GLuint m_col2Attr;
+
     QOpenGLShaderProgram *m_program;
+
     QOpenGLVertexArrayObject* m_vao;
     QOpenGLBuffer *m_vbo;
     QOpenGLBuffer *m_ibo;
+
     int m_frame;
     bool m_useSourceCode;
 
-    GLuint indicesCount;
+    QOpenGLVertexArrayObject* m_vao2;
+    QOpenGLBuffer *m_vbo2;
+    QOpenGLBuffer *m_ibo2;
+
+    GLuint indicesCountChair;
+    GLuint indicesCountDesk;
 
 };
 
@@ -67,8 +80,20 @@ public:
       return renWin;
   }
 
+  void mousePressEvent(QMouseEvent* event);
+  void mouseMoveEvent(QMouseEvent* event);
+  void mouseReleaseEvent(QMouseEvent* event);
+  void wheelEvent(QWheelEvent* event);
+
+public slots:
+  void zoom(int value);
+
+signals:
+  void zChanged(int value);
+
 private:
   RenderWindow* renWin;
+  QPoint lastPos;
 
 };
 

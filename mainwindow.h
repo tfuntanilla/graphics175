@@ -42,6 +42,8 @@ private slots:
 
     void on_projectionButton_toggled(bool checked);
 
+    void on_listWidget_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 };

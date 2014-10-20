@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->renderwindowwidget, SIGNAL(zChanged(int)), ui->renderwindowwidget, SLOT(zoom(int)));
 }
 
 MainWindow::~MainWindow()
@@ -86,4 +88,9 @@ void MainWindow::on_projectionButton_toggled(bool checked)
 {
     ui->renderwindowwidget->GetRenderWindow()->togglePers = checked;
     ui->renderwindowwidget->GetRenderWindow()->render();
+}
+
+void MainWindow::on_listWidget_clicked(const QModelIndex &index)
+{
+
 }

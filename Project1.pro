@@ -19,12 +19,14 @@ SOURCES += \
     main.cpp \
     openglwindow.cpp \
     renderwindow.cpp \
-    tiny_obj_loader.cc
+    tiny_obj_loader.cc \
+    scenehandler.cpp
 
 HEADERS  += mainwindow.h \
     openglwindow.h \
     renderwindow.h \
-    tiny_obj_loader.h
+    tiny_obj_loader.h \
+    scenehandler.h
 
 FORMS    += mainwindow.ui
 
