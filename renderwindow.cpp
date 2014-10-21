@@ -8,10 +8,10 @@
 #include <QByteArray>
 #include <QJsonObject>
 
-
-
 #include <cstdlib>
 #include <iostream>
+
+#define PI 3.14159265
 
 static const char *vertexShaderSource =
     "#version 330\n"
@@ -41,10 +41,9 @@ RenderWindow::RenderWindow()
 {
     setAnimating(true);
     indicesCountChair = 0, indicesCountDesk = 0;
-    angle = 0;
-    xRot = 0, xTrans = 0, xScale = 0;
-    yRot = 1, yTrans = 0, yScale = 0;
-    zRot = 0, zTrans = -5, zScale = 0;
+    xRot = 0, xTrans = -10, xScale = 10;
+    yRot = 1, yTrans = -15, yScale = 10;
+    zRot = 0, zTrans = 0, zScale = 0;
 
     togglePers = false;
 }
@@ -208,7 +207,7 @@ void RenderWindow::render()
 
     */
 
-    /* First chair vertices */
+    /* Chair vertices */
     GLfloat vertices[vlen];
     for (size_t i = 0; i < shapes.size(); i++) {
         for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
@@ -217,7 +216,7 @@ void RenderWindow::render()
             vertices[3*v+2] = shapes[i].mesh.positions[3*v+2];
         }
     }
-
+    /* Desk vertices */
     GLfloat vertices2[vlen2];
     for (size_t i = 0; i < shapes2.size(); i++) {
         for (size_t v = 0; v < shapes2[i].mesh.positions.size() / 3; v++) {
@@ -277,10 +276,11 @@ void RenderWindow::render()
     */
 
 
-    /* First chair indices */
+
     indicesCountChair = ilen;
     indicesCountDesk = ilen2;
 
+    /* Chair indices */
     GLuint indices[ilen];
     for (size_t i = 0; i < shapes.size(); i++) {
         for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
@@ -290,6 +290,7 @@ void RenderWindow::render()
         }
     }
 
+    /* Desk indices */
     GLuint indices2[ilen2];
     for (size_t i = 0; i < shapes2.size(); i++) {
         for (size_t v = 0; v < shapes2[i].mesh.indices.size() / 3; v++) {
@@ -344,7 +345,7 @@ void RenderWindow::render()
     }
 
     else if (!togglePers) {
-        projection_chair1.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+        projection_chair1.ortho(-20.0, 20.0, -20.0, 20.0, 20, -20.0);
     }
 
     /// set up view
@@ -362,7 +363,9 @@ void RenderWindow::render()
     model_chair1.setToIdentity(); /// set
 
     model_chair1.translate(xTrans, yTrans, zTrans); /// place it a certain distance from camera
-    model_chair1.rotate((float)angle, (float)xRot, (float)yRot, (float)zRot);
+    model_chair1.rotate((float)xRot/16.0, 1.0, 0.0, 0.0);
+    model_chair1.rotate((float)yRot/16.0, 0.0, 1.0, 0.0);
+    model_chair1.rotate((float)zRot/16.0, 0.0, 0.0, 1.0);
     model_chair1.scale((float)xScale, (float)yScale, (float)zScale);
 
     m_program->setUniformValue(m_matrixUniform, projection_chair1 * view_chair1 * model_chair1);
@@ -417,7 +420,7 @@ void RenderWindow::render()
     }
 
     else if (!togglePers) {
-        projection_desk1.ortho(1.0, -1.0, 1.0, -1.0, 0.1, 5.0);
+        projection_desk1.ortho(-20.0, 20.0, -20.0, 20.0, 20, -20.0);
     }
 
     /// set up view
@@ -434,8 +437,10 @@ void RenderWindow::render()
     QMatrix4x4 model_desk1;
     model_desk1.setToIdentity(); /// set
 
-    model_desk1.translate(xTrans+10, yTrans+10, zTrans-10); /// place it a certain distance from camera
-    model_desk1.rotate((float)angle+25.0, (float)xRot, (float)yRot, (float)zRot);
+    model_desk1.translate(xTrans+10, yTrans+10, zTrans+10); /// place it a certain distance from camera
+    model_desk1.rotate((float)xRot/16.0, 1.0, 0.0, 0.0);
+    model_desk1.rotate((float)yRot/16.0, 0.0, 1.0, 0.0);
+    model_desk1.rotate((float)zRot/16.0, 0.0, 0.0, 1.0);
     model_desk1.scale((float)xScale, (float)yScale, (float)zScale);
 
     m_program->setUniformValue(m_matrixUniform, projection_desk1 * view_desk1 * model_desk1);
@@ -482,38 +487,30 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
         setXRotation(xRot + 8 * dy);
         setYRotation(yRot + 8 * dx);
     } else if (event->buttons() & Qt::RightButton) {
-        setXRotation(xRot + 8 * dy);
-        setZRotation(zRot + 8 * dx);
+        setXTranslation(xTrans + dx);
+        setYTranslation(yTrans + dy);
     }
 
     lastPos = event->pos();
 
 }
 
-void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-
-}
-
 void RenderWindow::wheelEvent(QWheelEvent *event)
 {
-    lastPos = event->pixelDelta();
-
-    int value = lastPos.manhattanLength();
-
-    if (value > 100) {
-        value = -value;
+    int steps = 0;
+    if (event != NULL) {
+        steps++;
+        QPoint z = event->angleDelta();
+        if (z.y() == -120) {
+            setZTranslation(zTrans + steps);
+        }
+        else {
+            setZTranslation(zTrans - steps);
+        }
     }
 
-    zoom(zTrans + value);
 
-    std::cout << "Total Steps: " << value << std::endl;
-}
 
-void RenderWindow::zoom(int value)
-{
-    emit zChanged(value);
-    render();
 }
 
 static void qNormalizeAngle(int &angle)
@@ -524,33 +521,51 @@ static void qNormalizeAngle(int &angle)
         angle -= 360 * 16;
 }
 
-void RenderWindow::setXRotation(int angle)
+void RenderWindow::setXRotation(int value)
 {
 
-    qNormalizeAngle(angle);
-    if (angle != xRot) {
-        xRot = angle;
-        emit xRotationChanged(angle);
+    qNormalizeAngle(value);
+    if (value != xRot) {
+        xRot = value;
+        emit xRotationChanged(value);
         render();
     }
 }
 
-void RenderWindow::setYRotation(int angle)
+void RenderWindow::setYRotation(int value)
 {
-    qNormalizeAngle(angle);
-    if (angle != yRot) {
-        yRot = angle;
-        emit yRotationChanged(angle);
+    qNormalizeAngle(value);
+    if (value!= yRot) {
+        yRot = value;
+        emit yRotationChanged(value);
         render();
     }
 }
 
-void RenderWindow::setZRotation(int angle)
+void RenderWindow::setXTranslation(int value)
 {
-    qNormalizeAngle(angle);
-    if (angle != zRot) {
-        zRot = angle;
-        emit zRotationChanged(angle);
+    if (value != xTrans) {
+        xTrans = value;
+        emit xTranslationChanged(value);
         render();
     }
 }
+
+void RenderWindow::setYTranslation(int value)
+{
+    if (value != yTrans) {
+        yTrans = value;
+        emit yTranslationChanged(value);
+        render();
+    }
+}
+
+void RenderWindow::setZTranslation(int value)
+{
+    if (value != zTrans) {
+        zTrans = value;
+        emit zTranslationChanged(value);
+        render();
+    }
+}
+

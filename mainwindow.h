@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QSlider>
+#include <QListWidgetItem>
+#include <QKeyEvent>
 
 namespace Ui {
 class MainWindow;
@@ -16,6 +18,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void setLineEditDefaults();
+
 private slots:
 
     void on_zTransSlider_valueChanged(int value);
@@ -23,8 +27,6 @@ private slots:
     void on_xTransSlider_valueChanged(int value);
 
     void on_yTransSlider_valueChanged(int value);
-
-    void on_angleRotSlider_valueChanged(int value);
 
     void on_xRotSlider_valueChanged(int value);
 
@@ -42,7 +44,25 @@ private slots:
 
     void on_projectionButton_toggled(bool checked);
 
-    void on_listWidget_clicked(const QModelIndex &index);
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+
+    void on_xTransLineEdit_textChanged(const QString &arg1);
+
+    void on_yTransLineEdit_textChanged(const QString &arg1);
+
+    void on_zTransLineEdit_textChanged(const QString &arg1);
+
+    void on_xRotLineEdit_textChanged(const QString &arg1);
+
+    void on_yRotLineEdit_textChanged(const QString &arg1);
+
+    void on_zRotLineEdit_textChanged(const QString &arg1);
+
+    void on_xScaleLineEdit_textChanged(const QString &arg1);
+
+    void on_yScaleLineEdit_textChanged(const QString &arg1);
+
+    void on_zScaleLineEdit_textChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;

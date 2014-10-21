@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QKeyEvent>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -28,7 +29,6 @@ public:
     void toggleWireFrame(bool c);
     void checkError(const QString& prefix);
 
-    int angle;
     int xRot, xTrans, xScale;
     int yRot, yTrans, yScale;
     int zRot, zTrans, zScale;
@@ -36,8 +36,6 @@ public:
     bool togglePers;
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
-
-    void mouseReleaseEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent* event);
 
     QPoint lastPos;
@@ -67,16 +65,18 @@ private:
     GLuint indicesCountChair;
     GLuint indicesCountDesk;
 public slots:
-  void zoom(int value);
-  void setXRotation(int angle);
-  void setYRotation(int angle);
-  void setZRotation(int angle);
+  void setXRotation(int value);
+  void setYRotation(int value);
+  void setXTranslation(int value);
+  void setYTranslation(int value);
+  void setZTranslation(int value);
 
 signals:
-  void zChanged(int value);
-  void xRotationChanged(int angle);
-  void yRotationChanged(int angle);
-  void zRotationChanged(int angle);
+  void xRotationChanged(int value);
+  void yRotationChanged(int value);
+  void xTranslationChanged(int value);
+  void yTranslationChanged(int value);
+  void zTranslationChanged(int value);
 };
 
 class RenderWindowWidget : public QWidget
