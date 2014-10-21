@@ -27,6 +27,7 @@ public:
     void initialize();
     void render();
     void toggleWireFrame(bool c);
+    void getFileAndMatrices(QVector<const char *> objFiles, QVector<QMatrix4x4> transformMatrices);
     void checkError(const QString& prefix);
 
     int xRot, xTrans, xScale;
@@ -41,6 +42,9 @@ public:
     QPoint lastPos;
 
 private:
+
+    QVector<const char*> filenames;
+    QVector<QMatrix4x4> matrices;
 
     GLuint m_posAttr;
     GLuint m_colAttr;

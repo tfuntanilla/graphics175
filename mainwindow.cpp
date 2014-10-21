@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    menuBar()->setNativeMenuBar(false);
 
     setLineEditDefaults();
 
@@ -19,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yTranslationChanged(int)), ui->yTransSlider, SLOT(setValue(int)));
 
     connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zTranslationChanged(int)), ui->zTransSlider, SLOT(setValue(int)));
+
+
 
 }
 
@@ -197,4 +200,51 @@ void MainWindow::on_zScaleLineEdit_textChanged(const QString &arg1)
     bool ok;
     int value = arg1.toInt(&ok, 10);
     ui->zScaleSlider->setValue(value);
+}
+
+void MainWindow::handleScene(QString filename)
+{
+    SceneHandler scene;
+    QVector<Scene*> scenes;
+    QVector<Model*> models;
+
+    scene.scenedemoRead("/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/scene.json", scenes);
+
+    for (int i=0; i<scenes[0]->root.size(); i++) {
+        if (scenes[0]->root[i]->type == "model") {
+            models.push_back(static_cast<Model*>(scenes[0]->root[i]->children[0]));
+        }
+    }
+
+    QVector<QString> names;
+    QVector<QString> filenames;
+    QVector<QMatrix4x4> matrices;
+
+    QVector<const char*> objectFiles;
+
+    for (int i=0; i<models.size(); i++) {
+        names.push_back(models[i]->name);
+        filenames.push_back(models[i]->fileName);
+        matrices.push_back(models[i]->transform);
+
+        ui->listWidget->addItem(models[i]->name);
+    }
+
+    for (int i=0; i<filenames.size(); i++) {
+        QByteArray byteArray = filenames[i].toUtf8();
+        const char* cString = byteArray.constData();
+        objectFiles.push_back(cString);
+    }
+
+    ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(objectFiles, matrices);
+
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    //file = QFileDialog::getOpenFileName(this, "Open File");
+    //QMessageBox::information(this, "File Selected", file.length() == 0 ? "No File Selected" : file);
+
+    handleScene(file);
+
 }

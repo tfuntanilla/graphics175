@@ -31,4 +31,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 OTHER_FILES += \
-    scene.json
+    scene.json \
+    table.obj \
+    chair.obj

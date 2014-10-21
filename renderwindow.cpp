@@ -48,6 +48,17 @@ RenderWindow::RenderWindow()
     togglePers = false;
 }
 
+void RenderWindow::getFileAndMatrices(QVector<const char *> objFiles, QVector<QMatrix4x4> transformMatrices)
+{
+    for (int i=0; i<objFiles.size(); i++) {
+        filenames.push_back(objFiles[i]);
+    }
+
+    for (int i=0; i<transformMatrices.size(); i++) {
+        matrices.push_back(transformMatrices[i]);
+    }
+}
+
 void RenderWindow::checkError(const QString &prefix)
 {
     /// if OpenGL Logging is enabled or active
@@ -140,12 +151,6 @@ void RenderWindow::initialize()
 
 void RenderWindow::render()
 {
-
-    //SceneHandler scene;
-    //QVector<Scene*> scenes;
-
-    //scene.scenedemoRead("/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/scene.json", scenes);
-
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */

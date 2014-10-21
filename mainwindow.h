@@ -5,6 +5,10 @@
 #include <QSlider>
 #include <QListWidgetItem>
 #include <QKeyEvent>
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include "scenehandler.h"
 
 namespace Ui {
 class MainWindow;
@@ -64,8 +68,15 @@ private slots:
 
     void on_zScaleLineEdit_textChanged(const QString &arg1);
 
+    void handleScene(QString filename);
+
+    void on_actionOpen_triggered();
+
 private:
     Ui::MainWindow *ui;
+
+    QString file;
+
 };
 
 #endif // MAINWINDOW_H
