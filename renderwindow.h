@@ -3,7 +3,7 @@
 
 #include "openglwindow.h"
 #include "tiny_obj_loader.h"
-#include "scenehandler.h"
+#include "camera.h"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -27,31 +27,30 @@ public:
     void initialize();
     void render();
     void toggleWireFrame(bool c);
-    void getFileAndMatrices(QVector<const char *> objFiles, QVector<QMatrix4x4> transformMatrices);
+    void getFileAndMatrices(QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
     void checkError(const QString& prefix);
 
-    int xRot, xTrans, xScale;
-    int yRot, yTrans, yScale;
-    int zRot, zTrans, zScale;
+    int xRot, xTrans, xScale, xEye, xCen, xUp;
+    int yRot, yTrans, yScale, yEye, yCen, yUp;
+    int zRot, zTrans, zScale, zEye, zCen, zUp;
 
     bool togglePers;
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent* event);
 
+    Camera camera;
+
     QPoint lastPos;
 
 private:
 
-    QVector<const char*> filenames;
+    QVector<std::string> filenames;
     QVector<QMatrix4x4> matrices;
 
     GLuint m_posAttr;
     GLuint m_colAttr;
     GLuint m_matrixUniform;
-
-    //GLuint m_pos2Attr;
-    //GLuint m_col2Attr;
 
     QOpenGLShaderProgram *m_program;
 
@@ -66,8 +65,12 @@ private:
     QOpenGLBuffer *m_vbo2;
     QOpenGLBuffer *m_ibo2;
 
-    GLuint indicesCountChair;
-    GLuint indicesCountDesk;
+    GLuint indicesCount1;
+    GLuint indicesCount2;
+
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+
 public slots:
   void setXRotation(int value);
   void setYRotation(int value);

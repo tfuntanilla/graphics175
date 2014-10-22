@@ -48,8 +48,6 @@ private slots:
 
     void on_projectionButton_toggled(bool checked);
 
-    void on_listWidget_itemClicked(QListWidgetItem *item);
-
     void on_xTransLineEdit_textChanged(const QString &arg1);
 
     void on_yTransLineEdit_textChanged(const QString &arg1);
@@ -71,6 +69,8 @@ private slots:
     void handleScene(QString filename);
 
     void on_actionOpen_triggered();
+
+    void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

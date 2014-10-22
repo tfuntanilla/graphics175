@@ -21,13 +21,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zTranslationChanged(int)), ui->zTransSlider, SLOT(setValue(int)));
 
-
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+static const char* convertQStringtoString(QString string)
+{
+
+
+    QByteArray byteArray = string.toUtf8();
+    const char* cString = byteArray.constData();
+
+    return cString;
 }
 
 void MainWindow::setLineEditDefaults()
@@ -122,23 +130,6 @@ void MainWindow::on_projectionButton_toggled(bool checked)
     ui->renderwindowwidget->GetRenderWindow()->render();
 }
 
-void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
-{
-    // get all the items in the list widget
-    QList<QListWidgetItem *> items =
-          ui->listWidget->findItems(QString("*"), Qt::MatchWrap | Qt::MatchWildcard);
-
-    // match user selection with one of the items
-    for (int i = 0; i < items.size(); i++)  {
-        if (items[i]->text() == item->text()) {
-            std::cout << "checked" << std::endl;
-        }
-    }
-
-    // connect that item with mouse control
-
-}
-
 void MainWindow::on_xTransLineEdit_textChanged(const QString &arg1)
 {
     bool ok;
@@ -220,24 +211,24 @@ void MainWindow::handleScene(QString filename)
     QVector<QString> filenames;
     QVector<QMatrix4x4> matrices;
 
-    QVector<const char*> objectFiles;
+    QVector<std::string> objectFiles;
 
     for (int i=0; i<models.size(); i++) {
         names.push_back(models[i]->name);
         filenames.push_back(models[i]->fileName);
         matrices.push_back(models[i]->transform);
 
-        ui->listWidget->addItem(models[i]->name);
+        ui->listWidget->insertItem(i, models[i]->name);
+
     }
 
     for (int i=0; i<filenames.size(); i++) {
-        QByteArray byteArray = filenames[i].toUtf8();
-        const char* cString = byteArray.constData();
-        objectFiles.push_back(cString);
+        std::string str = convertQStringtoString(filenames[i]);
+        objectFiles.push_back(str);
     }
 
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(objectFiles, matrices);
-
+    ui->renderwindowwidget->GetRenderWindow()->render();
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -247,4 +238,18 @@ void MainWindow::on_actionOpen_triggered()
 
     handleScene(file);
 
+}
+
+void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    QString desk = "desk";
+
+    //
+
+
+    if (item->text() == desk) {
+        std::cout << "yes" << std::endl;
+        //ui->renderwindowwidget->GetRenderWindow()->updateProperties(item->text());
+
+    }
 }

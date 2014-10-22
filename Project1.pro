@@ -20,17 +20,19 @@ SOURCES += \
     openglwindow.cpp \
     renderwindow.cpp \
     tiny_obj_loader.cc \
-    scenehandler.cpp
+    scenehandler.cpp \
+    camera.cpp
 
 HEADERS  += mainwindow.h \
     openglwindow.h \
     renderwindow.h \
     tiny_obj_loader.h \
-    scenehandler.h
+    scenehandler.h \
+    camera.h
 
 FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     scene.json \
-    table.obj \
-    chair.obj
+    chair.obj \
+    desk.obj
