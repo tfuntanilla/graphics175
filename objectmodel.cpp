@@ -2,7 +2,8 @@
 
 ObjectModel::ObjectModel()
 {
-    identifier = " ";
+    name = " ";
+    originFile = " ";
 
     projection.setToIdentity();
     view.setToIdentity();
@@ -19,9 +20,10 @@ ObjectModel::~ObjectModel()
 	
 }
 
-void ObjectModel::setNameAndIndex(QString name, int i)
+void ObjectModel::setNameAndIndex(QString n, QString f, int i)
 {
-    identifier = name;
+    name = n;
+    originFile = f;
     index = i;
 }
 
@@ -39,9 +41,25 @@ void ObjectModel::setModel(QMatrix4x4 matrix)
     model = matrix;
 }
 
-QString ObjectModel::getIdentifier()
+void ObjectModel::setProjection(QMatrix4x4 matrix)
 {
-	return identifier;
+    projection = matrix;
+}
+
+void ObjectModel::setView(QMatrix4x4 matrix)
+{
+    view = matrix;
+}
+
+
+QString ObjectModel::getName()
+{
+    return name;
+}
+
+QString ObjectModel::getOriginFile()
+{
+    return originFile;
 }
 
 QMatrix4x4 ObjectModel::getProjection()

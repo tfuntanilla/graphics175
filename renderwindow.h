@@ -29,7 +29,7 @@ public:
     void checkError(const QString& prefix);
 
     void toggleWireFrame(bool c);
-    void getFileAndMatrices(QVector<QString> typeNames, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
+    void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
     void updateModelProperties(int size);
 
     void mouseMoveEvent(QMouseEvent* event);
@@ -43,8 +43,9 @@ public:
 
 private:
 
-    QVector<QString> types; // stores the types/names of the objects
+    QVector<QString> objectNames; // stores the names of the objects
     QVector<std::string> filenames; // stores the filenames
+    QVector<QString> fnames;
     QVector<QMatrix4x4> matrices; // stores the transformation matrices
 
     GLuint m_posAttr;

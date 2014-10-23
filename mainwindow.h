@@ -72,6 +72,9 @@ private slots:
 
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
+    void on_actionSave_triggered();
+
+
 private:
     Ui::MainWindow *ui;
 

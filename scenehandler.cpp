@@ -113,12 +113,18 @@ SceneHandler::writeNode(Node* node) {
 
         qDebug() << out["name"] << " " << out["filename"];
 
-        QJsonArray data;
+        //QJsonArray data;
+        QJsonArray p, v, mod;
         for(int i = 0; i < 16; ++i) {
-            data.push_back((float)m->transform.data()[i]);
+            p.push_back((float)m->projection.data()[i]);
+            v.push_back((float)m->view.data()[i]);
+            mod.push_back((float)m->model.data()[i]);
         }
 
-        out["matrix"] = data;
+        //out["matrix"] = data;
+        out["projection"] = p;
+        out["view"] = v;
+        out["model"] = mod;
     } else if(node->type == "node") {
         QJsonArray children;
         for(int i = 0; i < node->children.size(); ++i) {

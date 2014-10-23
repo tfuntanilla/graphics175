@@ -212,21 +212,25 @@ void RenderWindow::render()
         QMatrix4x4 projection = objectmodels[0].getProjection();
         if (togglePers) {
             projection.perspective(60.0, (float)width()/(float)height(), 0.1, 10000);
-        }
 
+        }
         else if (!togglePers) {
             projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
         }
+        //objectmodels[0].setProjection(projection);
 
         QMatrix4x4 model = objectmodels[0].getModel();
-
         model.translate(objectmodels[0].xTrans, objectmodels[0].yTrans, objectmodels[0].zTrans);
         model.rotate((float)objectmodels[0].xRot/16.0, 1.0, 0.0, 0.0);
         model.rotate((float)objectmodels[0].yRot/16.0, 0.0, 1.0, 0.0);
         model.rotate((float)objectmodels[0].zRot/16.0, 0.0, 0.0, 1.0);
         model.scale((float)objectmodels[0].xScale, (float)objectmodels[0].yScale, (float)objectmodels[0].zScale);
+        //objectmodels[0].setModel(model);
 
-        m_program->setUniformValue(m_matrixUniform, projection * camera.returnView() * model);
+        QMatrix4x4 view = camera.returnView();
+        //objectmodels[0].setView(view);
+
+        m_program->setUniformValue(m_matrixUniform, projection * view * model);
 
         m_vao->bind();
         glDrawElements(GL_TRIANGLES, indicesCount1, GL_UNSIGNED_INT, 0);
@@ -318,6 +322,7 @@ void RenderWindow::render()
         else if (!togglePers) {
             projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
         }
+        //objectmodels[1].setProjection(projection);
 
         QMatrix4x4 model = objectmodels[1].getModel();
 
@@ -326,8 +331,12 @@ void RenderWindow::render()
         model.rotate((float)objectmodels[1].yRot/16.0, 0.0, 1.0, 0.0);
         model.rotate((float)objectmodels[1].zRot/16.0, 0.0, 0.0, 1.0);
         model.scale((float)objectmodels[1].xScale, (float)objectmodels[1].yScale, (float)objectmodels[1].zScale);
+        //objectmodels[1].setModel(model);
 
-        m_program->setUniformValue(m_matrixUniform, projection * camera.returnView() * model);
+        QMatrix4x4 view = camera.returnView();
+        //objectmodels[1].setView(view);
+
+        m_program->setUniformValue(m_matrixUniform, projection * view * model);
 
         m_vao2->bind();
         glDrawElements(GL_TRIANGLES, indicesCount2, GL_UNSIGNED_INT, 0);
@@ -337,7 +346,7 @@ void RenderWindow::render()
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
-    
+
     m_program->release();
 
     checkError("after program release");
@@ -408,21 +417,23 @@ void RenderWindow::wheelEvent(QWheelEvent *event)
     }
 }
 
-void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
+void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
 {
 
     for (int i=0; i<typeNames.size(); i++) {
-        types.push_back(typeNames[i]);
-        qDebug() << types[i];
+        objectNames.push_back(typeNames[i]);
     }
 
     for (int i=0; i<objFiles.size(); i++) {
         filenames.push_back(objFiles[i]);
-        std::cout << filenames[i] << std::endl;
     }
 
     for (int i=0; i<transformMatrices.size(); i++) {
         matrices.push_back(transformMatrices[i]);
+    }
+
+    for (int i=0; i<actualFiles.size(); i++) {
+        fnames.push_back(actualFiles[i]);
     }
 
 }
@@ -431,11 +442,8 @@ void RenderWindow::updateModelProperties(int size)
 {
     objectmodels.resize(size);
 
-    ObjectModel model;
-
     for (int i = 0; i < size; i++) {
-        model.setNameAndIndex(types[i], i);
-        objectmodels.insert(i, model);
+        objectmodels[i].setNameAndIndex(objectNames[i], fnames[i], i);
     }
 
     for (int i = 0; i < size; i++) {
