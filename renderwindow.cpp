@@ -39,26 +39,7 @@ RenderWindow::RenderWindow()
 {
     setAnimating(true);
     indicesCount1 = 0, indicesCount2 = 0;
-    xRot = 0, xTrans = -10, xScale = 10, xEye = 1, xCen = 0, xUp = 0;
-    yRot = 1, yTrans = -15, yScale = 10, yEye = 0, yCen = 0, yUp = 1;
-    zRot = 0, zTrans = 0, zScale = 0, zEye = 1, zCen = 0, zUp = 0;
-
     togglePers = false;
-}
-
-void RenderWindow::getFileAndMatrices(QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
-{
-
-    for (int i=0; i<objFiles.size(); i++) {
-        filenames.push_back(objFiles[i]);
-        //std::cout << filenames[i] << std::endl;
-
-    }
-
-    for (int i=0; i<transformMatrices.size(); i++) {
-        matrices.push_back(transformMatrices[i]);
-    }
-
 }
 
 void RenderWindow::checkError(const QString &prefix)
@@ -144,7 +125,6 @@ void RenderWindow::initialize()
 
 void RenderWindow::render()
 {
-
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
 
@@ -159,6 +139,7 @@ void RenderWindow::render()
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
 
+    m_vao->bind();
 
     std::string path = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/";
     std::string inputfile = path;
@@ -200,13 +181,12 @@ void RenderWindow::render()
             }
         }
 
-        m_vao->bind();
-
         m_vbo->bind();
         m_vbo->allocate((vlen + clen)*sizeof(GLfloat));
         m_vbo->write(0, vertices, vlen * sizeof(GLfloat));
         m_vbo->write(vlen*sizeof(GLfloat), colors, clen * sizeof(GLfloat));
 
+        //std::cout << "first model" << std::endl;
         checkError("after vertex buffer allocation");
 
         m_ibo->bind();
@@ -229,59 +209,27 @@ void RenderWindow::render()
         /* *********************************************************************************************** */
         /* *********************************************************************************************** */
 
-        QVector<QMatrix4x4> projection1, view1, model1;
-        projection1.resize(5); view1.resize(5); model1.resize(5);
-
-        float persAngle = 60.0, orthoLeft = -20.0, orthoRight = 20.0, orthoBottom = -20.0, orthoTop = 20.0,
-                orthoNear = 20.0, orthoFar = -20.0;
-        float x = 0.0, y = 0.0, z = 0.0;
-
-        for (int i=0; i<1; i++) {
-
-            /// set up projection
-            //QMatrix4x4 projection1;
-            projection1[i].setToIdentity(); /// set
-
-            if (togglePers) {
-                projection1[i].perspective(persAngle, (float)width()/(float)height(), 0.1, 10000);
-            }
-
-            else if (!togglePers) {
-                projection1[i].ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, orthoNear, orthoFar);
-            }
-
-            /// set up view
-            //QMatrix4x4 view1;
-            //view1[i].setToIdentity(); /// set
-
-            //QVector3D eye1(xEye, yEye, zEye);
-            //QVector3D center1(xCen, yCen, zCen);
-            //QVector3D up1(xUp,yUp, zUp);
-
-            //view1[i].lookAt(eye1, center1, up1);
-
-            /// set up matrix
-            //QMatrix4x4 model1 = matrices[0];
-            //model1.setToIdentity(); /// set
-
-            model1[i] = matrices[0];
-
-            model1[i].translate(xTrans+x, yTrans+y, zTrans+z); /// place it a certain distance from camera
-            model1[i].rotate((float)xRot/16.0, 1.0, 0.0, 0.0);
-            model1[i].rotate((float)yRot/16.0, 0.0, 1.0, 0.0);
-            model1[i].rotate((float)zRot/16.0, 0.0, 0.0, 1.0);
-            model1[i].scale((float)xScale, (float)yScale, (float)zScale);
-
-            m_program->setUniformValue(m_matrixUniform, projection1[i] * camera.returnView() * model1[i]);
-
-            m_vao->bind();
-            glDrawElements(GL_TRIANGLES, indicesCount1, GL_UNSIGNED_INT, 0);
-
-            persAngle += 5.0;
-            orthoLeft += 5.0; orthoRight += 5.0; orthoBottom += 5.0; orthoBottom += 5.0;
-            x += 10.0; y += 0.0; z += 10.0;
-
+        QMatrix4x4 projection = objectmodels[0].getProjection();
+        if (togglePers) {
+            projection.perspective(60.0, (float)width()/(float)height(), 0.1, 10000);
         }
+
+        else if (!togglePers) {
+            projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
+        }
+
+        QMatrix4x4 model = objectmodels[0].getModel();
+
+        model.translate(objectmodels[0].xTrans, objectmodels[0].yTrans, objectmodels[0].zTrans);
+        model.rotate((float)objectmodels[0].xRot/16.0, 1.0, 0.0, 0.0);
+        model.rotate((float)objectmodels[0].yRot/16.0, 0.0, 1.0, 0.0);
+        model.rotate((float)objectmodels[0].zRot/16.0, 0.0, 0.0, 1.0);
+        model.scale((float)objectmodels[0].xScale, (float)objectmodels[0].yScale, (float)objectmodels[0].zScale);
+
+        m_program->setUniformValue(m_matrixUniform, projection * camera.returnView() * model);
+
+        m_vao->bind();
+        glDrawElements(GL_TRIANGLES, indicesCount1, GL_UNSIGNED_INT, 0);
 
         m_vao->release();
 
@@ -289,6 +237,8 @@ void RenderWindow::render()
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
+
+    m_vao2->bind();
 
     inputfile = path;
     if (!filenames.empty()) {
@@ -316,15 +266,12 @@ void RenderWindow::render()
         GLfloat colors2[clen2];
         std::fill_n(colors2, clen2, 1.0f);
 
-
-
         int ilen2 = 0;
         for (size_t i = 0; i < shapes.size(); i++) {
            ilen2 += shapes[i].mesh.indices.size();
         }
 
         indicesCount2 = ilen2;
-
 
         GLuint indices2[ilen2];
         for (size_t i = 0; i < shapes.size(); i++) {
@@ -335,21 +282,18 @@ void RenderWindow::render()
             }
         }
 
-
-        m_vao2->bind();
-
         m_vbo2->bind();
         m_vbo2->allocate((vlen2 + clen2)*sizeof(GLfloat));
         m_vbo2->write(0, vertices2, vlen2 * sizeof(GLfloat));
         m_vbo2->write(vlen2*sizeof(GLfloat), colors2, clen2 * sizeof(GLfloat));
 
+        //std::cout << "second model" << std::endl;
         checkError("after vertex buffer allocation");
 
         m_ibo2->bind();
         m_ibo2->allocate(indices2, ilen2*sizeof(GLuint));
 
         checkError("after index buffer allocation");
-
 
         m_program->enableAttributeArray(m_posAttr);
 
@@ -366,39 +310,24 @@ void RenderWindow::render()
         /* *********************************************************************************************** */
         /* *********************************************************************************************** */
 
-        /// set up projection
-        QMatrix4x4 projection2;
-        projection2.setToIdentity(); /// set
-
+        QMatrix4x4 projection = objectmodels[1].getProjection();
         if (togglePers) {
-            projection2.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+            projection.perspective(60.0, (float)width()/(float)height(), 0.1, 10000);
         }
 
         else if (!togglePers) {
-            projection2.ortho(-20.0, 20.0, -20.0, 20.0, 20, -20.0);
+            projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
         }
 
-        /// set up view
-        //QMatrix4x4 view2;
-        //view2.setToIdentity(); /// set
+        QMatrix4x4 model = objectmodels[1].getModel();
 
-        //QVector3D eye2(xEye, yEye, zEye);
-        //QVector3D center2(xCen, yCen, zCen);
-       // QVector3D up2(xUp, yUp, zUp);
+        model.translate(objectmodels[1].xTrans, objectmodels[1].yTrans, objectmodels[1].zTrans);
+        model.rotate((float)objectmodels[1].xRot/16.0, 1.0, 0.0, 0.0);
+        model.rotate((float)objectmodels[1].yRot/16.0, 0.0, 1.0, 0.0);
+        model.rotate((float)objectmodels[1].zRot/16.0, 0.0, 0.0, 1.0);
+        model.scale((float)objectmodels[1].xScale, (float)objectmodels[1].yScale, (float)objectmodels[1].zScale);
 
-        //view2.lookAt(eye2, center2, up2);
-
-        /// set up matrix
-        QMatrix4x4 model2 = matrices[1];
-        //model2.setToIdentity(); /// set
-
-        model2.translate(xTrans+10, yTrans+10, zTrans+10); /// place it a certain distance from camera
-        model2.rotate((float)xRot/16.0, 1.0, 0.0, 0.0);
-        model2.rotate((float)yRot/16.0, 0.0, 1.0, 0.0);
-        model2.rotate((float)zRot/16.0, 0.0, 0.0, 1.0);
-        model2.scale((float)xScale, (float)yScale, (float)zScale);
-
-        m_program->setUniformValue(m_matrixUniform, projection2 * camera.returnView() * model2);
+        m_program->setUniformValue(m_matrixUniform, projection * camera.returnView() * model);
 
         m_vao2->bind();
         glDrawElements(GL_TRIANGLES, indicesCount2, GL_UNSIGNED_INT, 0);
@@ -418,14 +347,6 @@ void RenderWindow::render()
     }
 }
 
-static void qNormalizeAngle(int &angle)
-{
-    while (angle < 0)
-        angle += 360 * 16;
-    while (angle > 360)
-        angle -= 360 * 16;
-}
-
 void RenderWindow::toggleWireFrame(bool c)
 {
     if (c) {
@@ -436,6 +357,13 @@ void RenderWindow::toggleWireFrame(bool c)
     }
 }
 
+static void qNormalizeAngle(int &angle)
+{
+    while (angle < 0)
+        angle += 360 * 16;
+    while (angle > 360)
+        angle -= 360 * 16;
+}
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
@@ -447,16 +375,16 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - lastPos.x();
     int dy = event->y() - lastPos.y();
 
-    int xAngle = 0;
-    xAngle = (xAngle + dx*8);
-    int yAngle = 0;
-    yAngle = (yAngle + dy*8);
+    int xAngle = dx*8;
+    int yAngle = dy*8;
 
     if (event->buttons() & Qt::LeftButton) {
         camera.camTranslate(dx, QVector3D(1, 0, 0));
         camera.camTranslate(dy, QVector3D(0, 1, 0));
     } else if (event->buttons() & Qt::RightButton) {
-        qNormalizeAngle(xAngle); qNormalizeAngle(yAngle);
+        qNormalizeAngle(xAngle);
+        qNormalizeAngle(yAngle);
+
         camera.camRotate((float)xAngle/16.0, QVector3D(1, 0, 0));
         camera.camRotate((float)yAngle/16.0, QVector3D(0, 1, 0));
     }
@@ -472,88 +400,46 @@ void RenderWindow::wheelEvent(QWheelEvent *event)
         steps++;
         QPoint z = event->angleDelta();
         if (z.y() == -120) {
-            camera.camZoom((float)steps);
+            camera.camZoom((float)steps*2.0);
         }
         else {
-            camera.camZoom((float)-steps);
+            camera.camZoom((float)steps*-2.0);
         }
     }
-
-    /*
-    int steps = 0;
-    if (event != NULL) {
-        steps++;
-        QPoint z = event->angleDelta();
-        if (z.y() == -120) {
-            setZTranslation(zTrans + steps);
-        }
-        else {
-            setZTranslation(zTrans - steps);
-        }
-    }
-    */
-
-
 }
 
-
-
-void RenderWindow::setXRotation(int value)
+void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
 {
 
-    qNormalizeAngle(value);
-    if (value != xRot) {
-        xRot = value;
-        emit xRotationChanged(value);
-        render();
+    for (int i=0; i<typeNames.size(); i++) {
+        types.push_back(typeNames[i]);
+        qDebug() << types[i];
+    }
+
+    for (int i=0; i<objFiles.size(); i++) {
+        filenames.push_back(objFiles[i]);
+        std::cout << filenames[i] << std::endl;
+    }
+
+    for (int i=0; i<transformMatrices.size(); i++) {
+        matrices.push_back(transformMatrices[i]);
+    }
+
+}
+
+void RenderWindow::updateModelProperties(int size)
+{
+    objectmodels.resize(size);
+
+    ObjectModel model;
+
+    for (int i = 0; i < size; i++) {
+        model.setNameAndIndex(types[i], i);
+        objectmodels.insert(i, model);
+    }
+
+    for (int i = 0; i < size; i++) {
+        objectmodels[i].setPropertiesValues(0, 0, 0, 0, 0, 0, 30, 45, 45);
+        objectmodels[i].setModel(matrices[i]);
     }
 }
-
-void RenderWindow::setYRotation(int value)
-{
-    qNormalizeAngle(value);
-    if (value!= yRot) {
-        yRot = value;
-        emit yRotationChanged(value);
-        render();
-    }
-}
-
-void RenderWindow::setXTranslation(int value)
-{
-    if (value != xTrans) {
-        xTrans = value;
-        emit xTranslationChanged(value);
-        render();
-    }
-}
-
-void RenderWindow::setYTranslation(int value)
-{
-    if (value != yTrans) {
-        yTrans = value;
-        emit yTranslationChanged(value);
-        render();
-    }
-}
-
-void RenderWindow::setZTranslation(int value)
-{
-    if (value != zTrans) {
-        zTrans = value;
-        emit zTranslationChanged(value);
-        render();
-    }
-}
-
-/*
-void RenderWindow::updateProperties(QString modelName)
-{
-   if (objModel->name == modelName) {
-
-   }
-
-}
-
-*/
-

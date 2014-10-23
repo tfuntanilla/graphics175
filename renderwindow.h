@@ -4,6 +4,7 @@
 #include "openglwindow.h"
 #include "tiny_obj_loader.h"
 #include "camera.h"
+#include "objectmodel.h"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -11,7 +12,6 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QWheelEvent>
-#include <QKeyEvent>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -26,27 +26,26 @@ public:
 
     void initialize();
     void render();
-    void toggleWireFrame(bool c);
-    void getFileAndMatrices(QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
     void checkError(const QString& prefix);
 
-    int xRot, xTrans, xScale, xEye, xCen, xUp;
-    int yRot, yTrans, yScale, yEye, yCen, yUp;
-    int zRot, zTrans, zScale, zEye, zCen, zUp;
+    void toggleWireFrame(bool c);
+    void getFileAndMatrices(QVector<QString> typeNames, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
+    void updateModelProperties(int size);
 
-    bool togglePers;
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent* event);
 
+    bool togglePers;
     Camera camera;
-
     QPoint lastPos;
+    QVector<ObjectModel> objectmodels;
 
 private:
 
-    QVector<std::string> filenames;
-    QVector<QMatrix4x4> matrices;
+    QVector<QString> types; // stores the types/names of the objects
+    QVector<std::string> filenames; // stores the filenames
+    QVector<QMatrix4x4> matrices; // stores the transformation matrices
 
     GLuint m_posAttr;
     GLuint m_colAttr;
@@ -68,22 +67,10 @@ private:
     GLuint indicesCount1;
     GLuint indicesCount2;
 
+    // used for storing OBJ data parsed using tinyobj parser
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
 
-public slots:
-  void setXRotation(int value);
-  void setYRotation(int value);
-  void setXTranslation(int value);
-  void setYTranslation(int value);
-  void setZTranslation(int value);
-
-signals:
-  void xRotationChanged(int value);
-  void yRotationChanged(int value);
-  void xTranslationChanged(int value);
-  void yTranslationChanged(int value);
-  void zTranslationChanged(int value);
 };
 
 class RenderWindowWidget : public QWidget

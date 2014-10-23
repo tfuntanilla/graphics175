@@ -13,13 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setLineEditDefaults();
 
-    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(xRotationChanged(int)), ui->xRotSlider, SLOT(setValue(int)));
-    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yRotationChanged(int)), ui->yRotSlider, SLOT(setValue(int)));
+    //connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(xRotationChanged(int)), ui->xRotSlider, SLOT(setValue(int)));
+    //connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yRotationChanged(int)), ui->yRotSlider, SLOT(setValue(int)));
 
-    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(xTranslationChanged(int)), ui->xTransSlider, SLOT(setValue(int)));
-    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yTranslationChanged(int)), ui->yTransSlider, SLOT(setValue(int)));
-
-    connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zTranslationChanged(int)), ui->zTransSlider, SLOT(setValue(int)));
+    //connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(xTranslationChanged(int)), ui->xTransSlider, SLOT(setValue(int)));
+    //connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(yTranslationChanged(int)), ui->yTransSlider, SLOT(setValue(int)));
+    //connect(ui->renderwindowwidget->GetRenderWindow(), SIGNAL(zTranslationChanged(int)), ui->zTransSlider, SLOT(setValue(int)));
 
 }
 
@@ -30,7 +29,6 @@ MainWindow::~MainWindow()
 
 static const char* convertQStringtoString(QString string)
 {
-
 
     QByteArray byteArray = string.toUtf8();
     const char* cString = byteArray.constData();
@@ -56,65 +54,123 @@ void MainWindow::setLineEditDefaults()
 
 void MainWindow::on_xTransSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xTrans = value;
+    ui->xTransLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+
+    /*
     ui->renderwindowwidget->GetRenderWindow()->xTrans = value;
     ui->xTransLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_yTransSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yTrans = value;
+    ui->yTransLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+
+    /*
     ui->renderwindowwidget->GetRenderWindow()->yTrans = value;   
     ui->yTransLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_zTransSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zTrans = value;
+    ui->zTransLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+
+    /*
     ui->renderwindowwidget->GetRenderWindow()->zTrans = value;
     ui->zTransLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_xRotSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xRot = value;
+    ui->xRotLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+
+    /*
     ui->renderwindowwidget->GetRenderWindow()->xRot = value;
     ui->xRotLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_yRotSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yRot = value;
+    ui->yRotLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+    /*
     ui->renderwindowwidget->GetRenderWindow()->yRot = value;
     ui->yRotLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_zRotSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zRot = value;
+    ui->zRotLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+    /*
     ui->renderwindowwidget->GetRenderWindow()->zRot = value;
     ui->zRotLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_xScaleSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xScale = value;
+    ui->xScaleLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+    /*
     ui->renderwindowwidget->GetRenderWindow()->xScale = value;
     ui->xScaleLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_yScaleSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yScale = value;
+    ui->yScaleLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+    /*
     ui->renderwindowwidget->GetRenderWindow()->yScale = value;
     ui->yScaleLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_zScaleSlider_valueChanged(int value)
 {
+    int index = ui->listWidget->currentRow();
+    ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zScale = value;
+    ui->zScaleLineEdit->setText(QString::number(value));
+    ui->renderwindowwidget->GetRenderWindow()->render();
+    /*
     ui->renderwindowwidget->GetRenderWindow()->zScale = value;
     ui->zScaleLineEdit->setText(QString::number(value));
     ui->renderwindowwidget->GetRenderWindow()->render();
+    */
 }
 
 void MainWindow::on_wireFrameButton_toggled(bool checked)
@@ -196,6 +252,7 @@ void MainWindow::on_zScaleLineEdit_textChanged(const QString &arg1)
 void MainWindow::handleScene(QString filename)
 {
     SceneHandler scene;
+
     QVector<Scene*> scenes;
     QVector<Model*> models;
 
@@ -207,27 +264,43 @@ void MainWindow::handleScene(QString filename)
         }
     }
 
-    QVector<QString> names;
+    QVector<QString> names; // name of the object
     QVector<QString> filenames;
     QVector<QMatrix4x4> matrices;
 
     QVector<std::string> objectFiles;
 
-    for (int i=0; i<models.size(); i++) {
+    //int row = 0;
+
+    // Store contents of JSON file in appropriate vectors
+    for (int i = 0; i < models.size(); i++) {
         names.push_back(models[i]->name);
         filenames.push_back(models[i]->fileName);
         matrices.push_back(models[i]->transform);
 
-        ui->listWidget->insertItem(i, models[i]->name);
 
+        ui->listWidget->insertItem(i, models[i]->name);
+        //ui->listWidget->insertItem(row++, (models[i]->name+"_2"));
+        //ui->listWidget->insertItem(row++, (models[i]->name+"_3"));
+        //ui->listWidget->insertItem(row++, (models[i]->name+"_4"));
     }
 
+    // Select first element in list widget by default
+    ui->listWidget->setCurrentRow(0);
+
+
+    // Convert QString filenames to const char *
+    // Necessary for loading the OBJ files in tinyobj parser
     for (int i=0; i<filenames.size(); i++) {
         std::string str = convertQStringtoString(filenames[i]);
         objectFiles.push_back(str);
     }
 
-    ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(objectFiles, matrices);
+    //int totalNumOfObjects = models.size();
+
+    // Send attributes of the JSON file to the render
+    ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, objectFiles, matrices);
+    ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size());
     ui->renderwindowwidget->GetRenderWindow()->render();
 }
 
@@ -242,14 +315,31 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 {
-    QString desk = "desk";
+    int index = ui->listWidget->currentRow();
 
-    //
+    int currXTrans = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xTrans;
+    int currYTrans = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yTrans;
+    int currZTrans = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zTrans;
+
+    int currXRot = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xRot;
+    int currYRot = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yRot;
+    int currZRot = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zRot;
+
+    int currXScale = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xScale;
+    int currYScale = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yScale;
+    int currZScale = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zScale;
+
+    ui->xTransLineEdit->setText(QString::number(currXTrans));
+    ui->yTransLineEdit->setText(QString::number(currYTrans));
+    ui->zTransLineEdit->setText(QString::number(currZTrans));
+
+    ui->xRotLineEdit->setText(QString::number(currXRot));
+    ui->yRotLineEdit->setText(QString::number(currYRot));
+    ui->zRotLineEdit->setText(QString::number(currZRot));
+
+    ui->xScaleLineEdit->setText(QString::number(currXScale));
+    ui->yScaleLineEdit->setText(QString::number(currYScale));
+    ui->zScaleLineEdit->setText(QString::number(currZScale));
 
 
-    if (item->text() == desk) {
-        std::cout << "yes" << std::endl;
-        //ui->renderwindowwidget->GetRenderWindow()->updateProperties(item->text());
-
-    }
 }

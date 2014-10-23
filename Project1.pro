@@ -21,14 +21,16 @@ SOURCES += \
     renderwindow.cpp \
     tiny_obj_loader.cc \
     scenehandler.cpp \
-    camera.cpp
+    camera.cpp \
+    objectmodel.cpp
 
 HEADERS  += mainwindow.h \
     openglwindow.h \
     renderwindow.h \
     tiny_obj_loader.h \
     scenehandler.h \
-    camera.h
+    camera.h \
+    objectmodel.h
 
 FORMS    += mainwindow.ui
 
