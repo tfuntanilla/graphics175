@@ -14,9 +14,10 @@ struct Model : public Node
     QString name;
     QString fileName;
     QMatrix4x4 transform;
-    QMatrix4x4 projection;
-    QMatrix4x4 view;
-    QMatrix4x4 model;
+
+    QVector3D translate;
+    QVector3D rotate;
+    QVector3D scale;
 
 };
 

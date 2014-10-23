@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
+    <width>1074</width>
     <height>663</height>
    </rect>
   </property>
@@ -28,14 +28,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>230</y>
+      <y>240</y>
       <width>81</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -51,6 +51,12 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <property name="minimumSize">
      <size>
       <width>241</width>
@@ -64,7 +70,7 @@
      <number>1000</number>
     </property>
     <property name="value">
-     <number>-10</number>
+     <number>0</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -92,7 +98,7 @@
      <number>1000</number>
     </property>
     <property name="value">
-     <number>-15</number>
+     <number>0</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -133,16 +139,16 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>390</y>
+      <y>380</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-10000</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>10000</number>
+     <number>1000</number>
     </property>
     <property name="singleStep">
      <number>1</number>
@@ -164,16 +170,16 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>420</y>
+      <y>410</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-10000</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>10000</number>
+     <number>1000</number>
     </property>
     <property name="singleStep">
      <number>1</number>
@@ -195,16 +201,16 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>450</y>
+      <y>440</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-10000</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>10000</number>
+     <number>1000</number>
     </property>
     <property name="singleStep">
      <number>1</number>
@@ -229,19 +235,19 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>510</y>
+      <y>490</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-100</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>100</number>
+     <number>1000</number>
     </property>
     <property name="value">
-     <number>10</number>
+     <number>0</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -257,19 +263,19 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>540</y>
+      <y>520</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-100</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>100</number>
+     <number>1000</number>
     </property>
     <property name="value">
-     <number>10</number>
+     <number>0</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -292,7 +298,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -310,7 +316,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -328,7 +334,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -339,16 +345,16 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>570</y>
+      <y>550</y>
       <width>241</width>
       <height>22</height>
      </rect>
     </property>
     <property name="minimum">
-     <number>-100</number>
+     <number>-1000</number>
     </property>
     <property name="maximum">
-     <number>100</number>
+     <number>1000</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -371,7 +377,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -382,14 +388,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>470</y>
+      <y>460</y>
       <width>51</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -400,14 +406,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>450</y>
+      <y>440</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -418,14 +424,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>390</y>
+      <y>380</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -436,14 +442,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>420</y>
+      <y>410</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -454,14 +460,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>570</y>
+      <y>550</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -472,14 +478,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>510</y>
+      <y>490</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -490,14 +496,14 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>540</y>
+      <y>520</y>
       <width>21</width>
       <height>16</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -508,8 +514,8 @@
     <property name="geometry">
      <rect>
       <x>710</x>
-      <y>80</y>
-      <width>301</width>
+      <y>90</y>
+      <width>331</width>
       <height>141</height>
      </rect>
     </property>
@@ -523,7 +529,7 @@
    <widget class="QRadioButton" name="wireFrameButton">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>760</x>
       <y>10</y>
       <width>271</width>
       <height>21</height>
@@ -531,7 +537,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -547,7 +553,7 @@
    <widget class="QRadioButton" name="projectionButton">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>760</x>
       <y>50</y>
       <width>281</width>
       <height>21</height>
@@ -555,7 +561,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>18</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
@@ -567,7 +573,7 @@
      <rect>
       <x>980</x>
       <y>270</y>
-      <width>81</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -580,7 +586,7 @@
      <rect>
       <x>980</x>
       <y>300</y>
-      <width>81</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -593,7 +599,7 @@
      <rect>
       <x>980</x>
       <y>330</y>
-      <width>81</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -605,8 +611,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>390</y>
-      <width>81</width>
+      <y>380</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -618,8 +624,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>420</y>
-      <width>81</width>
+      <y>410</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -631,8 +637,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>450</y>
-      <width>81</width>
+      <y>440</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -644,8 +650,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>510</y>
-      <width>81</width>
+      <y>490</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -657,8 +663,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>540</y>
-      <width>81</width>
+      <y>520</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -670,8 +676,8 @@
     <property name="geometry">
      <rect>
       <x>980</x>
-      <y>570</y>
-      <width>81</width>
+      <y>550</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -686,7 +692,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1100</width>
+     <width>1074</width>
      <height>22</height>
     </rect>
    </property>

@@ -66,9 +66,9 @@ private slots:
 
     void on_zScaleLineEdit_textChanged(const QString &arg1);
 
-    void handleScene(QString filename);
-
     void on_actionOpen_triggered();
+
+    void handleScene(QString filename);
 
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
@@ -78,7 +78,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QString file;
 
 };
 

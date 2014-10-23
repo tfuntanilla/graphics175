@@ -9,8 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->listWidget->setCurrentRow(0);
-    file = " ";
+    //ui->listWidget->setCurrentRow(0);
 
     //setLineEditDefaults();
 
@@ -54,7 +53,7 @@ void MainWindow::on_xTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xTrans = value;
             ui->xTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->xTransLineEdit->setText(QString::number(value));
@@ -74,7 +73,7 @@ void MainWindow::on_yTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yTrans = value;
             ui->yTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
 
         }
         else {
@@ -95,7 +94,7 @@ void MainWindow::on_zTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zTrans = value;
             ui->zTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->zTransLineEdit->setText(QString::number(value));
@@ -115,7 +114,7 @@ void MainWindow::on_xRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xRot = value;
             ui->xRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->xRotLineEdit->setText(QString::number(value));
@@ -136,7 +135,7 @@ void MainWindow::on_yRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yRot = value;
             ui->yRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->yRotLineEdit->setText(QString::number(value));
@@ -156,7 +155,7 @@ void MainWindow::on_zRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zRot = value;
             ui->zRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->zRotLineEdit->setText(QString::number(value));
@@ -176,7 +175,7 @@ void MainWindow::on_xScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xScale = value;
             ui->xScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->xScaleLineEdit->setText(QString::number(value));
@@ -197,7 +196,7 @@ void MainWindow::on_yScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yScale = value;
             ui->yScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->yScaleLineEdit->setText(QString::number(value));
@@ -217,7 +216,7 @@ void MainWindow::on_zScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zScale = value;
             ui->zScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->render();
+            ui->renderwindowwidget->GetRenderWindow()->renderNow();
         }
         else {
             //ui->zScaleLineEdit->setText(QString::number(value));
@@ -240,7 +239,7 @@ void MainWindow::on_wireFrameButton_toggled(bool checked)
 void MainWindow::on_projectionButton_toggled(bool checked)
 {
     ui->renderwindowwidget->GetRenderWindow()->togglePers = checked;
-    ui->renderwindowwidget->GetRenderWindow()->render();
+    ui->renderwindowwidget->GetRenderWindow()->renderNow();
 }
 
 void MainWindow::on_xTransLineEdit_textChanged(const QString &arg1)
@@ -313,7 +312,7 @@ void MainWindow::handleScene(QString filename)
     QVector<Scene*> scenes;
     QVector<Model*> models;
 
-    scene.scenedemoRead("/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/scene.json", scenes);
+    scene.scenedemoRead(filename, scenes);
 
     for (int i=0; i<scenes[0]->root.size(); i++) {
         if (scenes[0]->root[i]->type == "model") {
@@ -321,20 +320,25 @@ void MainWindow::handleScene(QString filename)
         }
     }
 
-    QVector<QString> names; // name of the object
+    QVector<QString> names;
     QVector<QString> filenames;
     QVector<QMatrix4x4> matrices;
 
+    QVector<QVector3D> t;
+    QVector<QVector3D>r;
+    QVector<QVector3D> s;
+
     QVector<std::string> objectFiles;
 
-    //int row = 0;
 
     // Store contents of JSON file in appropriate vectors
     for (int i = 0; i < models.size(); i++) {
         names.push_back(models[i]->name);
         filenames.push_back(models[i]->fileName);
         matrices.push_back(models[i]->transform);
-
+        t.push_back(models[i]->translate);
+        r.push_back(models[i]->rotate);
+        s.push_back(models[i]->scale);
 
         ui->listWidget->insertItem(i, models[i]->name);
     }
@@ -348,17 +352,15 @@ void MainWindow::handleScene(QString filename)
 
     // Send attributes of the JSON file to the render
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, filenames, objectFiles, matrices);
-    ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size());
-    ui->renderwindowwidget->GetRenderWindow()->render();
+    ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s);
+    ui->renderwindowwidget->GetRenderWindow()->renderNow();
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    //file = QFileDialog::getOpenFileName(this, "Open File");
-    //QMessageBox::information(this, "File Selected", file.length() == 0 ? "No File Selected" : file);
-
+    QString file = QFileDialog::getOpenFileName(ui->renderwindowwidget, "Open File", "../Project1/", tr("JSON (*.json)"));
+    qDebug() << file;
     handleScene(file);
-
 }
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
@@ -407,82 +409,57 @@ void MainWindow::on_actionSave_triggered()
     Scene* s = new Scene();
     scenes.push_back(s);
 
-    //Node *n = new Node();
-    //scenes[0]->root.push_back(n);
-
-    //Node *nc = new Node();
-    //scenes[0]->root[0]->children.push_back(nc);
-
-    //scenes.resize(1);
-
     QString type = "model";
     QVector<QString> names;
     QVector<QString> files;
     QVector<QString> qfiles;
-
-    QVector<QMatrix4x4> projections;
-    QVector<QMatrix4x4> views;
     QVector<QMatrix4x4> models;
 
-    qDebug() << "After declarations";
+    QVector<QVector3D> tr;
+    QVector<QVector3D> ro;
+    QVector<QVector3D> sc;
+
 
     int totalModels = ui->renderwindowwidget->GetRenderWindow()->objectmodels.size();
 
     for (int i = 0; i < totalModels; i++) {
         names.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getName());
         files.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getOriginFile());
-        projections.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getProjection());
-        views.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getView());
         models.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getModel());
+        tr.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].xTrans,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].yTrans,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].zTrans));
+        ro.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].xRot,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].yRot,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].zRot));
+        sc.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].xScale,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].yScale,
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].zScale));
     }
-
-    qDebug() << "After pushing to vectors";
 
     for (int i = 0; i < files.size(); i++) {
         qfiles.push_back(QString(files[i]));
     }
 
-    qDebug() << "After pushing to qfiles";
 
-    Model* m = new Model();
     for(int i = 0; i < totalModels; i++) {
-
-        qDebug() << "Declared new model";
-
+        Model* m = new Model();
         m->name = names[i];
-
-        qDebug() << m->name;
-
         m->fileName = qfiles[i];
-
-        qDebug() << m->fileName;
-
-        m->projection = projections[i];
-
-        qDebug() << "After pushing projection";
-
-        m->view = views[i];
-
-        qDebug() << "After pushing view";
-
-        m->model = models[i];
-
-        qDebug() << "After pushing model";
+        m->transform = models[i];
+        m->translate = tr[i];
+        m->rotate = ro[i];
+        m->scale = sc[i];
 
         scenes[0]->root.push_back(new Node());
         scenes[0]->root[i]->type = type;
         scenes[0]->root[i]->children.push_back(new Node());
         scenes[0]->root[i]->children[0] = m;
-
-        qDebug() << "After pushing model to scene";
     }
 
-    qDebug() << "After pushing to scenes";
     const char *c = convertQStringtoString(out);
     scenes[0]->name = out;
     scenes[0]->description = QString("This is ").append(c);
-
-    qDebug() << "Ready to write";
 
     savedScene.scenedemoWrite(out, scenes);
 

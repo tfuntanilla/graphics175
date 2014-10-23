@@ -37,7 +37,7 @@ RenderWindow::RenderWindow()
     , m_frame(0)
     , m_useSourceCode(true)
 {
-    setAnimating(true);
+    setAnimating(false);
     indicesCount1 = 0, indicesCount2 = 0;
     togglePers = false;
 }
@@ -125,11 +125,11 @@ void RenderWindow::initialize()
 
 void RenderWindow::render()
 {
-    /* *********************************************************************************************** */
-    /* *********************************************************************************************** */
 
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 1);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -140,7 +140,6 @@ void RenderWindow::render()
     /* *********************************************************************************************** */
 
     m_vao->bind();
-
     std::string path = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/";
     std::string inputfile = path;
     if (!filenames.empty()) {
@@ -215,17 +214,16 @@ void RenderWindow::render()
 
         }
         else if (!togglePers) {
-            projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
+            projection.ortho(-200.0, 200.0, -200.0, 200.0, 0, 1000);
         }
         //objectmodels[0].setProjection(projection);
 
         QMatrix4x4 model = objectmodels[0].getModel();
         model.translate(objectmodels[0].xTrans, objectmodels[0].yTrans, objectmodels[0].zTrans);
-        model.rotate((float)objectmodels[0].xRot/16.0, 1.0, 0.0, 0.0);
-        model.rotate((float)objectmodels[0].yRot/16.0, 0.0, 1.0, 0.0);
-        model.rotate((float)objectmodels[0].zRot/16.0, 0.0, 0.0, 1.0);
-        model.scale((float)objectmodels[0].xScale, (float)objectmodels[0].yScale, (float)objectmodels[0].zScale);
-        //objectmodels[0].setModel(model);
+        model.rotate(objectmodels[0].xRot/16.0, 1.0, 0.0, 0.0);
+        model.rotate(objectmodels[0].yRot/16.0, 0.0, 1.0, 0.0);
+        model.rotate(objectmodels[0].zRot/16.0, 0.0, 0.0, 1.0);
+        model.scale(objectmodels[0].xScale, objectmodels[0].yScale, objectmodels[0].zScale);
 
         QMatrix4x4 view = camera.returnView();
         //objectmodels[0].setView(view);
@@ -241,9 +239,9 @@ void RenderWindow::render()
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
+    //glBindFramebuffer(GL_FRAMEBUFFER, 2);
 
     m_vao2->bind();
-
     inputfile = path;
     if (!filenames.empty()) {
         tinyobj::LoadObj(shapes, materials, (inputfile.append(filenames[1])).c_str());
@@ -327,10 +325,10 @@ void RenderWindow::render()
         QMatrix4x4 model = objectmodels[1].getModel();
 
         model.translate(objectmodels[1].xTrans, objectmodels[1].yTrans, objectmodels[1].zTrans);
-        model.rotate((float)objectmodels[1].xRot/16.0, 1.0, 0.0, 0.0);
-        model.rotate((float)objectmodels[1].yRot/16.0, 0.0, 1.0, 0.0);
-        model.rotate((float)objectmodels[1].zRot/16.0, 0.0, 0.0, 1.0);
-        model.scale((float)objectmodels[1].xScale, (float)objectmodels[1].yScale, (float)objectmodels[1].zScale);
+        model.rotate(objectmodels[1].xRot/16.0, 1.0, 0.0, 0.0);
+        model.rotate(objectmodels[1].yRot/16.0, 0.0, 1.0, 0.0);
+        model.rotate(objectmodels[1].zRot/16.0, 0.0, 0.0, 1.0);
+        model.scale(objectmodels[1].xScale, objectmodels[1].yScale, objectmodels[1].zScale);
         //objectmodels[1].setModel(model);
 
         QMatrix4x4 view = camera.returnView();
@@ -364,6 +362,8 @@ void RenderWindow::toggleWireFrame(bool c)
     else {
        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
+    renderNow();
 }
 
 static void qNormalizeAngle(int &angle)
@@ -388,7 +388,7 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
     int yAngle = dy*8;
 
     if (event->buttons() & Qt::LeftButton) {
-        camera.camTranslate(dx, QVector3D(1, 0, 0));
+        camera.camTranslate(-dx, QVector3D(1, 0, 0));
         camera.camTranslate(dy, QVector3D(0, 1, 0));
     } else if (event->buttons() & Qt::RightButton) {
         qNormalizeAngle(xAngle);
@@ -400,6 +400,8 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 
     lastPos = event->pos();
 
+    renderNow();
+
 }
 
 void RenderWindow::wheelEvent(QWheelEvent *event)
@@ -409,12 +411,14 @@ void RenderWindow::wheelEvent(QWheelEvent *event)
         steps++;
         QPoint z = event->angleDelta();
         if (z.y() == -120) {
-            camera.camZoom((float)steps*2.0);
+            camera.camZoom((float)steps*-3.0);
         }
         else {
-            camera.camZoom((float)steps*-2.0);
+            camera.camZoom((float)steps*3.0);
         }
     }
+
+    renderNow();
 }
 
 void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
@@ -430,6 +434,7 @@ void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QStrin
 
     for (int i=0; i<transformMatrices.size(); i++) {
         matrices.push_back(transformMatrices[i]);
+        //qDebug() << "Matrices actually passed: " << matrices[i];
     }
 
     for (int i=0; i<actualFiles.size(); i++) {
@@ -438,7 +443,7 @@ void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QStrin
 
 }
 
-void RenderWindow::updateModelProperties(int size)
+void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale)
 {
     objectmodels.resize(size);
 
@@ -447,7 +452,10 @@ void RenderWindow::updateModelProperties(int size)
     }
 
     for (int i = 0; i < size; i++) {
-        objectmodels[i].setPropertiesValues(0, 0, 0, 0, 0, 0, 30, 45, 45);
+        objectmodels[i].setPropertiesValues(trans[i].x(), trans[i].y(), trans[i].z(),
+                                            rot[i].x(), rot[i].y(), rot[i].z(),
+                                            scale[i].x(), scale[i].y(),scale[i].z());
+
         objectmodels[i].setModel(matrices[i]);
     }
 }

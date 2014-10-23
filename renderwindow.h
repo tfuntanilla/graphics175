@@ -30,7 +30,7 @@ public:
 
     void toggleWireFrame(bool c);
     void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
-    void updateModelProperties(int size);
+    void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale);
 
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
@@ -40,6 +40,7 @@ public:
     Camera camera;
     QPoint lastPos;
     QVector<ObjectModel> objectmodels;
+
 
 private:
 
@@ -91,8 +92,6 @@ public:
   RenderWindow* GetRenderWindow() {
       return renWin;
   }
-
-
 
 
 private:

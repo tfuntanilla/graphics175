@@ -21,6 +21,9 @@ SceneHandler::parseModel(const QJsonObject& model) {
     out->name = model["name"].toString();
     out->fileName = model["filename"].toString();
     QJsonArray jmatrix = model["matrix"].toArray();
+    QJsonArray tvector = model["translation"].toArray();
+    QJsonArray rvector = model["rotation"].toArray();
+    QJsonArray svector = model["scale"].toArray();
 
     if(jmatrix.size() != 16) {
         qDebug() << "name: " << out->name
@@ -37,9 +40,50 @@ SceneHandler::parseModel(const QJsonObject& model) {
         }
         out->transform = QMatrix4x4(dlist);
     }
+
+    if (tvector.size() != 3) {
+        out->translate = QVector3D(0.0, 0.0, 0.0);
+    }
+    else {
+
+        float dlist[3];
+
+        for (int i = 0; i < tvector.size(); ++i) {
+            dlist[i] = (float)tvector[i].toDouble();
+        }
+        out->translate = QVector3D(dlist[0], dlist[1], dlist[2]);
+    }
+
+    if (rvector.size() != 3) {
+        out->rotate = QVector3D(0.0, 0.0, 0.0);
+    }
+    else {
+        float dlist[3];
+
+        for (int i = 0; i < rvector.size(); ++i) {
+            dlist[i] = (float)rvector[i].toDouble();
+        }
+        out->rotate = QVector3D(dlist[0], dlist[1], dlist[2]);
+    }
+
+    if (svector.size() != 3) {
+        out->scale = QVector3D(30.0, 45.0, 45.0);
+    }
+    else {
+        float dlist[3];
+
+        for (int i = 0; i < svector.size(); ++i) {
+            dlist[i] = (float)svector[i].toDouble();
+        }
+        out->scale = QVector3D(dlist[0], dlist[1], dlist[2]);
+    }
+
     qDebug() << "load :" << out->name
              << " file: " << out->fileName
-             << " transformed " << out->transform;
+             << " transformed " << out->transform
+             << " translate" << out->translate
+             << " rotate" << out->rotate
+             << " scale" << out->scale;
 
     return out;
 }
@@ -113,18 +157,32 @@ SceneHandler::writeNode(Node* node) {
 
         qDebug() << out["name"] << " " << out["filename"];
 
-        //QJsonArray data;
-        QJsonArray p, v, mod;
+        QJsonArray data;
         for(int i = 0; i < 16; ++i) {
-            p.push_back((float)m->projection.data()[i]);
-            v.push_back((float)m->view.data()[i]);
-            mod.push_back((float)m->model.data()[i]);
+            data.push_back((float)m->transform.data()[i]);
         }
 
-        //out["matrix"] = data;
-        out["projection"] = p;
-        out["view"] = v;
-        out["model"] = mod;
+        out["matrix"] = data;
+
+        QJsonArray t, r, s;
+
+        t.push_back((float)m->translate.x());
+        t.push_back((float)m->translate.y());
+        t.push_back((float)m->translate.z());
+
+        r.push_back((float)m->rotate.x());
+        r.push_back((float)m->rotate.y());
+        r.push_back((float)m->rotate.z());
+
+        s.push_back((float)m->scale.x());
+        s.push_back((float)m->scale.y());
+        s.push_back((float)m->scale.z());
+
+        out["translation"] = t;
+        out["rotation"] = r;
+        out["scale"] = s;
+
+
     } else if(node->type == "node") {
         QJsonArray children;
         for(int i = 0; i < node->children.size(); ++i) {

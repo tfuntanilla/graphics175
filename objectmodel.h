@@ -11,7 +11,7 @@ public:
 	~ObjectModel();
 
     void setNameAndIndex(QString n, QString f, int i);
-    void setPropertiesValues(int xT, int yT, int zT, int xR, int yR, int zR, int xS, int yS, int zS);
+    void setPropertiesValues(float xT, float yT, float zT, float xR, float yR, float zR, float xS, float yS, float zS);
     void setModel(QMatrix4x4 matrix);
     void setProjection(QMatrix4x4 matrix);
     void setView(QMatrix4x4 matrix);
@@ -22,19 +22,19 @@ public:
     QString getName();
     QString getOriginFile();
 
-	int index;
+    int index;
 
-	int xTrans;
-	int yTrans;
-	int zTrans;
+    float xTrans;
+    float yTrans;
+    float zTrans;
 
-	int xRot;
-	int yRot;
-	int zRot;
+    float xRot;
+    float yRot;
+    float zRot;
 
-	int xScale;
-	int yScale;
-	int zScale;
+    float xScale;
+    float yScale;
+    float zScale;
 
 private:
     QString name;

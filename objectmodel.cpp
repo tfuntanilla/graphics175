@@ -5,9 +5,9 @@ ObjectModel::ObjectModel()
     name = " ";
     originFile = " ";
 
-    projection.setToIdentity();
-    view.setToIdentity();
-    model.setToIdentity();
+    //projection.setToIdentity();
+    //view.setToIdentity();
+    //model.setToIdentity();
 
     xTrans = 10; yTrans = 15; zTrans = 20;
     xRot = 0; yRot = 0; zRot = 0;
@@ -27,7 +27,7 @@ void ObjectModel::setNameAndIndex(QString n, QString f, int i)
     index = i;
 }
 
-void ObjectModel::setPropertiesValues(int xT, int yT, int zT, int xR, int yR, int zR, int xS, int yS, int zS)
+void ObjectModel::setPropertiesValues(float xT, float yT, float zT, float xR, float yR, float zR, float xS, float yS, float zS)
 {
 
 	xTrans = xT; yTrans = yT; zTrans = zT;
@@ -38,7 +38,9 @@ void ObjectModel::setPropertiesValues(int xT, int yT, int zT, int xR, int yR, in
 
 void ObjectModel::setModel(QMatrix4x4 matrix)
 {
-    model = matrix;
+    QMatrix4x4 temp;
+    temp.setToIdentity();
+    model *= temp;
 }
 
 void ObjectModel::setProjection(QMatrix4x4 matrix)
