@@ -1,3 +1,7 @@
+/* ****************************************************
+ * Camera Class for 3D Viewing
+ *****************************************************/
+
 #ifndef CAMERA_H
 #define CAMERA_H
 
@@ -13,11 +17,11 @@ public:
     void camTranslate(float dist, QVector3D trans);
     void camRotate(float amount, QVector3D rot);
     void camZoom(float amount);
-    void setCenter(QVector3D vector);
-    void setEye(QVector3D vector);
+    //void setCenter(QVector3D vector);
+    //void setEye(QVector3D vector);
     
     QMatrix4x4 returnView();
-    QVector3D getEyeVec();
+   // QVector3D getEyeVec();
 
 private:
     QMatrix4x4 rotationMatrix;

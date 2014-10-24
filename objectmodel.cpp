@@ -5,13 +5,9 @@ ObjectModel::ObjectModel()
     name = " ";
     originFile = " ";
 
-    //projection.setToIdentity();
-    //view.setToIdentity();
-    //model.setToIdentity();
-
-    xTrans = 10; yTrans = 15; zTrans = 20;
-    xRot = 0; yRot = 0; zRot = 0;
-    xScale = 30; yScale = 30; zScale = 30;
+    xTrans = 0.0; yTrans = 0.0; zTrans = 0.0;
+    xRot = 0.0; yRot = 0.0; zRot = 0.0;
+    xScale = 30.0; yScale = 30.0; zScale = 30.0;
 
 }
 
@@ -38,9 +34,7 @@ void ObjectModel::setPropertiesValues(float xT, float yT, float zT, float xR, fl
 
 void ObjectModel::setModel(QMatrix4x4 matrix)
 {
-    QMatrix4x4 temp;
-    temp.setToIdentity();
-    model *= temp;
+    model *= matrix;
 }
 
 void ObjectModel::setProjection(QMatrix4x4 matrix)
@@ -52,7 +46,6 @@ void ObjectModel::setView(QMatrix4x4 matrix)
 {
     view = matrix;
 }
-
 
 QString ObjectModel::getName()
 {
@@ -66,9 +59,7 @@ QString ObjectModel::getOriginFile()
 
 QMatrix4x4 ObjectModel::getProjection()
 {
-
 	return projection;
-
 }
 
 QMatrix4x4 ObjectModel::getView()

@@ -5,9 +5,7 @@ Camera::Camera()
     eye = QVector3D(1.0, 0.0, 1.0);
     center = QVector3D(0.0, 0.0, 0.0);
     up = QVector3D(0.0, 1.0, 0.0);
-    rotationMatrix.setToIdentity();
-
-    
+    rotationMatrix.setToIdentity();    
 }
 
 Camera::~Camera()
@@ -46,19 +44,19 @@ QMatrix4x4 Camera::returnView()
     
 }
 
+/*
 void Camera::setCenter(QVector3D vector)
 {
     center = vector;
 }
 
-// set the looking position
 void Camera::setEye(QVector3D vector)
 {
     eye = vector;
 }
 
-// returning the eyepos
 QVector3D Camera::getEyeVec()
 {
     return eye;
 }
+*/

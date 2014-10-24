@@ -9,9 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //ui->listWidget->setCurrentRow(0);
-
-    //setLineEditDefaults();
+    fileOnLoad = false;
 
     menuBar()->setNativeMenuBar(false);
 }
@@ -30,22 +28,6 @@ static const char* convertQStringtoString(QString string)
     return cString;
 }
 
-void MainWindow::setLineEditDefaults()
-{
-    ui->xTransLineEdit->setText("0");
-    ui->yTransLineEdit->setText("0");
-    ui->zTransLineEdit->setText("0");
-
-    ui->xRotLineEdit->setText("0");
-    ui->yRotLineEdit->setText("0");
-    ui->zRotLineEdit->setText("0");
-
-    ui->xScaleLineEdit->setText("0");
-    ui->yScaleLineEdit->setText("0");
-    ui->zScaleLineEdit->setText("0");
-
-}
-
 void MainWindow::on_xTransSlider_valueChanged(int value)
 {
     if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
@@ -53,15 +35,13 @@ void MainWindow::on_xTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xTrans = value;
             ui->xTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->xTransLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->xTransLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -73,16 +53,14 @@ void MainWindow::on_yTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yTrans = value;
             ui->yTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
         }
         else {
-            //ui->yTransLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->yTransLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -94,15 +72,13 @@ void MainWindow::on_zTransSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zTrans = value;
             ui->zTransLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->zTransLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->zTransLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -114,15 +90,13 @@ void MainWindow::on_xRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xRot = value;
             ui->xRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->xRotLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->xRotLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 
@@ -135,15 +109,13 @@ void MainWindow::on_yRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yRot = value;
             ui->yRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->yRotLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->yRotLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -155,15 +127,13 @@ void MainWindow::on_zRotSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zRot = value;
             ui->zRotLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->zRotLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->zRotLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -175,16 +145,14 @@ void MainWindow::on_xScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].xScale = value;
             ui->xScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->xScaleLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
 
     }
     else {
-        //ui->xScaleLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -196,15 +164,13 @@ void MainWindow::on_yScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].yScale = value;
             ui->yScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->yScaleLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->yScaleLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -216,15 +182,13 @@ void MainWindow::on_zScaleSlider_valueChanged(int value)
         if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
             ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].zScale = value;
             ui->zScaleLineEdit->setText(QString::number(value));
-            ui->renderwindowwidget->GetRenderWindow()->renderNow();
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
-            //ui->zScaleLineEdit->setText(QString::number(value));
             QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
         }
     }
     else {
-        //ui->zScaleLineEdit->setText(QString::number(value));
         QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
 }
@@ -239,7 +203,7 @@ void MainWindow::on_wireFrameButton_toggled(bool checked)
 void MainWindow::on_projectionButton_toggled(bool checked)
 {
     ui->renderwindowwidget->GetRenderWindow()->togglePers = checked;
-    ui->renderwindowwidget->GetRenderWindow()->renderNow();
+    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_xTransLineEdit_textChanged(const QString &arg1)
@@ -325,7 +289,7 @@ void MainWindow::handleScene(QString filename)
     QVector<QMatrix4x4> matrices;
 
     QVector<QVector3D> t;
-    QVector<QVector3D>r;
+    QVector<QVector3D> r;
     QVector<QVector3D> s;
 
     QVector<std::string> objectFiles;
@@ -343,6 +307,8 @@ void MainWindow::handleScene(QString filename)
         ui->listWidget->insertItem(i, models[i]->name);
     }
 
+    ui->listWidget->setCurrentRow(0);
+
     // Convert QString filenames to const char *
     // Necessary for loading the OBJ files in tinyobj parser
     for (int i=0; i<filenames.size(); i++) {
@@ -351,16 +317,46 @@ void MainWindow::handleScene(QString filename)
     }
 
     // Send attributes of the JSON file to the render
+    ui->renderwindowwidget->GetRenderWindow()->setFilePath(pathOfFile);
+    std::cout << pathOfFile << std::endl;
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, filenames, objectFiles, matrices);
     ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s);
-    ui->renderwindowwidget->GetRenderWindow()->renderNow();
+    ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    setLineEditDefaults();
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString file = QFileDialog::getOpenFileName(ui->renderwindowwidget, "Open File", "../Project1/", tr("JSON (*.json)"));
-    qDebug() << file;
-    handleScene(file);
+
+    if (!fileOnLoad) {
+        QString file = QFileDialog::getOpenFileName(ui->renderwindowwidget, "Open File", "../Project1/", tr("JSON (*.json)"));
+
+        if(!file.isEmpty()) {
+
+            // get file path - needed to load .obj files in renderwindow.cpp
+            QFileInfo filepath(file);
+            QString fp = filepath.absoluteFilePath();
+            QString base = filepath.baseName();
+            QString stuff = filepath.suffix();
+
+            base.append(".");
+            base.append(stuff);
+            fp.remove(base);
+
+            //qDebug() << fp;
+            pathOfFile = convertQStringtoString(fp);
+
+            fileOnLoad = true;
+            handleScene(file);
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("No file selected!"));
+        }
+    }
+    else {
+         QMessageBox::information(this, QString("Alert"),
+                                  QString("Another file is already open. To proceed, close the current window and run app again."));
+    }
 }
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
@@ -398,7 +394,7 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_actionSave_triggered()
 {
-    qDebug() << "Start";
+    qDebug() << "Start saving file...";
 
     QString out = QFileDialog::getSaveFileName(this, "Save As");
 
@@ -422,6 +418,7 @@ void MainWindow::on_actionSave_triggered()
 
     int totalModels = ui->renderwindowwidget->GetRenderWindow()->objectmodels.size();
 
+    // retrieve objects
     for (int i = 0; i < totalModels; i++) {
         names.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getName());
         files.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getOriginFile());
@@ -441,7 +438,7 @@ void MainWindow::on_actionSave_triggered()
         qfiles.push_back(QString(files[i]));
     }
 
-
+    // store the objects in the scene vector
     for(int i = 0; i < totalModels; i++) {
         Model* m = new Model();
         m->name = names[i];
@@ -462,5 +459,40 @@ void MainWindow::on_actionSave_triggered()
     scenes[0]->description = QString("This is ").append(c);
 
     savedScene.scenedemoWrite(out, scenes);
+
+    qDebug() << "File saved!";
+
+}
+
+void MainWindow::setLineEditDefaults()
+{
+    if (fileOnLoad && (ui->renderwindowwidget->GetRenderWindow()->objectmodels.size() > 0)) {
+        int xt = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].xTrans;
+        ui->xTransLineEdit->setText(QString::number(xt));
+
+        int yt = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].yTrans;
+        ui->yTransLineEdit->setText(QString::number(yt));
+
+        int zt = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].zTrans;
+        ui->zTransLineEdit->setText(QString::number(zt));
+
+        int xr = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].xRot;
+        ui->xRotLineEdit->setText(QString::number(xr));
+
+        int yr = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].yRot;
+        ui->yRotLineEdit->setText(QString::number(yr));
+
+        int zr = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].zRot;
+        ui->zRotLineEdit->setText(QString::number(zr));
+
+        int xs = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].xScale;
+        ui->xScaleLineEdit->setText(QString::number(xs));
+
+        int ys = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].yScale;
+        ui->yScaleLineEdit->setText(QString::number(ys));
+
+        int zs = ui->renderwindowwidget->GetRenderWindow()->objectmodels[0].zScale;
+        ui->zScaleLineEdit->setText(QString::number(zs));
+    }
 
 }

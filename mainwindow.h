@@ -78,6 +78,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    bool fileOnLoad; // flag indicating whether a file is currently being rendered
+    std::string pathOfFile; // gets the path of of the JSON file
+
 
 };
 

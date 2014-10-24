@@ -38,7 +38,7 @@ RenderWindow::RenderWindow()
     , m_useSourceCode(true)
 {
     setAnimating(false);
-    indicesCount1 = 0, indicesCount2 = 0;
+    //indicesCount1 = 0, indicesCount2 = 0;
     togglePers = false;
 }
 
@@ -93,13 +93,13 @@ void RenderWindow::initialize()
     m_colAttr = m_program->attributeLocation("colAttr");
     m_matrixUniform = m_program->uniformLocation("mvp");
 
-    m_vao = new QOpenGLVertexArrayObject(this);
-    m_vao->create();
+    m_vao.push_back(new QOpenGLVertexArrayObject(this));
+    m_vao[0]->create();
 
-    m_vbo = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    m_vbo->create();
-    m_ibo = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    m_ibo->create();
+    m_vbo.push_back(new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer));
+    m_vbo[0]->create();
+    m_ibo.push_back(new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer));
+    m_ibo[0]->create();
 
     checkError("state initialized");
 
@@ -110,16 +110,8 @@ void RenderWindow::initialize()
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
 
-    m_vao2 = new QOpenGLVertexArrayObject(this);
-    m_vao2->create();
 
-    m_vbo2 = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    m_vbo2->create();
-    m_ibo2 = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    m_ibo2->create();
 
-    /* *********************************************************************************************** */
-    /* *********************************************************************************************** */
 
 }
 
@@ -129,217 +121,141 @@ void RenderWindow::render()
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
-    //glBindFramebuffer(GL_FRAMEBUFFER, 1);
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    // allocate space for additional vertex array objects as necessary
+    for (int i = 1; (i < filenames.size() && m_vao.size() != filenames.size()); i++) {
+        m_vao.push_back(new QOpenGLVertexArrayObject(this));
+        m_vao[i]->create();
+
+        m_vbo.push_back(new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer));
+        m_vbo[i]->create();
+        m_ibo.push_back(new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer));
+        m_ibo[i]->create();
+
+        checkError("state initialized");
+
+        /// check for errors to ensure OpenGL
+        /// is functioning properly.
+        checkError("after program bind");
+    }
 
     m_program->bind();
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
 
-    m_vao->bind();
-    std::string path = "/Users/trishamariefuntanilla/Box Sync/ECS175/Project1/";
-    std::string inputfile = path;
-    if (!filenames.empty()) {
-        tinyobj::LoadObj(shapes, materials, (inputfile.append(filenames[0])).c_str());
-    }
+    // begin reading the file and storing the vertices, colors, indices, etc.
 
-    if (!shapes.empty()) {
-        int vlen = 0;
-        for (size_t i = 0; i < shapes.size(); i++) {
-            vlen += shapes[i].mesh.positions.size();
+    for (int i = 0; i < filenames.size(); i++) {
+        m_vao[i]->bind();
+
+        std::string fp = path;
+        if (!filenames.empty()) {
+            //std::cout << "From loader: " << path << std::endl;
+            tinyobj::LoadObj(shapes, materials, (fp.append(filenames[i])).c_str());
         }
 
-        GLfloat vertices[vlen];
-        for (size_t i = 0; i < shapes.size(); i++) {
-            for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-                vertices[3*v+0] = shapes[i].mesh.positions[3*v+0];
-                vertices[3*v+1] = shapes[i].mesh.positions[3*v+1];
-                vertices[3*v+2] = shapes[i].mesh.positions[3*v+2];
+        if (!shapes.empty()) {
+            int vlen = 0;
+            for (size_t i = 0; i < shapes.size(); i++) {
+                vlen += shapes[i].mesh.positions.size();
             }
-        }
 
-        int clen = vlen;
-        GLfloat colors[clen];
-        std::fill_n(colors, clen, 1.0f);
-
-        int ilen = 0;
-        for (size_t i = 0; i < shapes.size(); i++) {
-            ilen += shapes[i].mesh.indices.size();
-        }
-
-        indicesCount1 = ilen;
-        GLuint indices[ilen];
-        for (size_t i = 0; i < shapes.size(); i++) {
-            for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
-                indices[3*v+0] = shapes[i].mesh.indices[3*v+0];
-                indices[3*v+1] = shapes[i].mesh.indices[3*v+1];
-                indices[3*v+2] = shapes[i].mesh.indices[3*v+2];
+            GLfloat vertices[vlen];
+            for (size_t i = 0; i < shapes.size(); i++) {
+                for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
+                    vertices[3*v+0] = shapes[i].mesh.positions[3*v+0];
+                    vertices[3*v+1] = shapes[i].mesh.positions[3*v+1];
+                    vertices[3*v+2] = shapes[i].mesh.positions[3*v+2];
+                }
             }
-        }
 
-        m_vbo->bind();
-        m_vbo->allocate((vlen + clen)*sizeof(GLfloat));
-        m_vbo->write(0, vertices, vlen * sizeof(GLfloat));
-        m_vbo->write(vlen*sizeof(GLfloat), colors, clen * sizeof(GLfloat));
-
-        //std::cout << "first model" << std::endl;
-        checkError("after vertex buffer allocation");
-
-        m_ibo->bind();
-        m_ibo->allocate(indices, ilen*sizeof(GLuint));
-
-        checkError("after index buffer allocation");
-
-        m_program->enableAttributeArray(m_posAttr);
-
-        /// vertex position start offset is 0, number of value = 3 (x,y,z)
-        m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
-
-        m_program->enableAttributeArray(m_colAttr);
-
-        /// color position start offset is vlen * sizeof(GLFloat), number of values = 3 (r,g,b) (4 if we did rgba)
-        m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, vlen * sizeof(GLfloat), 3);
-
-        checkError("after enabling attributes");
-
-        /* *********************************************************************************************** */
-        /* *********************************************************************************************** */
-
-        QMatrix4x4 projection = objectmodels[0].getProjection();
-        if (togglePers) {
-            projection.perspective(60.0, (float)width()/(float)height(), 0.1, 10000);
-
-        }
-        else if (!togglePers) {
-            projection.ortho(-200.0, 200.0, -200.0, 200.0, 0, 1000);
-        }
-        //objectmodels[0].setProjection(projection);
-
-        QMatrix4x4 model = objectmodels[0].getModel();
-        model.translate(objectmodels[0].xTrans, objectmodels[0].yTrans, objectmodels[0].zTrans);
-        model.rotate(objectmodels[0].xRot/16.0, 1.0, 0.0, 0.0);
-        model.rotate(objectmodels[0].yRot/16.0, 0.0, 1.0, 0.0);
-        model.rotate(objectmodels[0].zRot/16.0, 0.0, 0.0, 1.0);
-        model.scale(objectmodels[0].xScale, objectmodels[0].yScale, objectmodels[0].zScale);
-
-        QMatrix4x4 view = camera.returnView();
-        //objectmodels[0].setView(view);
-
-        m_program->setUniformValue(m_matrixUniform, projection * view * model);
-
-        m_vao->bind();
-        glDrawElements(GL_TRIANGLES, indicesCount1, GL_UNSIGNED_INT, 0);
-
-        m_vao->release();
-
-    }
-
-    /* *********************************************************************************************** */
-    /* *********************************************************************************************** */
-    //glBindFramebuffer(GL_FRAMEBUFFER, 2);
-
-    m_vao2->bind();
-    inputfile = path;
-    if (!filenames.empty()) {
-        tinyobj::LoadObj(shapes, materials, (inputfile.append(filenames[1])).c_str());
-    }
-
-    if (!shapes.empty()) {
-        int vlen2 = 0;
-        for (size_t i = 0; i < shapes.size(); i++) {
-            vlen2 += shapes[i].mesh.positions.size();
-
-        }
-
-        GLfloat vertices2[vlen2];
-        for (size_t i = 0; i < shapes.size(); i++) {
-            for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-                vertices2[3*v+0] = shapes[i].mesh.positions[3*v+0];
-                vertices2[3*v+1] = shapes[i].mesh.positions[3*v+1];
-                vertices2[3*v+2] = shapes[i].mesh.positions[3*v+2];
-                //std::cout << vertices2[obj1_offset + 3*v+0] << " " << vertices2[obj1_offset + 3*v+1] << " " << vertices2[obj1_offset + 3*v+2] << std::endl;
+            int clen = vlen;
+            GLfloat colors[clen];
+            std::fill_n(colors, clen, 0.0f);
+            for (int i = 0; i < clen; i+=9) {
+               colors[i] = 1.0f;
+               if ((i+4) <= clen) {
+                    colors[i+4] = 1.0f;
+               }
+               if ((i+4) <= clen) {
+                    colors[i+8] = 1.0f;
+                }
             }
-        }
 
-        int clen2 = vlen2;
-        GLfloat colors2[clen2];
-        std::fill_n(colors2, clen2, 1.0f);
-
-        int ilen2 = 0;
-        for (size_t i = 0; i < shapes.size(); i++) {
-           ilen2 += shapes[i].mesh.indices.size();
-        }
-
-        indicesCount2 = ilen2;
-
-        GLuint indices2[ilen2];
-        for (size_t i = 0; i < shapes.size(); i++) {
-            for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
-                indices2[3*v+0] = shapes[i].mesh.indices[3*v+0];
-                indices2[3*v+1] = shapes[i].mesh.indices[3*v+1];
-                indices2[3*v+2] = shapes[i].mesh.indices[3*v+2];
+            int ilen = 0;
+            for (size_t i = 0; i < shapes.size(); i++) {
+                ilen += shapes[i].mesh.indices.size();
             }
+
+            //indicesCount = ilen;
+            indicesCount.push_back(ilen);
+            GLuint indices[ilen];
+            for (size_t i = 0; i < shapes.size(); i++) {
+                for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
+                    indices[3*v+0] = shapes[i].mesh.indices[3*v+0];
+                    indices[3*v+1] = shapes[i].mesh.indices[3*v+1];
+                    indices[3*v+2] = shapes[i].mesh.indices[3*v+2];
+                }
+            }
+
+            m_vbo[i]->bind();
+            m_vbo[i]->allocate((vlen + clen)*sizeof(GLfloat));
+            m_vbo[i]->write(0, vertices, vlen * sizeof(GLfloat));
+            m_vbo[i]->write(vlen*sizeof(GLfloat), colors, clen * sizeof(GLfloat));
+
+            checkError("after vertex buffer allocation");
+
+            m_ibo[i]->bind();
+            m_ibo[i]->allocate(indices, ilen*sizeof(GLuint));
+
+            checkError("after index buffer allocation");
+
+            m_program->enableAttributeArray(m_posAttr);
+
+            /// vertex position start offset is 0, number of value = 3 (x,y,z)
+            m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
+
+            m_program->enableAttributeArray(m_colAttr);
+
+            /// color position start offset is vlen * sizeof(GLFloat), number of values = 3 (r,g,b) (4 if we did rgba)
+            m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, vlen * sizeof(GLfloat), 3);
+
+            checkError("after enabling attributes");
+
+            /* *********************************************************************************************** */
+            /* *********************************************************************************************** */
+
+            // set up transformation matrices
+
+            QMatrix4x4 projection = objectmodels[i].getProjection();
+            if (togglePers) {
+                projection.perspective(60.0, (float)width()/(float)height(), 0.1, 5000);
+
+            }
+            else if (!togglePers) {
+                projection.ortho(-(float)width()/2, (float)width()/2, -(float)height()/2, (float)height()/2, 0.0, 1000.0);
+            }
+
+            QMatrix4x4 model = objectmodels[i].getModel();
+            model.translate(objectmodels[i].xTrans, objectmodels[i].yTrans, objectmodels[i].zTrans);
+            model.rotate(objectmodels[i].xRot/16.0, 1.0, 0.0, 0.0);
+            model.rotate(objectmodels[i].yRot/16.0, 0.0, 1.0, 0.0);
+            model.rotate(objectmodels[i].zRot/16.0, 0.0, 0.0, 1.0);
+            model.scale(objectmodels[i].xScale, objectmodels[i].yScale, objectmodels[i].zScale);
+
+            QMatrix4x4 view = camera.returnView();
+
+            m_program->setUniformValue(m_matrixUniform, projection * view * model);
+
+            m_vao[i]->bind();
+            glDrawElements(GL_TRIANGLES, indicesCount[i], GL_UNSIGNED_INT, 0);
+
+            m_vao[i]->release();
+
         }
-
-        m_vbo2->bind();
-        m_vbo2->allocate((vlen2 + clen2)*sizeof(GLfloat));
-        m_vbo2->write(0, vertices2, vlen2 * sizeof(GLfloat));
-        m_vbo2->write(vlen2*sizeof(GLfloat), colors2, clen2 * sizeof(GLfloat));
-
-        //std::cout << "second model" << std::endl;
-        checkError("after vertex buffer allocation");
-
-        m_ibo2->bind();
-        m_ibo2->allocate(indices2, ilen2*sizeof(GLuint));
-
-        checkError("after index buffer allocation");
-
-        m_program->enableAttributeArray(m_posAttr);
-
-        /// vertex position start offset is 0, number of value = 3 (x,y,z)
-        m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
-
-        m_program->enableAttributeArray(m_colAttr);
-
-        /// color position start offset is vlen * sizeof(GLFloat), number of values = 3 (r,g,b) (4 if we did rgba)
-        m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, vlen2 * sizeof(GLfloat), 3);
-
-        checkError("after enabling attributes");
-
-        /* *********************************************************************************************** */
-        /* *********************************************************************************************** */
-
-        QMatrix4x4 projection = objectmodels[1].getProjection();
-        if (togglePers) {
-            projection.perspective(60.0, (float)width()/(float)height(), 0.1, 10000);
-        }
-
-        else if (!togglePers) {
-            projection.ortho(-500.0, 500.0, -500.0, 500.0, 0, 1000);
-        }
-        //objectmodels[1].setProjection(projection);
-
-        QMatrix4x4 model = objectmodels[1].getModel();
-
-        model.translate(objectmodels[1].xTrans, objectmodels[1].yTrans, objectmodels[1].zTrans);
-        model.rotate(objectmodels[1].xRot/16.0, 1.0, 0.0, 0.0);
-        model.rotate(objectmodels[1].yRot/16.0, 0.0, 1.0, 0.0);
-        model.rotate(objectmodels[1].zRot/16.0, 0.0, 0.0, 1.0);
-        model.scale(objectmodels[1].xScale, objectmodels[1].yScale, objectmodels[1].zScale);
-        //objectmodels[1].setModel(model);
-
-        QMatrix4x4 view = camera.returnView();
-        //objectmodels[1].setView(view);
-
-        m_program->setUniformValue(m_matrixUniform, projection * view * model);
-
-        m_vao2->bind();
-        glDrawElements(GL_TRIANGLES, indicesCount2, GL_UNSIGNED_INT, 0);
-
-        m_vao2->release();
     }
 
     /* *********************************************************************************************** */
@@ -363,7 +279,7 @@ void RenderWindow::toggleWireFrame(bool c)
        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    renderNow();
+    renderLater();
 }
 
 static void qNormalizeAngle(int &angle)
@@ -400,7 +316,7 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 
     lastPos = event->pos();
 
-    renderNow();
+    renderLater();
 
 }
 
@@ -418,7 +334,7 @@ void RenderWindow::wheelEvent(QWheelEvent *event)
         }
     }
 
-    renderNow();
+    renderLater();
 }
 
 void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices)
@@ -434,7 +350,6 @@ void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QStrin
 
     for (int i=0; i<transformMatrices.size(); i++) {
         matrices.push_back(transformMatrices[i]);
-        //qDebug() << "Matrices actually passed: " << matrices[i];
     }
 
     for (int i=0; i<actualFiles.size(); i++) {
@@ -458,4 +373,11 @@ void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVe
 
         objectmodels[i].setModel(matrices[i]);
     }
+}
+
+void RenderWindow::setFilePath(std::string p)
+{
+    //std::cout << "From render window setFilePath: " << p << std::endl;
+    path.append(p);
+    //std::cout << "After appending: " << path << std::endl;
 }

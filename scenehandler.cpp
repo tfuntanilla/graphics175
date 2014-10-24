@@ -1,4 +1,4 @@
-#include "SceneHandler.h"
+#include "scenehandler.h"
 
 #include <QFile>
 

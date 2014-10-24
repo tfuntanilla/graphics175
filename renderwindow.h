@@ -31,6 +31,7 @@ public:
     void toggleWireFrame(bool c);
     void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
     void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale);
+    void setFilePath(std::string p);
 
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
@@ -40,14 +41,15 @@ public:
     Camera camera;
     QPoint lastPos;
     QVector<ObjectModel> objectmodels;
+    std::string path;
 
 
 private:
 
-    QVector<QString> objectNames; // stores the names of the objects
-    QVector<std::string> filenames; // stores the filenames
-    QVector<QString> fnames;
-    QVector<QMatrix4x4> matrices; // stores the transformation matrices
+    QVector<QString> objectNames;
+    QVector<std::string> filenames;
+    QVector<QString> fnames; // same as filenames, but type is QString
+    QVector<QMatrix4x4> matrices;
 
     GLuint m_posAttr;
     GLuint m_colAttr;
@@ -55,19 +57,14 @@ private:
 
     QOpenGLShaderProgram *m_program;
 
-    QOpenGLVertexArrayObject* m_vao;
-    QOpenGLBuffer *m_vbo;
-    QOpenGLBuffer *m_ibo;
+    QVector<QOpenGLVertexArrayObject*> m_vao;
+    QVector<QOpenGLBuffer*> m_vbo;
+    QVector<QOpenGLBuffer*> m_ibo;
 
     int m_frame;
     bool m_useSourceCode;
 
-    QOpenGLVertexArrayObject* m_vao2;
-    QOpenGLBuffer *m_vbo2;
-    QOpenGLBuffer *m_ibo2;
-
-    GLuint indicesCount1;
-    GLuint indicesCount2;
+    QVector<GLuint> indicesCount;
 
     // used for storing OBJ data parsed using tinyobj parser
     std::vector<tinyobj::shape_t> shapes;

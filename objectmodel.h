@@ -1,6 +1,10 @@
+/* ****************************************************
+ * Object Model Class for storing the properties of
+ * models taken from .obj files
+ *****************************************************/
+
 #ifndef OBJECTMODEL_H
 #define OBJECTMODEL_H
-
 
 #include <QMatrix4x4>
 

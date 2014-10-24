@@ -1,3 +1,7 @@
+/* ****************************************************
+ * SceneHandler class for processing JSON files
+ *****************************************************/
+
 #ifndef SCENEHANDLER_H
 #define SCENEHANDLER_H
 
