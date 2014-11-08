@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QLabel>
 
 class QOpenGLShaderProgram;
 class QOpenGLBuffer;
@@ -43,6 +44,10 @@ public:
     QVector<ObjectModel> objectmodels;
     std::string path;
 
+    std::vector<GLfloat> canvas;
+    void softwareRender();
+    void clipOnW(std::vector<QVector4D> inVertices, std::vector<QVector4D> &outputVertices);
+    void clipOnAxis(int axis, std::vector<QVector4D> inVertices, std::vector<QVector4D> &outputVertices);
 
 private:
 
@@ -65,10 +70,16 @@ private:
     bool m_useSourceCode;
 
     QVector<GLuint> indicesCount;
+    QVector<QMatrix4x4> mvp;
 
     // used for storing OBJ data parsed using tinyobj parser
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
+
+    std::vector<tinyobj::shape_t> m_shapes;
+
+    QLabel softRenWin;
+
 
 };
 

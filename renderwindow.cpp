@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <algorithm>
 
 static const char *vertexShaderSource =
     "#version 330\n"
@@ -117,7 +118,6 @@ void RenderWindow::initialize()
 
 void RenderWindow::render()
 {
-
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
@@ -153,7 +153,6 @@ void RenderWindow::render()
 
         std::string fp = path;
         if (!filenames.empty()) {
-            //std::cout << "From loader: " << path << std::endl;
             tinyobj::LoadObj(shapes, materials, (fp.append(filenames[i])).c_str());
         }
 
@@ -247,6 +246,7 @@ void RenderWindow::render()
             model.scale(objectmodels[i].xScale, objectmodels[i].yScale, objectmodels[i].zScale);
 
             QMatrix4x4 view = camera.returnView();
+            mvp.push_back(projection * view * model);
 
             m_program->setUniformValue(m_matrixUniform, projection * view * model);
 
@@ -380,4 +380,323 @@ void RenderWindow::setFilePath(std::string p)
     //std::cout << "From render window setFilePath: " << p << std::endl;
     path.append(p);
     //std::cout << "After appending: " << path << std::endl;
+}
+
+void RenderWindow::softwareRender()
+{
+    //vertex shader
+    // store position, color, and indices in a software buffer
+
+    std::vector<QVector2D> pixelVals; // pixel values to draw/color
+    for (int a = 0; a < filenames.size(); a++) {
+        std::string fp = path;
+        if (!filenames.empty()) {
+            tinyobj::LoadObj(shapes, materials, (fp.append(filenames[a])).c_str());
+        }
+
+        std::vector<QVector4D> posVecTrans;
+        if (!shapes.empty()) {
+            int vlen = 0;
+            for (size_t i = 0; i < shapes.size(); i++) {
+                vlen += shapes[i].mesh.positions.size();
+            }
+
+            GLfloat vertices[vlen];
+            for (size_t i = 0; i < shapes.size(); i++) {
+                for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
+                    vertices[3*v+0] = shapes[i].mesh.positions[3*v+0];
+                    vertices[3*v+1] = shapes[i].mesh.positions[3*v+1];
+                    vertices[3*v+2] = shapes[i].mesh.positions[3*v+2];
+
+                }
+            }
+
+            int clen = vlen;
+            GLfloat colors[clen];
+            std::fill_n(colors, clen, 0.0f);
+            for (int i = 0; i < clen; i+=9) {
+                colors[i] = 1.0f;
+                if ((i+4) <= clen) {
+                    colors[i+4] = 1.0f;
+                }
+                if ((i+4) <= clen) {
+                    colors[i+8] = 1.0f;
+                }
+            }
+
+            int ilen = 0;
+            for (size_t i = 0; i < shapes.size(); i++) {
+                ilen += shapes[i].mesh.indices.size();
+            }
+
+            GLuint indices[ilen];
+            for (size_t i = 0; i < shapes.size(); i++) {
+                for (size_t v = 0; v < shapes[i].mesh.indices.size() / 3; v++) {
+                    indices[3*v+0] = shapes[i].mesh.indices[3*v+0];
+                    indices[3*v+1] = shapes[i].mesh.indices[3*v+1];
+                    indices[3*v+2] = shapes[i].mesh.indices[3*v+2];
+                }
+            }
+
+            /*
+        int vlen = 9;
+        GLfloat vertices[] = {
+             0.0f, 0.707f, 0.0f,
+            -0.5f, -0.5f,  0.0f,
+             0.5f, -0.5f,  0.0f
+        }; /// total 9 elements.
+
+        int clen = 9;
+        GLfloat colors[] = {
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f
+        };
+
+        int ilen = 3;
+        GLuint indices[] = {
+            0, 1, 2
+        };
+
+        for (size_t v = 0; v < vlen / 3; v++) {
+            QVector4D posVec(vertices[3*v+0], vertices[3*v+1], vertices[3*v+2], 1);
+
+            QMatrix4x4 projection;
+            projection.setToIdentity(); /// set
+            projection.perspective(60, (float)width()/(float)height(), 0.1, 10000);
+
+            /// set up view
+            QMatrix4x4 view;
+            view.setToIdentity(); /// set
+
+            QVector3D eye(0, 0, 1);
+            QVector3D center(0,0,0);
+            QVector3D up(0,1,0);
+
+            view.lookAt(eye, center, up);
+
+            /// set up matrix
+            QMatrix4x4 model;
+            model.setToIdentity(); /// set
+            model.translate(0, 0, -2); /// place it a certain distance from camera
+
+            posVecTrans.push_back(projection * view * model * posVec);
+
+        }
+        */
+
+            for (size_t i = 0; i < shapes.size(); i++) {
+                for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
+                    QVector4D posVec(vertices[3*v+0], vertices[3*v+1], vertices[3*v+2], 1);
+                    posVecTrans.push_back(mvp[a] * posVec);
+                }
+            }
+
+            //clipping
+            std::vector<QVector4D> outPosVecTrans;
+            clipOnW(posVecTrans, outPosVecTrans);
+            clipOnAxis(0, posVecTrans, outPosVecTrans);
+            clipOnAxis(1, posVecTrans, outPosVecTrans);
+            clipOnAxis(2, posVecTrans, outPosVecTrans);
+
+            //perspective divide
+            std::vector<QVector4D> persDiv;
+            for (unsigned int i = 0; i < outPosVecTrans.size(); ++i) {
+                persDiv.push_back(outPosVecTrans[i] / outPosVecTrans[i].w());
+            }
+
+            // convert to screen coordinates
+            for (unsigned int i = 0; i < persDiv.size(); ++i) {
+                int x = (persDiv[i].x() + 1.f) / 2.f * width();
+                int y = (persDiv[i].y() + 1.f) / 2.f * height();
+                persDiv[i].setX((float)x);
+                persDiv[i].setY((float)y);
+            }
+
+            //rasterization
+            //Barycentric algorithm
+
+            for (int i = 0; i < ilen / 3; ++i) {
+
+                // get triangle vertices to render
+                QVector4D v1 = persDiv[indices[3*i+0]];
+                QVector4D v2 = persDiv[indices[3*i+1]];
+                QVector4D v3 = persDiv[indices[3*i+2]];
+
+                // determine rectangular bounds for pixel selection
+                int maxX = std::max(v1.x(), std::max(v2.x(), v3.x()));
+                int minX = std::min(v1.x(), std::min(v2.x(), v3.x()));
+                int maxY = std::max(v1.y(), std::max(v2.y(), v3.y()));
+                int minY = std::min(v1.y(), std::min(v2.y(), v3.y()));
+
+                // determine spanning edges of triangles
+                QVector2D vs1(v2.x() - v1.x(), v2.y() - v1.y());
+                QVector2D vs2(v3.x() - v1.x(), v3.y() - v1.y());
+
+                // gather pixels to render
+                for (int x = minX; x <= maxX; x++) {
+                    for (int y = minY; y <= maxY; y++) {
+                        QVector2D q(x - v1.x(), y - v1.y());
+
+                        float alpha = (float)(q.x()*vs2.y() - q.y()*vs2.x()) / (float)(vs1.x()*vs2.y() - vs1.y()*vs2.x());
+                        float beta = (float)(vs1.x()*q.y() - vs1.y()*q.x()) / (float)(vs1.x()*vs2.y() - vs1.y() * vs2.x());
+
+                        if ( (alpha >= 0) && (beta >= 0) && (alpha + beta <= 1)) {
+                            pixelVals.push_back(QVector2D(x, y));
+                        }
+                    }
+                }
+
+            }
+
+            //fragment shader
+            canvas.resize(width() * height());
+            for (unsigned int i = 0; i < canvas.size(); i++) {
+                canvas[i] = 0.0f;
+            }
+
+            for (unsigned int i = 0; i < pixelVals.size(); ++i) {
+                int x = pixelVals[i].x();
+                int y = pixelVals[i].y();
+                canvas[width() * y + x] = 1.f;
+            }
+
+        }
+    }
+
+    // display image
+    QImage image(width(), height(), QImage::Format_RGB32);
+
+    for (int x = 0; x < width(); ++x) {
+        for (int y = 0; y < height(); ++y) {
+            if (width() * y + x < canvas.size()) {
+                QRgb rgb = qRgb(255 * canvas[(width() * y + x) + 0],
+                        255 * canvas[(width() * y + x) + 1],
+                        255 * canvas[(width() * y + x) + 2]);
+                image.setPixel(x, image.height() - y - 1, rgb);
+            }
+        }
+    }
+
+    softRenWin.resize(width(), height());
+    softRenWin.setPixmap(QPixmap::fromImage(image.scaled(width(), height())));
+
+    softRenWin.show();
+}
+
+void RenderWindow::clipOnW(std::vector<QVector4D> inVertices, std::vector<QVector4D>& outputVertices)
+{
+    float W_CLIPPING_PLANE = 0.00001;
+    QVector4D currVertice;
+    QVector4D prevVertice;
+    //qDebug() << inVertices[0].x() << inVertices[0].y() << inVertices[0].z() << inVertices[0].w();
+
+    prevVertice = inVertices[inVertices.size() - 1];
+
+    float prevDot = (prevVertice.w() < W_CLIPPING_PLANE) ? -1 : 1;
+    float currDot;
+
+    float intersectionFactor;
+    QVector4D intersectionPoint;
+
+    for (size_t i = 0; i < inVertices.size(); i++) {
+        currVertice = inVertices[i];
+        currDot = (currVertice.w() < W_CLIPPING_PLANE) ? -1 : 1;
+
+        if (prevDot * currDot < 0) {
+            intersectionFactor = (W_CLIPPING_PLANE - prevVertice.w() ) / (prevVertice.w() - currVertice.w());
+            intersectionPoint = currVertice;
+            intersectionPoint -= prevVertice;
+            intersectionPoint *= intersectionFactor;
+            intersectionPoint += prevVertice;
+
+            outputVertices.push_back(intersectionPoint);
+        }
+        if (currDot > 0) {
+            outputVertices.push_back(currVertice);
+        }
+
+        prevDot = currDot;
+        prevVertice = currVertice;
+    }
+}
+
+void RenderWindow::clipOnAxis(int axis, std::vector<QVector4D> inVertices, std::vector<QVector4D>& outputVertices)
+{
+    QVector4D currVertice;
+    QVector4D prevVertice;
+
+    float prevDot;
+    float currDot;
+
+    float intersectionFactor;
+    QVector4D intersectionPoint;
+
+    int prevPoint, currPoint;
+    if (axis == 0) {
+        prevPoint = prevVertice.x();
+        currPoint = currVertice.x();
+    }
+    else if (axis == 1) {
+        prevPoint = prevVertice.y();
+        currPoint = currVertice.y();
+    }
+    else {
+        prevPoint = prevVertice.z();
+        currPoint = currVertice.z();
+    }
+
+    // clip against first plane
+    prevVertice = inVertices[inVertices.size() - 1];
+    prevDot = (prevPoint <= prevVertice.w()) ? 1 : -1;
+
+    for (size_t i = 0; i < inVertices.size(); i++) {
+        currVertice = inVertices[i];
+        currDot = (currPoint <= currVertice.w()) ? 1 : -1;
+
+        if (prevDot * currDot < 0)
+        {
+            //Need to clip against plan w=0
+
+            intersectionFactor = (prevVertice.w() - prevPoint) / ((prevVertice.w() - prevPoint) - (currVertice.w() - currPoint) );
+            intersectionPoint = currVertice;
+            intersectionPoint -= prevVertice;
+            intersectionPoint *= intersectionFactor;
+            intersectionPoint += prevVertice;
+
+            outputVertices.push_back(intersectionPoint);
+        }
+
+        if (currDot > 0) {
+            outputVertices.push_back(currVertice);
+        }
+
+        prevDot = currDot;
+        prevVertice = currVertice;
+    }
+
+    // clip against opposite plane
+    prevVertice = inVertices[inVertices.size() - 1];
+    prevDot = (-prevPoint <= prevVertice.w()) ? 1 : -1;
+    for (size_t i = 0; i < inVertices.size(); i++) {
+        currVertice = inVertices[i];
+        currDot = (-currPoint <= currVertice.w()) ? 1 : -1;
+
+        if (prevDot * currDot < 0) {
+            intersectionFactor = (prevVertice.w() + prevPoint) / ((prevVertice.w() + prevPoint) - (currVertice.w() + currPoint));
+            intersectionPoint = currVertice;
+            intersectionPoint -= prevVertice;
+            intersectionPoint *= intersectionFactor;
+            intersectionPoint += prevVertice;
+
+            outputVertices.push_back(intersectionPoint);
+        }
+
+        if (currDot > 0) {
+            outputVertices.push_back(currVertice);
+        }
+
+        prevDot = currDot;
+        prevVertice = currVertice;
+    }
 }

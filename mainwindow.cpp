@@ -3,6 +3,7 @@
 
 #include "renderwindow.h"
 #include <iostream>
+#include <QRgb>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     fileOnLoad = false;
 
     menuBar()->setNativeMenuBar(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -495,4 +497,9 @@ void MainWindow::setLineEditDefaults()
         ui->zScaleLineEdit->setText(QString::number(zs));
     }
 
+}
+
+void MainWindow::on_softwareRenderButton_clicked()
+{
+    ui->renderwindowwidget->GetRenderWindow()->softwareRender();
 }
