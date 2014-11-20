@@ -21,6 +21,7 @@ public:
     //void setEye(QVector3D vector);
     
     QMatrix4x4 returnView();
+    QVector3D returnEye();
    // QVector3D getEyeVec();
 
 private:

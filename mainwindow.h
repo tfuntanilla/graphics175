@@ -23,7 +23,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void setLineEditDefaults();
 
 private slots:
 
@@ -45,28 +44,6 @@ private slots:
 
     void on_zScaleSlider_valueChanged(int value);
 
-    void on_wireFrameButton_toggled(bool checked);
-
-    void on_projectionButton_toggled(bool checked);
-
-    void on_xTransLineEdit_textChanged(const QString &arg1);
-
-    void on_yTransLineEdit_textChanged(const QString &arg1);
-
-    void on_zTransLineEdit_textChanged(const QString &arg1);
-
-    void on_xRotLineEdit_textChanged(const QString &arg1);
-
-    void on_yRotLineEdit_textChanged(const QString &arg1);
-
-    void on_zRotLineEdit_textChanged(const QString &arg1);
-
-    void on_xScaleLineEdit_textChanged(const QString &arg1);
-
-    void on_yScaleLineEdit_textChanged(const QString &arg1);
-
-    void on_zScaleLineEdit_textChanged(const QString &arg1);
-
     void on_actionOpen_triggered();
 
     void handleScene(QString filename);
@@ -75,13 +52,53 @@ private slots:
 
     void on_actionSave_triggered();
 
-    void on_softwareRenderButton_clicked();
+    void on_polygonMode_comboBox_activated(const QString &arg1);
+
+    void on_comboBox_projectionMode_activated(const QString &arg1);
+
+    void on_colorButton_Mat_clicked();
+
+    void on_comboBox_shading_activated(const QString &arg1);
+
+    void on_comboBox_lights_activated(const QString &arg1);
+
+    void on_horizontalSlider_lightPosX_valueChanged(int value);
+
+    void on_horizontalSlider_lightPosY_valueChanged(int value);
+
+    void on_horizontalSlider_lightPosZ_valueChanged(int value);
+
+    void on_comboBox_lightType_activated(const QString &arg1);
+
+    void on_horizontalSlider_Ia_valueChanged(int value);
+
+    void on_horizontalSlider_Id_valueChanged(int value);
+
+    void on_horizontalSlider_Is_valueChanged(int value);
+
+    void on_colorButton_Light_clicked();
+
+    void on_horizontalSlider_Ka_valueChanged(int value);
+
+    void on_horizontalSlider_Kd_valueChanged(int value);
+
+    void on_horizontalSlider_Ks_valueChanged(int value);
+
+    void on_horizontalSlider_n_valueChanged(int value);
+
+    void on_pushButton_newLight_clicked();
+
+    void on_pushButton_removeLight_clicked();
+
+    void on_listWidget_lights_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;
 
     bool fileOnLoad; // flag indicating whether a file is currently being rendered
     std::string pathOfFile; // gets the path of of the JSON file
+
+    bool ambSelected, diffSelected, specSelected;
 
 };
 

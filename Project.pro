@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-10-17T21:09:58
+# Project created by QtCreator 2014-11-11T22:18:18
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Project1
+TARGET = Project
 TEMPLATE = app
 
 DEPENDPATH += .
@@ -22,7 +22,9 @@ SOURCES += \
     tiny_obj_loader.cc \
     scenehandler.cpp \
     camera.cpp \
-    objectmodel.cpp
+    objectmodel.cpp \
+    shapes.cpp \
+    light.cpp
 
 HEADERS  += mainwindow.h \
     openglwindow.h \
@@ -30,11 +32,19 @@ HEADERS  += mainwindow.h \
     tiny_obj_loader.h \
     scenehandler.h \
     camera.h \
-    objectmodel.h
+    objectmodel.h \
+    shapes.h \
+    light.h
 
 FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     scene.json \
     chair.obj \
-    desk.obj
+    desk.obj \
+    gouraud.vert \
+    gouraud.frag \
+    flat.frag \
+    flat.vert \
+    phong.frag \
+    phong.vert

@@ -54,9 +54,9 @@ void Camera::setEye(QVector3D vector)
 {
     eye = vector;
 }
-
-QVector3D Camera::getEyeVec()
+*/
+QVector3D Camera::returnEye()
 {
     return eye;
 }
-*/
+
