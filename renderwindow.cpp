@@ -66,7 +66,7 @@ RenderWindow::RenderWindow()
 
     n = 50.0;
 
-    totalLights = 0;
+    totalLights = 1;
 
 }
 

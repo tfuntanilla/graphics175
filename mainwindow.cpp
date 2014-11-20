@@ -488,8 +488,12 @@ void MainWindow::on_horizontalSlider_lightPosX_valueChanged(int value)
 {
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
-        ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setX((float)value);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setX((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+
+
     }
 }
 
@@ -497,8 +501,14 @@ void MainWindow::on_horizontalSlider_lightPosY_valueChanged(int value)
 {
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
-        ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setY((float)value);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setY((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
+
+        }
     }
 }
 
@@ -506,8 +516,14 @@ void MainWindow::on_horizontalSlider_lightPosZ_valueChanged(int value)
 {
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
-        ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setZ((float)value);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setZ((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
+
+        }
     }
 }
 
@@ -558,27 +574,18 @@ void MainWindow::on_colorButton_Light_clicked()
 
         if (ambSelected) {
             ui->renderwindowwidget->GetRenderWindow()->Ia_r = (float)color.redF();
-            //qDebug() << "Ambient" << (float)color.redF();
             ui->renderwindowwidget->GetRenderWindow()->Ia_g = (float)color.greenF();
-            //qDebug() << "Ambient" << (float)color.greenF();
             ui->renderwindowwidget->GetRenderWindow()->Ia_b = (float)color.blueF();
-            //qDebug() << "Ambient" << (float)color.blueF();
         }
         else if (diffSelected) {
             ui->renderwindowwidget->GetRenderWindow()->Id_r = (float)color.redF();
-            //qDebug() << "Diffuse" << (float)color.redF();
             ui->renderwindowwidget->GetRenderWindow()->Id_g = (float)color.greenF();
-            //qDebug() << "Diffuse" << (float)color.greenF();
             ui->renderwindowwidget->GetRenderWindow()->Id_b = (float)color.blueF();
-            //qDebug() << "Diffuse" << (float)color.blueF();
         }
         else if (specSelected) {
             ui->renderwindowwidget->GetRenderWindow()->Is_r = (float)color.redF();
-            //qDebug() << "Specular" << (float)color.redF();
             ui->renderwindowwidget->GetRenderWindow()->Is_g = (float)color.greenF();
-            //qDebug() << "Specular" << (float)color.greenF();
             ui->renderwindowwidget->GetRenderWindow()->Is_b = (float)color.blueF();
-            //qDebug() << "Specular" << (float)color.blueF();
         }
         ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }

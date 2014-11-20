@@ -7,7 +7,8 @@ uniform mat3 normalMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 mvp;
 
-uniform vec4 lightPos;
+uniform int numOfLights;
+uniform vec4 lightPos[10];
 uniform vec3 eyePos;
 
 uniform vec3 Ia;
@@ -19,7 +20,7 @@ uniform vec3 Kd;
 uniform vec3 Ks;
 uniform float n;
 
-out vec3 intensity;
+out vec3 intensity[10];
 
 void main()
 {
@@ -30,26 +31,31 @@ void main()
     // transform normal into eye coordinates
     vec3 N = normalize(normalMatrix * normAttr);
 
-    // light direction
-    vec3 L = normalize(vec3(lightPos - modelViewPos));
-
-    // N dot L
-    float NdotL = max(0.0, dot(N, L));
-
     // view direction
     vec3 V = normalize(eyePos - vec3(modelViewPos));
 
-    vec3 specular = vec3(0.0, 0.0, 0.0);
-    if (NdotL > 0.0) {
+    for (int i = 0; i < numOfLights; i++) {
+        // light direction
+        vec3 L = normalize(vec3(lightPos[i] - modelViewPos));
 
-        // reflection
-        vec3 R = -normalize(reflect(N, L));
+        // N dot L
+        float NdotL = max(0.0, dot(N, L));
 
-        specular = Is * Ks * pow(max(0, dot(R, V)), n);
+        vec3 specular = vec3(0.0, 0.0, 0.0);
+        if (NdotL > 0.0) {
+
+            // reflection
+            vec3 R = -normalize(reflect(N, L));
+
+            specular = Is * Ks * pow(max(0, dot(R, V)), n);
+        }
+
+        // light intensity
+        intensity[i] = (Ia * Ka) + (Id * Kd * NdotL) + specular;
+
     }
 
-    // light intensity
-    intensity = (Ia * Ka) + (Id * Kd * NdotL) + specular;
+
 
     // final position of the vertex
     gl_Position = mvp * vec4(posAttr, 1.0);
