@@ -36,20 +36,20 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>-510</y>
        <width>325</width>
-       <height>1971</height>
+       <height>2025</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="53" column="0">
+      <item row="60" column="0">
        <widget class="QLabel" name="label_n">
         <property name="text">
          <string>n</string>
         </property>
        </widget>
       </item>
-      <item row="70" column="0">
+      <item row="77" column="0">
        <widget class="QLabel" name="label_scale">
         <property name="font">
          <font>
@@ -61,7 +61,7 @@
         </property>
        </widget>
       </item>
-      <item row="57" column="0">
+      <item row="64" column="0">
        <widget class="QLabel" name="xTransLabel">
         <property name="font">
          <font>
@@ -73,102 +73,7 @@
         </property>
        </widget>
       </item>
-      <item row="69" column="0">
-       <widget class="QSlider" name="zRotSlider">
-        <property name="minimum">
-         <number>-1000</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-        <property name="pageStep">
-         <number>10</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QComboBox" name="comboBox_projectionMode">
-        <item>
-         <property name="text">
-          <string>Perspective</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Orthogonal</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="54" column="0">
-       <widget class="QSlider" name="horizontalSlider_n">
-        <property name="value">
-         <number>50</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
       <item row="75" column="0">
-       <widget class="QLabel" name="zScaleLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="76" column="0">
-       <widget class="QSlider" name="zScaleSlider">
-        <property name="minimum">
-         <number>-150</number>
-        </property>
-        <property name="maximum">
-         <number>150</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="64" column="0">
-       <widget class="QLabel" name="xRotLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="68" column="0">
        <widget class="QLabel" name="zRotLabel">
         <property name="font">
          <font>
@@ -180,10 +85,13 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_shading">
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_lightsMain">
         <property name="text">
-         <string>Shading:</string>
+         <string>Lights</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -211,17 +119,14 @@
         </item>
        </widget>
       </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="label_lightsMain">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_shading">
         <property name="text">
-         <string>Lights</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <string>Shading:</string>
         </property>
        </widget>
       </item>
-      <item row="63" column="0">
+      <item row="70" column="0">
        <widget class="QLabel" name="label_rotate">
         <property name="font">
          <font>
@@ -247,21 +152,21 @@
         </item>
        </widget>
       </item>
-      <item row="37" column="0">
+      <item row="41" column="0">
        <widget class="QLabel" name="label_Id">
         <property name="text">
          <string>Id</string>
         </property>
        </widget>
       </item>
-      <item row="39" column="0">
+      <item row="43" column="0">
        <widget class="QLabel" name="label_Is">
         <property name="text">
          <string>Is</string>
         </property>
        </widget>
       </item>
-      <item row="59" column="0">
+      <item row="66" column="0">
        <widget class="QLabel" name="yTransLabel">
         <property name="font">
          <font>
@@ -273,7 +178,7 @@
         </property>
        </widget>
       </item>
-      <item row="58" column="0">
+      <item row="65" column="0">
        <widget class="QSlider" name="xTransSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -307,10 +212,13 @@
         </property>
        </widget>
       </item>
-      <item row="36" column="0">
+      <item row="40" column="0">
        <widget class="QSlider" name="horizontalSlider_Ia">
+        <property name="minimum">
+         <number>0</number>
+        </property>
         <property name="maximum">
-         <number>99</number>
+         <number>100</number>
         </property>
         <property name="value">
          <number>1</number>
@@ -318,25 +226,34 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="invertedAppearance">
+         <bool>false</bool>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
-      <item row="40" column="0">
+      <item row="45" column="0">
        <widget class="QSlider" name="horizontalSlider_Is">
         <property name="maximum">
-         <number>99</number>
+         <number>100</number>
         </property>
         <property name="pageStep">
-         <number>1</number>
+         <number>10</number>
         </property>
         <property name="value">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
-      <item row="56" column="0">
+      <item row="63" column="0">
        <widget class="QLabel" name="label_translate">
         <property name="font">
          <font>
@@ -362,7 +279,7 @@
         </property>
        </widget>
       </item>
-      <item row="25" column="0">
+      <item row="28" column="0">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -374,6 +291,22 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="10" column="0">
+       <widget class="QListWidget" name="listWidget_lights">
+        <item>
+         <property name="text">
+          <string>light_1</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="24" column="0">
+       <widget class="QLabel" name="label_lightType">
+        <property name="text">
+         <string>Type:</string>
+        </property>
+       </widget>
       </item>
       <item row="17" column="0">
        <widget class="QSlider" name="horizontalSlider_lightPosX">
@@ -389,36 +322,17 @@
         </property>
        </widget>
       </item>
-      <item row="27" column="0">
-       <widget class="QComboBox" name="comboBox_lightType">
-        <item>
-         <property name="text">
-          <string>Ambient</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Diffuse</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Specular</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="50" column="0">
+      <item row="57" column="0">
        <widget class="QSlider" name="horizontalSlider_Kd">
         <property name="maximum">
-         <number>99</number>
+         <number>100</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="47" column="0">
+      <item row="54" column="0">
        <widget class="QLabel" name="label_Ka">
         <property name="text">
          <string>Ka</string>
@@ -428,17 +342,10 @@
         </property>
        </widget>
       </item>
-      <item row="42" column="0">
+      <item row="49" column="0">
        <widget class="QLabel" name="label_colorMat">
         <property name="text">
          <string>Material Color:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="26" column="0">
-       <widget class="QLabel" name="label_lightType">
-        <property name="text">
-         <string>Type:</string>
         </property>
        </widget>
       </item>
@@ -449,7 +356,7 @@
         </property>
        </widget>
       </item>
-      <item row="24" column="0">
+      <item row="27" column="0">
        <widget class="QPushButton" name="colorButton_Light">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -483,34 +390,14 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="label_objects">
-        <property name="text">
-         <string>Objects</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0">
-       <widget class="QListWidget" name="listWidget">
-        <property name="frameShadow">
-         <enum>QFrame::Sunken</enum>
-        </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="35" column="0">
+      <item row="38" column="0">
        <widget class="QLabel" name="label_Ia">
         <property name="text">
          <string>Ia</string>
         </property>
        </widget>
       </item>
-      <item row="72" column="0">
+      <item row="79" column="0">
        <widget class="QSlider" name="xScaleSlider">
         <property name="minimum">
          <number>-150</number>
@@ -532,7 +419,7 @@
         </property>
        </widget>
       </item>
-      <item row="73" column="0">
+      <item row="80" column="0">
        <widget class="QLabel" name="yScaleLabel">
         <property name="font">
          <font>
@@ -544,7 +431,7 @@
         </property>
        </widget>
       </item>
-      <item row="74" column="0">
+      <item row="81" column="0">
        <widget class="QSlider" name="yScaleSlider">
         <property name="minimum">
          <number>-150</number>
@@ -566,7 +453,7 @@
         </property>
        </widget>
       </item>
-      <item row="66" column="0">
+      <item row="73" column="0">
        <widget class="QLabel" name="yRotLabel">
         <property name="font">
          <font>
@@ -575,23 +462,6 @@
         </property>
         <property name="text">
          <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_General">
-        <property name="text">
-         <string>General</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_polygonMode">
-        <property name="text">
-         <string>Polygon Mode:</string>
         </property>
        </widget>
       </item>
@@ -615,10 +485,20 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_projectionMode">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_polygonMode">
         <property name="text">
-         <string>Projection Mode:</string>
+         <string>Polygon Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_General">
+        <property name="text">
+         <string>General</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -629,7 +509,14 @@
         </property>
        </widget>
       </item>
-      <item row="62" column="0">
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_projectionMode">
+        <property name="text">
+         <string>Projection Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="69" column="0">
        <widget class="QSlider" name="zTransSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -648,7 +535,7 @@
         </property>
        </widget>
       </item>
-      <item row="61" column="0">
+      <item row="68" column="0">
        <widget class="QLabel" name="zTransLabel">
         <property name="font">
          <font>
@@ -660,7 +547,7 @@
         </property>
        </widget>
       </item>
-      <item row="60" column="0">
+      <item row="67" column="0">
        <widget class="QSlider" name="yTransSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -682,7 +569,17 @@
         </property>
        </widget>
       </item>
-      <item row="67" column="0">
+      <item row="62" column="0">
+       <widget class="QLabel" name="label_transformation">
+        <property name="text">
+         <string>Transformation</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="74" column="0">
        <widget class="QSlider" name="yRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -707,7 +604,7 @@
         </property>
        </widget>
       </item>
-      <item row="65" column="0">
+      <item row="72" column="0">
        <widget class="QSlider" name="xRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -732,17 +629,26 @@
         </property>
        </widget>
       </item>
-      <item row="55" column="0">
-       <widget class="QLabel" name="label_transformation">
-        <property name="text">
-         <string>Transformation</string>
+      <item row="42" column="0">
+       <widget class="QSlider" name="horizontalSlider_Id">
+        <property name="maximum">
+         <number>100</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="71" column="0">
+      <item row="78" column="0">
        <widget class="QLabel" name="xScaleLabel">
         <property name="font">
          <font>
@@ -751,22 +657,6 @@
         </property>
         <property name="text">
          <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="38" column="0">
-       <widget class="QSlider" name="horizontalSlider_Id">
-        <property name="maximum">
-         <number>99</number>
-        </property>
-        <property name="pageStep">
-         <number>10</number>
-        </property>
-        <property name="value">
-         <number>1</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -791,14 +681,14 @@
         </property>
        </widget>
       </item>
-      <item row="49" column="0">
+      <item row="56" column="0">
        <widget class="QLabel" name="label_Kd">
         <property name="text">
          <string>Kd</string>
         </property>
        </widget>
       </item>
-      <item row="23" column="0">
+      <item row="26" column="0">
        <widget class="QLabel" name="label_colorLight">
         <property name="text">
          <string>Light Color:</string>
@@ -812,47 +702,90 @@
         </property>
        </widget>
       </item>
-      <item row="52" column="0">
+      <item row="59" column="0">
        <widget class="QSlider" name="horizontalSlider_Ks">
         <property name="maximum">
-         <number>99</number>
+         <number>100</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="41" column="0">
-       <widget class="QLabel" name="label_materialParameters">
-        <property name="text">
-         <string>Material Parameters</string>
+      <item row="47" column="0">
+       <widget class="QListWidget" name="listWidget">
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="48" column="0">
-       <widget class="QSlider" name="horizontalSlider_Ka">
-        <property name="maximum">
-         <number>99</number>
-        </property>
-        <property name="value">
+        <property name="lineWidth">
          <number>1</number>
         </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       </widget>
+      </item>
+      <item row="53" column="0">
+       <widget class="QComboBox" name="comboBox_Kcomponent">
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Red</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Green</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Blue</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="25" column="0">
+       <widget class="QComboBox" name="comboBox_lightType">
+        <item>
+         <property name="text">
+          <string>Ambient</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Diffuse</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Specular</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="12" column="0">
+       <widget class="QPushButton" name="pushButton_removeLight">
+        <property name="text">
+         <string>Remove</string>
         </property>
        </widget>
       </item>
       <item row="51" column="0">
-       <widget class="QLabel" name="label_Ks">
-        <property name="text">
-         <string>Ks</string>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
       </item>
-      <item row="43" column="0">
+      <item row="50" column="0">
        <widget class="QPushButton" name="colorButton_Mat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -886,33 +819,161 @@
         </property>
        </widget>
       </item>
-      <item row="44" column="0">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="12" column="0">
-       <widget class="QPushButton" name="pushButton_removeLight">
+      <item row="58" column="0">
+       <widget class="QLabel" name="label_Ks">
         <property name="text">
-         <string>Remove</string>
+         <string>Ks</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="0">
-       <widget class="QListWidget" name="listWidget_lights">
+      <item row="55" column="0">
+       <widget class="QSlider" name="horizontalSlider_Ka">
+        <property name="inputMethodHints">
+         <set>Qt::ImhNone</set>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="48" column="0">
+       <widget class="QLabel" name="label_materialParameters">
+        <property name="text">
+         <string>Material Parameters</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="71" column="0">
+       <widget class="QLabel" name="xRotLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
+      </item>
+      <item row="83" column="0">
+       <widget class="QSlider" name="zScaleSlider">
+        <property name="minimum">
+         <number>-150</number>
+        </property>
+        <property name="maximum">
+         <number>150</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="82" column="0">
+       <widget class="QLabel" name="zScaleLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Z</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QComboBox" name="comboBox_projectionMode">
         <item>
          <property name="text">
-          <string>light_1</string>
+          <string>Perspective</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Orthogonal</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="61" column="0">
+       <widget class="QSlider" name="horizontalSlider_n">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="76" column="0">
+       <widget class="QSlider" name="zRotSlider">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="46" column="0">
+       <widget class="QLabel" name="label_objects">
+        <property name="text">
+         <string>Objects</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="52" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Select component:</string>
+        </property>
        </widget>
       </item>
      </layout>

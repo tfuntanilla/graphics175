@@ -5,6 +5,7 @@
 #include "tiny_obj_loader.h"
 #include "camera.h"
 #include "objectmodel.h"
+#include "light.h"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -48,18 +49,20 @@ public:
     void calculateSurfaceNormals(QVector3D v1, QVector3D v2, QVector3D v3);
     void setShader(bool flat, bool gouraud, bool phong);
 
-    //GLfloat lightPosX[10], lightPosY[10], lightPosZ[10], lightPosW[10];
     QVector4D lightPos[10];
+    QVector3D IaRGB[10], IdRGB[10], IsRGB[10];
 
-    GLfloat Ia, Ia_r, Ia_g, Ia_b,
-            Id, Id_r, Id_g, Id_b,
-            Is, Is_r, Is_g, Is_b;
-    GLfloat Ka, Ka_r, Ka_g, Ka_b,
-            Kd, Kd_r, Kd_g, Kd_b,
-            Ks, Ks_r, Ks_g, Ks_b;
-    GLfloat n;
-
+    Light lighting;
     int totalLights;
+
+    //GLfloat Ia[10], Id[10], Is[10];
+
+    //GLfloat Ka, Ka_r, Ka_g, Ka_b,
+    //        Kd, Kd_r, Kd_g, Kd_b,
+    //        Ks, Ks_r, Ks_g, Ks_b;
+    //GLfloat n;
+    void setTotalLights(int i);
+
 
 private:
 
@@ -78,11 +81,13 @@ private:
     GLuint m_IaUniform;
     GLuint m_IdUniform;
     GLuint m_IsUniform;
+    GLuint m_IaRGBUniform;
+    GLuint m_IdRGBUniform;
+    GLuint m_IsRGBUniform;
     GLuint m_KaUniform;
     GLuint m_KdUniform;
     GLuint m_KsUniform;
     GLuint m_shineUniform;
-
 
     QOpenGLShaderProgram *m_program;
     QOpenGLShaderProgram *m_flatShaderProgram;

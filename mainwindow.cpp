@@ -3,9 +3,12 @@
 
 #include "renderwindow.h"
 #include <iostream>
+#include <cmath>
 #include <QRgb>
 #include <QScrollArea>
 #include <QColorDialog>
+
+#define PI 3.14159265
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     menuBar()->setNativeMenuBar(false);
 
     ambSelected = true; diffSelected = false; specSelected = false;
+    ui->listWidget_lights->setCurrentRow(0);
+    red = false; green = false; blue = false;
 
 }
 
@@ -244,7 +249,6 @@ void MainWindow::handleScene(QString filename)
     std::cout << pathOfFile << std::endl;
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, filenames, objectFiles, matrices);
     ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s);
-    //ui->renderwindowwidget->GetRenderWindow()->collectShapes();
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
 }
@@ -312,7 +316,6 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     ui->xScaleSlider->setValue(currXScale);
     ui->yScaleSlider->setValue(currYScale);
     ui->zScaleSlider->setValue(currZScale);
-
 
 }
 
@@ -411,42 +414,13 @@ void MainWindow::on_comboBox_projectionMode_activated(const QString &arg1)
     }
 }
 
-void MainWindow::on_colorButton_Mat_clicked()
-{
-    QColorDialog *qcd = new QColorDialog(QColor::fromRgb(0, 0, 0, 255), this);
-    QColor color = qcd->getColor();
-    if(color.isValid()) {
-        QString qss = QString("background-color: %1").arg(color.name());
-        ui->colorButton_Mat->setStyleSheet(qss);
-
-        ui->renderwindowwidget->GetRenderWindow()->Ka_r = (float)color.redF();
-        //qDebug() << "Ambient" << (float)color.redF();
-        ui->renderwindowwidget->GetRenderWindow()->Ka_g = (float)color.greenF();
-        //qDebug() << "Ambient" << (float)color.greenF();
-        ui->renderwindowwidget->GetRenderWindow()->Ka_b = (float)color.blueF();
-        //qDebug() << "Ambient" << (float)color.blueF();
-
-        ui->renderwindowwidget->GetRenderWindow()->Kd_r = (float)color.redF();
-        //qDebug() << "Diffuse" << (float)color.redF();
-        ui->renderwindowwidget->GetRenderWindow()->Kd_g = (float)color.greenF();
-        //qDebug() << "Diffuse" << (float)color.greenF();
-        ui->renderwindowwidget->GetRenderWindow()->Kd_b = (float)color.blueF();
-        //qDebug() << "Diffuse" << (float)color.blueF();
-
-
-        ui->renderwindowwidget->GetRenderWindow()->Ks_r = (float)color.redF();
-        //qDebug() << "Specular" << (float)color.redF();
-        ui->renderwindowwidget->GetRenderWindow()->Ks_g = (float)color.greenF();
-        //qDebug() << "Specular" << (float)color.greenF();
-        ui->renderwindowwidget->GetRenderWindow()->Ks_b = (float)color.blueF();
-        //qDebug() << "Specular" << (float)color.blueF();
-
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
-    }
-}
-
 void MainWindow::on_comboBox_shading_activated(const QString &arg1)
 {
+    int light = ui->listWidget_lights->currentRow();
+    if (ui->listWidget_lights->count() > 1 && light != 0) {
+        ui->listWidget_lights->setCurrentRow(0);
+    }
+
     if (arg1 == "No Shading") {
         ui->renderwindowwidget->GetRenderWindow()->setShader(0, 0, 0);
         ui->renderwindowwidget->GetRenderWindow()->renderLater();
@@ -461,7 +435,7 @@ void MainWindow::on_comboBox_shading_activated(const QString &arg1)
         ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }
 
-    else {
+    else if (arg1 == "Phong") {
         ui->renderwindowwidget->GetRenderWindow()->setShader(0, 0, 1);
         ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }
@@ -471,15 +445,15 @@ void MainWindow::on_comboBox_lights_activated(const QString &arg1)
 {
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
-
-        if (arg1 == "Point") {
-            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setW(1.0);
-            ui->renderwindowwidget->GetRenderWindow()->renderLater();
-        }
-
-        else if (arg1 == "Directional") {
-            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setW(0.0);
-            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        if (index >= 0) {
+            if (arg1 == "Point") {
+                ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].setW(1.0);
+                ui->renderwindowwidget->GetRenderWindow()->renderLater();
+            }
+            else if (arg1 == "Directional") {
+                ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].setW(0.0);
+                ui->renderwindowwidget->GetRenderWindow()->renderLater();
+            }
         }
     }
 }
@@ -489,11 +463,13 @@ void MainWindow::on_horizontalSlider_lightPosX_valueChanged(int value)
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
         if (index >= 0) {
-            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setX((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].setX((float)value);
             ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
 
-
+        }
     }
 }
 
@@ -502,7 +478,7 @@ void MainWindow::on_horizontalSlider_lightPosY_valueChanged(int value)
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
         if (index >= 0) {
-            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setY((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].setY((float)value);
             ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
@@ -517,7 +493,7 @@ void MainWindow::on_horizontalSlider_lightPosZ_valueChanged(int value)
     if (ui->listWidget_lights->count() > 0) {
         int index = ui->listWidget_lights->currentRow();
         if (index >= 0) {
-            ui->renderwindowwidget->GetRenderWindow()->lightPos[index].setZ((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].setZ((float)value);
             ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
         else {
@@ -529,39 +505,93 @@ void MainWindow::on_horizontalSlider_lightPosZ_valueChanged(int value)
 
 void MainWindow::on_comboBox_lightType_activated(const QString &arg1)
 {
+    int index = ui->listWidget_lights->currentRow();
+    QVector3D* iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
+    QVector3D* idrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB();
+    QVector3D* isrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIsRGB();
+
     if (arg1 == "Ambient") {
         ambSelected = true;
         diffSelected = false;
         specSelected = false;
+
+        if (index >= 0) {
+            QColor color(iargb[index].x()*255, iargb[index].y()*255, iargb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+        }
     }
     else if (arg1 == "Diffuse") {
         ambSelected = false;
         diffSelected = true;
         specSelected = false;
+
+        if (index >= 0) {
+            QColor color(idrgb[index].x()*255, idrgb[index].y()*255, idrgb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+        }
     }
     else if (arg1 == "Specular") {
         ambSelected = false;
         diffSelected = false;
         specSelected = true;
+
+        if (index >= 0) {
+            QColor color(isrgb[index].x()*255, isrgb[index].y()*255, isrgb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+        }
     }
 }
 
 void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Ia = (float)value;
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    qDebug() << adjustedValue;
+    int index = ui->listWidget_lights->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setIaValues(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
+    }
+
 }
 
 void MainWindow::on_horizontalSlider_Id_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Id = (float)value;
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    qDebug() << adjustedValue;
+    int index = ui->listWidget_lights->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setIdValues(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
+    }
 }
 
 void MainWindow::on_horizontalSlider_Is_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Is = (float)value;
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    qDebug() << adjustedValue;
+    int index = ui->listWidget_lights->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setIsValues(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
+    }
 }
 
 void MainWindow::on_colorButton_Light_clicked()
@@ -572,20 +602,37 @@ void MainWindow::on_colorButton_Light_clicked()
         QString qss = QString("background-color: %1").arg(color.name());
         ui->colorButton_Light->setStyleSheet(qss);
 
-        if (ambSelected) {
-            ui->renderwindowwidget->GetRenderWindow()->Ia_r = (float)color.redF();
-            ui->renderwindowwidget->GetRenderWindow()->Ia_g = (float)color.greenF();
-            ui->renderwindowwidget->GetRenderWindow()->Ia_b = (float)color.blueF();
+        int index = ui->listWidget_lights->currentRow();
+
+        if (index >= 0) {
+            if (ambSelected) {
+                ui->renderwindowwidget->GetRenderWindow()->lighting.setIaRGBValues(index, color.redF(), color.greenF(), color.blueF());
+            }
+            else if (diffSelected) {
+                ui->renderwindowwidget->GetRenderWindow()->lighting.setIdRGBValues(index, color.redF(), color.greenF(), color.blueF());
+            }
+            else if (specSelected) {
+                ui->renderwindowwidget->GetRenderWindow()->lighting.setIsRGBValues(index, color.redF(), color.greenF(), color.blueF());
+            }
+
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
         }
-        else if (diffSelected) {
-            ui->renderwindowwidget->GetRenderWindow()->Id_r = (float)color.redF();
-            ui->renderwindowwidget->GetRenderWindow()->Id_g = (float)color.greenF();
-            ui->renderwindowwidget->GetRenderWindow()->Id_b = (float)color.blueF();
-        }
-        else if (specSelected) {
-            ui->renderwindowwidget->GetRenderWindow()->Is_r = (float)color.redF();
-            ui->renderwindowwidget->GetRenderWindow()->Is_g = (float)color.greenF();
-            ui->renderwindowwidget->GetRenderWindow()->Is_b = (float)color.blueF();
+    }
+}
+
+void MainWindow::on_colorButton_Mat_clicked()
+{
+    QColorDialog *qcd = new QColorDialog(QColor::fromRgb(0, 0, 0, 255), this);
+    QColor color = qcd->getColor();
+    if(color.isValid()) {
+        QString qss = QString("background-color: %1").arg(color.name());
+        ui->colorButton_Mat->setStyleSheet(qss);
+
+        int index = ui->listWidget->currentRow();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setKaRGBValues(index, color.red(), color.green(), color.blue());
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setKdRGBValues(index, color.red(), color.green(), color.blue());
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setKsRGBValues(index, color.red(), color.green(), color.blue());
         }
         ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }
@@ -593,44 +640,165 @@ void MainWindow::on_colorButton_Light_clicked()
 
 void MainWindow::on_horizontalSlider_Ka_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Ka = (float)value;
+    float adjustedValue = (float)value / 100.0;
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setKa(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_Kd_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Kd = (float)value;
+    float adjustedValue = (float)value / 100.0;
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setKd(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_Ks_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->Ks = (float)value;
+    float adjustedValue = (float)value / 100.0;
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setKs(index, adjustedValue);
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_n_valueChanged(int value)
 {
-    ui->renderwindowwidget->GetRenderWindow()->n = (float)value;
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setN(index, (float)value);
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_pushButton_newLight_clicked()
 {
-    ui->renderwindowwidget->GetRenderWindow()->totalLights++;
+    ui->renderwindowwidget->GetRenderWindow()->setTotalLights(1);
     int lights = ui->renderwindowwidget->GetRenderWindow()->totalLights;
     QString newlight = "light_";
     QString totalLights;
     ui->listWidget_lights->addItem(newlight.append(totalLights.setNum(lights)));
-
 }
 
 void MainWindow::on_pushButton_removeLight_clicked()
 {
-
+    int index = ui->listWidget_lights->currentRow();
+    if (index < 0 || index > ui->listWidget_lights->count()) {
+        QMessageBox::information(this, QString("Alert"), QString("Select light to be removed from list."));
+    }
+    else {
+        ui->renderwindowwidget->GetRenderWindow()->setTotalLights(-1);
+        QListWidgetItem* item = ui->listWidget_lights->takeItem(index);
+        delete item;
+    }
 }
 
 void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
 {
+    item->setSelected(true);
+    int index = ui->listWidget_lights->currentRow();
 
+    int lpX = ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].x();
+    int lpY = ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].y();
+    int lpZ = ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].z();
+    int lpW = ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[index].w();
+
+    ui->horizontalSlider_lightPosX->setValue(lpX);
+    ui->horizontalSlider_lightPosY->setValue(lpY);
+    ui->horizontalSlider_lightPosZ->setValue(lpZ);
+
+    if (lpW == 1) {
+        ui->comboBox_lights->setCurrentIndex(0);
+    }
+    else if (lpW == 0) {
+        ui->comboBox_lights->setCurrentIndex(1);
+    }
+
+    int ia = ui->renderwindowwidget->GetRenderWindow()->lighting.getIa(index);
+    qDebug() << "ia" << ia;
+    int id = ui->renderwindowwidget->GetRenderWindow()->lighting.getId(index);
+    int is = ui->renderwindowwidget->GetRenderWindow()->lighting.getIs(index);
+
+    ui->horizontalSlider_Ia->setValue(asin(ia) * 180/PI);
+    ui->horizontalSlider_Id->setValue(asin(id) * 180/PI);
+    ui->horizontalSlider_Is->setValue(asin(is) * 180/PI);
+
+    QVector3D* iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
+    QVector3D* idrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB();
+    QVector3D* isrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIsRGB();
+
+    if (ambSelected) {
+        if (index >= 0) {
+            QColor color(iargb[index].x()*255, iargb[index].y()*255, iargb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+            else {
+                qDebug() << "Not valid";
+            }
+        }
+    }
+    else if (diffSelected) {
+        if (index >= 0) {
+            QColor color(idrgb[index].x()*255, idrgb[index].y()*255, idrgb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+        }
+    }
+    else if (specSelected) {
+        if (index >= 0) {
+            QColor color(isrgb[index].x()*255, isrgb[index].y()*255, isrgb[index].z()*255, 255);
+            if(color.isValid()) {
+                QString qss = QString("background-color: %1").arg(color.name());
+                ui->colorButton_Light->setStyleSheet(qss);
+            }
+        }
+    }
+
+}
+
+void MainWindow::on_comboBox_Kcomponent_activated(const QString &arg1)
+{
+    if (arg1 == "") {
+        QMessageBox::information(this, QString("Alert"), QString("Select component to modify."));
+    }
+    else if (arg1 == "red") {
+        red = true;
+        green = false;
+        blue = false;
+    }
+    else if (arg1 == "green") {
+        red = false;
+        green = true;
+        blue = false;
+    }
+    else if (arg1 == "blue") {
+        red = false;
+        green = false;
+        blue = true;
+    }
 }

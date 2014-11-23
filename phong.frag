@@ -3,51 +3,51 @@
 out vec4 fragColor;
 
 uniform int numOfLights;
+
 uniform vec4 lightPos[10];
 uniform vec3 eyePos;
 
-uniform vec3 Ia;
-uniform vec3 Id;
-uniform vec3 Is;
+uniform float Ia[10];
+uniform float Id[10];
+uniform float Is[10];
+uniform vec3 IaRGB[10];
+uniform vec3 IdRGB[10];
+uniform vec3 IsRGB[10];
 
-uniform vec3 Ka;
-uniform vec3 Kd;
-uniform vec3 Ks;
-uniform float n;
+uniform vec3 Ka[10];
+uniform vec3 Kd[10];
+uniform vec3 Ks[10];
 
-in vec4 worldPos;
+uniform float n[10];
+
+in vec4 modelViewPos;
 in vec3 N;
 
 void main()
 {
-    // view direction
-    vec3 V = normalize(eyePos - vec3(worldPos));
-
-    vec3 intensity[10];
+    vec3 lightIntensity[10];
 
     for (int i = 0; i < numOfLights; i++) {
+        vec3 ambient = Ia[i] * IaRGB[i] * Ka[i];
+
         // light direction
-        vec3 L = normalize(vec3(lightPos[i] - worldPos));
-
+        vec3 L = normalize(vec3(lightPos[i] - modelViewPos));
         // N dot L
-        float NdotL = max(0.0, dot(N, L));
+        float NdotL = max(0.0, dot(N, L));     
+        vec3 diffuse = Id[i] * IdRGB[i] * Kd[i] * NdotL;
 
+        // view direction
+        vec3 V = normalize(-modelViewPos.xyz);
+        // reflection
+        vec3 R = -normalize(reflect(N, L));
         vec3 specular = vec3(0.0, 0.0, 0.0);
-
         if (NdotL > 0.0) {
-
-            // reflection
-            vec3 R = -normalize(reflect(N, L));
-
-            specular = Is * Ks * pow(max(0.0, dot(R, V)), n);
+            specular = Is[i] * IsRGB[i] * Ks[i] * pow(max(0.0, dot(R, V)), n[i]);
         }
 
         // light intensity
-        intensity[i] = (Ia * Ka) + (Id * Kd * NdotL) + specular;
+        lightIntensity[i] = ambient + diffuse + specular;
 
-        fragColor = vec4(intensity[i], 1.0);
-
+        fragColor = vec4(lightIntensity[i], 1.0);
     }
-
-
 }

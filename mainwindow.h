@@ -92,6 +92,8 @@ private slots:
 
     void on_listWidget_lights_itemClicked(QListWidgetItem *item);
 
+    void on_comboBox_Kcomponent_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
 
@@ -99,6 +101,7 @@ private:
     std::string pathOfFile; // gets the path of of the JSON file
 
     bool ambSelected, diffSelected, specSelected;
+    bool red, green, blue;
 
 };
 

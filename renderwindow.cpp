@@ -49,25 +49,23 @@ RenderWindow::RenderWindow()
     m_gouraudShadeOn = false;
     m_phongShadeOn = false;
 
+    totalLights = 1;
+/*
     for (int i = 0; i < 10; i++) {
-        lightPos[i].setX(0.0);
-        lightPos[i].setY(0.0);
-        lightPos[i].setZ(0.0);
-        lightPos[i].setW(1.0);
-    }
+        lightPos[i].setX(0.0); lightPos[i].setY(0.0); lightPos[i].setZ(0.0); lightPos[i].setW(1.0);
+        Ia[i] = 1.0; Id[i] = 1.0; Is[i] = 1.0;
+        IaRGB[i].setX(1.0); IaRGB[i].setY(1.0); IaRGB[i].setZ(1.0);
+        IdRGB[i].setX(1.0); IdRGB[i].setY(1.0); IdRGB[i].setZ(1.0);
+        IsRGB[i].setX(1.0); IsRGB[i].setY(1.0); IsRGB[i].setZ(1.0);
 
-    Ia = 1.0; Ia_r = 1.0; Ia_g = 1.0; Ia_b = 1.0;
-    Id = 1.0; Id_r = 1.0; Id_g = 1.0; Id_b = 1.0;
-    Is = 1.0; Is_r = 1.0; Is_g = 1.0; Is_b = 1.0;
+    }
 
     Ka = 1.0; Ka_r = 0.45; Ka_g = 0.0; Ka_b = 0.0;
     Kd = 1.0; Kd_r = 0.55; Kd_g = 0.0; Kd_b = 0.0;
     Ks = 1.0; Ks_r = 1.0; Ks_g = 1.0; Ks_b = 1.0;
 
-    n = 50.0;
 
-    totalLights = 1;
-
+*/
 }
 
 void RenderWindow::checkError(const QString &prefix)
@@ -106,17 +104,9 @@ void RenderWindow::initialize()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     glEnable(GL_DEPTH_TEST);
-    m_program = new QOpenGLShaderProgram(this);
 
-    if(m_useSourceCode) {
-        m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-    } else {
-        m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/simple.vert");
-        m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/simple.frag");
-    }
 
-    m_program->link();
+    //m_program->link();
     //linkShaderPrograms();
 
     /* *********************************************************************************************** */
@@ -145,11 +135,13 @@ void RenderWindow::linkShaderPrograms()
         m_IaUniform = m_flatShaderProgram->uniformLocation("Ia");
         m_IdUniform = m_flatShaderProgram->uniformLocation("Id");
         m_IsUniform = m_flatShaderProgram->uniformLocation("Is");
+        m_IaRGBUniform = m_flatShaderProgram->uniformLocation("IaRGB");
+        m_IdRGBUniform = m_flatShaderProgram->uniformLocation("IdRGB");
+        m_IsRGBUniform = m_flatShaderProgram->uniformLocation("IsRGB");
         m_KaUniform = m_flatShaderProgram->uniformLocation("Ka");
         m_KdUniform = m_flatShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_flatShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_flatShaderProgram->uniformLocation("n");
-
     }
     else if (m_gouraudShadeOn) {
         m_gouraudShaderProgram = new QOpenGLShaderProgram(this);
@@ -172,6 +164,9 @@ void RenderWindow::linkShaderPrograms()
         m_IaUniform = m_gouraudShaderProgram->uniformLocation("Ia");
         m_IdUniform = m_gouraudShaderProgram->uniformLocation("Id");
         m_IsUniform = m_gouraudShaderProgram->uniformLocation("Is");
+        m_IaRGBUniform = m_gouraudShaderProgram->uniformLocation("IaRGB");
+        m_IdRGBUniform = m_gouraudShaderProgram->uniformLocation("IdRGB");
+        m_IsRGBUniform = m_gouraudShaderProgram->uniformLocation("IsRGB");
         m_KaUniform = m_gouraudShaderProgram->uniformLocation("Ka");
         m_KdUniform = m_gouraudShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_gouraudShaderProgram->uniformLocation("Ks");
@@ -197,12 +192,24 @@ void RenderWindow::linkShaderPrograms()
         m_IaUniform = m_phongShaderProgram->uniformLocation("Ia");
         m_IdUniform = m_phongShaderProgram->uniformLocation("Id");
         m_IsUniform = m_phongShaderProgram->uniformLocation("Is");
+        m_IaRGBUniform = m_phongShaderProgram->uniformLocation("IaRGB");
+        m_IdRGBUniform = m_phongShaderProgram->uniformLocation("IdRGB");
+        m_IsRGBUniform = m_phongShaderProgram->uniformLocation("IsRGB");
         m_KaUniform = m_phongShaderProgram->uniformLocation("Ka");
         m_KdUniform = m_phongShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_phongShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_phongShaderProgram->uniformLocation("n");
     }
     else {
+        m_program = new QOpenGLShaderProgram(this);
+        if(m_useSourceCode) {
+            m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+            m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
+        } else {
+            m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/simple.vert");
+            m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/simple.frag");
+        }
+        m_program->link();
 
         m_posAttr = m_program->attributeLocation("posAttr");
         m_colAttr = m_program->attributeLocation("colAttr");
@@ -230,26 +237,18 @@ void RenderWindow::enableAttr(int vlen)
         m_phongShaderProgram->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
         m_phongShaderProgram->enableAttributeArray(m_normAttr);
         m_phongShaderProgram->setAttributeBuffer(m_normAttr, GL_FLOAT, vlen * sizeof(GLfloat), 3);
-
     }
     else {
         m_program->enableAttributeArray(m_posAttr);
-
-        /// vertex position start offset is 0, number of value = 3 (x,y,z)
         m_program->setAttributeBuffer(m_posAttr, GL_FLOAT, 0, 3);
-
         m_program->enableAttributeArray(m_colAttr);
-
-        /// color position start offset is vlen * sizeof(GLFloat), number of values = 3 (r,g,b) (4 if we did rgba)
         m_program->setAttributeBuffer(m_colAttr, GL_FLOAT, vlen * sizeof(GLfloat), 3);
-
     }
     checkError("after enabling attributes");
 }
 
 void RenderWindow::render()
 {
-
     linkShaderPrograms();
 
     const qreal retinaScale = devicePixelRatio();
@@ -275,20 +274,19 @@ void RenderWindow::render()
         checkError("after program bind");
     }
 
+    // select which shader to bind initially;
     if (m_flatShadeOn) {
         m_flatShaderProgram->bind();
     }
     else if (m_gouraudShadeOn) {
         m_gouraudShaderProgram->bind();
     }
-
     else if (m_phongShadeOn) {
         m_phongShaderProgram->bind();
     }
     else {
         m_program->bind();
     }
-
 
     /* *********************************************************************************************** */
     /* *********************************************************************************************** */
@@ -304,7 +302,6 @@ void RenderWindow::render()
         }
 
         if (!shapes.empty()) {
-
             int vlen = 0;
             int ilen = 0;
             int nlen = 0;
@@ -337,7 +334,6 @@ void RenderWindow::render()
                     indices[3*j+2] = shapes[i].mesh.indices[3*j+2];
 
                     calculateSurfaceNormals(triangleVectors[indices[3*j+0]], triangleVectors[indices[3*j+1]], triangleVectors[indices[3*j+2]]);
-
                 }
 
                 if (m_flatShadeOn) {
@@ -347,7 +343,6 @@ void RenderWindow::render()
                         normals[3*j+2] = triangleVectors[j].z();
                     }
                 }
-
                 else {
                     for (size_t j = 0; j < shapes[i].mesh.normals.size() / 3; j++) {
                         normals[3*j+0] = shapes[i].mesh.normals[3*j+0];
@@ -371,16 +366,10 @@ void RenderWindow::render()
                 }
             }
 
-            //QVector3D Ka(materials[0].ambient[0], materials[0].ambient[1], materials[0].ambient[2]);
-            //QVector3D Kd(materials[0].diffuse[0], materials[0].diffuse[1], materials[0].diffuse[2]);
-            //QVector3D Ks(materials[0].specular[0], materials[0].specular[1], materials[0].specular[2]);
-
-
             m_vbo[i]->bind();
             m_vbo[i]->allocate((vlen + nlen)*sizeof(GLfloat));
             m_vbo[i]->write(0, vertices, vlen * sizeof(GLfloat));
             m_vbo[i]->write(vlen*sizeof(GLfloat), normals, nlen * sizeof(GLfloat));
-            //m_vbo[i]->write((vlen + clen)*sizeof(GLfloat), normals, nlen * sizeof(GLfloat));
 
             checkError("after vertex buffer allocation");
 
@@ -395,11 +384,9 @@ void RenderWindow::render()
             /* *********************************************************************************************** */
 
             // set up transformation matrices
-
             QMatrix4x4 projection = objectmodels[i].getProjection();
             if (perspectiveOn) {
                 projection.perspective(60.0, (float)width()/(float)height(), 0.1, 1000);
-
             }
             else if (!perspectiveOn) {
                 projection.ortho(-(float)width()/2, (float)width()/2, -(float)height()/2, (float)height()/2, 0.0, 1000.0);
@@ -421,17 +408,20 @@ void RenderWindow::render()
                 m_flatShaderProgram->setUniformValue(m_normalMatrixUniform, (view * model).normalMatrix());
 
                 m_flatShaderProgram->setUniformValue(m_numOfLights, totalLights);
-                m_flatShaderProgram->setUniformValueArray(m_lightPosition, lightPos, 10);
+                m_flatShaderProgram->setUniformValueArray(m_lightPosition, lighting.lightPos, 10);
 
                 m_flatShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_flatShaderProgram->setUniformValue(m_IaUniform, QVector3D(Ia*Ia_r, Ia*Ia_g, Ia*Ia_b));
-                m_flatShaderProgram->setUniformValue(m_IdUniform, QVector3D(Id*Id_r, Id*Id_g, Id*Id_b));
-                m_flatShaderProgram->setUniformValue(m_IsUniform, QVector3D(Is*Is_r, Is*Is_g, Is*Is_b));
-                m_flatShaderProgram->setUniformValue(m_KaUniform, QVector3D(Ka*Ka_r, Ka*Ka_g, Ka*Ka_b));
-                m_flatShaderProgram->setUniformValue(m_KdUniform, QVector3D(Kd*Kd_r, Kd*Kd_g, Kd*Kd_b));
-                m_flatShaderProgram->setUniformValue(m_KsUniform, QVector3D(Ks*Ks_r, Ks*Ks_g, Ks*Ks_b));
-                m_flatShaderProgram->setUniformValue(m_shineUniform, n);
+                m_flatShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_flatShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
+                m_flatShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
+                m_flatShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_KaUniform, lighting.getKa(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_KdUniform, lighting.getKd(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_KsUniform, lighting.getKs(), 10);
+                m_flatShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
 
             }
             else if (m_gouraudShadeOn) {
@@ -441,16 +431,19 @@ void RenderWindow::render()
                 m_gouraudShaderProgram->setUniformValue(m_normalMatrixUniform, (view * model).normalMatrix());
 
                 m_gouraudShaderProgram->setUniformValue(m_numOfLights, totalLights);
-                m_gouraudShaderProgram->setUniformValueArray(m_lightPosition, lightPos, 10);
+                m_gouraudShaderProgram->setUniformValueArray(m_lightPosition, lighting.lightPos, 10);
                 m_gouraudShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_gouraudShaderProgram->setUniformValue(m_IaUniform, QVector3D(Ia*Ia_r, Ia*Ia_g, Ia*Ia_b));
-                m_gouraudShaderProgram->setUniformValue(m_IdUniform, QVector3D(Id*Id_r, Id*Id_g, Id*Id_b));
-                m_gouraudShaderProgram->setUniformValue(m_IsUniform, QVector3D(Is*Is_r, Is*Is_g, Is*Is_b));
-                m_gouraudShaderProgram->setUniformValue(m_KaUniform, QVector3D(Ka*Ka_r, Ka*Ka_g, Ka*Ka_b));
-                m_gouraudShaderProgram->setUniformValue(m_KdUniform, QVector3D(Kd*Kd_r, Kd*Kd_g, Kd*Kd_b));
-                m_gouraudShaderProgram->setUniformValue(m_KsUniform, QVector3D(Ks*Ks_r, Ks*Ks_g, Ks*Ks_b));
-                m_gouraudShaderProgram->setUniformValue(m_shineUniform, n);
+                m_gouraudShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_gouraudShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
+                m_gouraudShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
+                m_gouraudShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_gouraudShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
+                m_gouraudShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
+                m_gouraudShaderProgram->setUniformValue(m_KaUniform, QVector3D(1.0, 1.0, 1.0));
+                m_gouraudShaderProgram->setUniformValue(m_KdUniform, QVector3D(1.0, 1.0, 1.0));
+                m_gouraudShaderProgram->setUniformValue(m_KsUniform, QVector3D(1.0, 1.0, 1.0));
+                m_gouraudShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
             }
             else if (m_phongShadeOn) {
                 m_phongShaderProgram->setUniformValue(m_matrixUniform, projection * view * model);
@@ -459,16 +452,19 @@ void RenderWindow::render()
                 m_phongShaderProgram->setUniformValue(m_normalMatrixUniform, (view * model).normalMatrix());
 
                 m_phongShaderProgram->setUniformValue(m_numOfLights, totalLights);
-                m_phongShaderProgram->setUniformValueArray(m_lightPosition, lightPos, 10);
+                m_phongShaderProgram->setUniformValueArray(m_lightPosition, lighting.lightPos, 10);
                 m_phongShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_phongShaderProgram->setUniformValue(m_IaUniform, QVector3D(Ia*Ia_r, Ia*Ia_g, Ia*Ia_b));
-                m_phongShaderProgram->setUniformValue(m_IdUniform, QVector3D(Id*Id_r, Id*Id_g, Id*Id_b));
-                m_phongShaderProgram->setUniformValue(m_IsUniform, QVector3D(Is*Is_r, Is*Is_g, Is*Is_b));
-                m_phongShaderProgram->setUniformValue(m_KaUniform, QVector3D(Ka*Ka_r, Ka*Ka_g, Ka*Ka_b));
-                m_phongShaderProgram->setUniformValue(m_KdUniform, QVector3D(Kd*Kd_r, Kd*Kd_g, Kd*Kd_b));
-                m_phongShaderProgram->setUniformValue(m_KsUniform, QVector3D(Ks*Ks_r, Ks*Ks_g, Ks*Ks_b));
-                m_phongShaderProgram->setUniformValue(m_shineUniform, n);
+                m_phongShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_phongShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
+                m_phongShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
+                m_phongShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_KaUniform, lighting.getKa(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_KdUniform, lighting.getKd(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_KsUniform, lighting.getKs(), 10);
+                m_phongShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
 
             }
             else {
@@ -585,6 +581,11 @@ void RenderWindow::setShader(bool flat, bool gouraud, bool phong)
     m_flatShadeOn = flat;
     m_gouraudShadeOn = gouraud;
     m_phongShadeOn = phong;
+}
+
+void RenderWindow::setTotalLights(int i)
+{
+    totalLights = totalLights + i;
 }
 
 static void qNormalizeAngle(int &angle)

@@ -2,23 +2,60 @@
 #define LIGHT_H
 
 #include <QOpenGLFunctions>
+#include <QVector3D>
+#include <QVector4D>
 
 class Light
 {
 private:
 
-    GLfloat lightPosX, lightPosY, lightPosZ, lightPosW;
+    QVector3D IaRGB[10], IdRGB[10], IsRGB[10];
 
-    GLfloat Ia, Ia_r, Ia_g, Ia_b,
-            Id, Id_r, Id_g, Id_b,
-            Is, Is_r, Is_g, Is_b;
-    GLfloat Ka, Ka_r, Ka_g, Ka_b,
-            Kd, Kd_r, Kd_g, Kd_b,
-            Ks, Ks_r, Ks_g, Ks_b;
-    GLfloat n;
+    GLfloat Ia[10], Id[10], Is[10];
+
+    QVector3D KaRGB[10], KdRGB[10], KsRGB[10];
+
+    GLfloat Ka[10], Kd[10], Ks[10];
+
+    GLfloat n[10];
+
+
+
 
 public:
     Light();
+
+    QVector3D* getKa();
+    QVector3D* getKd();
+    QVector3D* getKs();
+    QVector3D* getIaRGB();
+    QVector3D* getIdRGB();
+    QVector3D* getIsRGB();
+    GLfloat* getn();
+    GLfloat* getIa();
+    GLfloat *getId();
+    GLfloat *getIs();
+    float getIa(int i);
+    float getId(int i);
+    float getIs(int i);
+
+    void setIaValues(int i, float val);
+    void setIdValues(int i, float val);
+    void setIsValues(int i, float val);
+    void setIaRGBValues(int i, qreal r, qreal g, qreal b);
+    void setIdRGBValues(int i, qreal r, qreal g, qreal b);
+    void setIsRGBValues(int i, qreal r, qreal g, qreal b);
+    void setKaRGBValues(int i, int r, int g, int b);
+    void setKdRGBValues(int i, int r, int g, int b);
+    void setKsRGBValues(int i, int r, int g, int b);
+    void setN(int i, float val);
+
+    QVector4D lightPos[10];
+
+    void setKa(int i, float val);
+    void setKd(int i, float val);
+    void setKs(int i, float val);
+
 };
 
 #endif // LIGHT_H
