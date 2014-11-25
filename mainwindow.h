@@ -92,11 +92,13 @@ private slots:
 
     void on_listWidget_lights_itemClicked(QListWidgetItem *item);
 
-    void on_comboBox_Kcomponent_activated(const QString &arg1);
-
-    void on_horizontalSlider_attenuation_valueChanged(int value);
+    void on_horizontalSlider_constAtten_valueChanged(int value);
 
     void on_horizontalSlider_lightDist_valueChanged(int value);
+
+    void on_horizontalSlider_linearAtten_valueChanged(int value);
+
+    void on_horizontalSlider_quadAtten_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;

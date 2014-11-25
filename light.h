@@ -13,35 +13,29 @@ private:
 
     GLfloat Ia, Id[10], Is[10];
 
-    //QVector3D KaRGB[10], KdRGB[10], KsRGB[10];
-
-    //GLfloat Ka[10], Kd[10], Ks[10];
-
-    GLfloat n[10];
-
-    GLfloat attenuation[10];
     GLfloat lightDistance[10];
+
+    QVector3D attenuationFactors[10];
 
 
 public:
     Light();
 
-    //QVector3D* getKa();
-    //QVector3D* getKd();
-    //QVector3D* getKs();
+    QVector4D getLightPositions(int i);
+    QString getLightSource(int i);
     QVector3D getIaRGB();
     QVector3D* getIdRGB();
     QVector3D* getIsRGB();
-    GLfloat* getn();
+    QVector3D getIdRGB(int i);
+    QVector3D getIsRGB(int i);
     GLfloat getIa();
     GLfloat *getId();
     GLfloat *getIs();
-    //float getIa(int i);
     float getId(int i);
     float getIs(int i);
-    float getAttenuationFactor(int i);
+    QVector3D getAttenuationFactors(int i);
     float getLightDistance(int i);
-    GLfloat* getAttenuationFactor();
+    QVector3D *getAttenuationFactors();
     GLfloat* getLightDistance();
 
     void setIaValue(float val);
@@ -50,18 +44,13 @@ public:
     void setIaRGBValues(qreal r, qreal g, qreal b);
     void setIdRGBValues(int i, qreal r, qreal g, qreal b);
     void setIsRGBValues(int i, qreal r, qreal g, qreal b);
-    //void setKaRGBValues(int i, int r, int g, int b);
-    //void setKdRGBValues(int i, int r, int g, int b);
-    //void setKsRGBValues(int i, int r, int g, int b);
-    void setN(int i, float val);
-    void setAttenuationFactor(int i, float val);
+    void setQuadAtten(int i, float val);
+    void setLinearAtten(int i, float val);
+    void setConstantAtten(int i, float val);
     void setLightDistance(int i, float val);
 
     QVector4D lightPos[10];
 
-    //void setKa(int i, float val);
-    //void setKd(int i, float val);
-    //void setKs(int i, float val);
 
 };
 

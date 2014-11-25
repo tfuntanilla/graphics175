@@ -34,8 +34,12 @@ public:
 
     void toggleWireFrame(bool on);
     void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
-    void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale);
+    void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale, QVector<QVector3D> kvec, QVector<float> nvec);
     void setFilePath(std::string p);
+
+    void updateLightProperties(int size, QVector<QVector4D> lPos, QVector<QVector3D> atten,
+                               QVector<QVector3D> ambient, QVector<QVector3D> diffuse, QVector<QVector3D> specular,
+                               QVector<QVector3D> intensities, QVector<float> dist);
 
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
@@ -50,6 +54,7 @@ public:
     void setShader(bool flat, bool gouraud, bool phong);
 
     Light lighting;
+    QVector<Light> lights;
     int totalLights;
     void setTotalLights(int i);
 

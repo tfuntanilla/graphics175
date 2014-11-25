@@ -20,36 +20,30 @@ Light::Light()
         IdRGB[i].setX(1.0); IdRGB[i].setY(1.0); IdRGB[i].setZ(1.0);
         IsRGB[i].setX(1.0); IsRGB[i].setY(1.0); IsRGB[i].setZ(1.0);
 
-        attenuation[i] = 1.0;
+        attenuationFactors[i].setX(1.0);
+        attenuationFactors[i].setY(1.0);
+        attenuationFactors[i].setZ(1.0);
         lightDistance[i] = 0.0;
 
-        /*
-        // initialize reflectivity coefficient vector values
-        KaRGB[i].setX(1.0); KaRGB[i].setY(1.0); KaRGB[i].setZ(1.0);
-        KdRGB[i].setX(1.0); KdRGB[i].setY(1.0); KdRGB[i].setZ(1.0);
-        KsRGB[i].setX(1.0); KsRGB[i].setY(1.0); KsRGB[i].setZ(1.0);
-        */
-        // initialize shininess factor
-        n[i] = 50.0;
     }
 
 }
-/*
-QVector3D* Light::getKa()
+
+QVector4D Light::getLightPositions(int i)
 {
-    return KaRGB;
+    return QVector4D(lightPos[i].x(), lightPos[i].y(), lightPos[i].z(), lightPos[i].w());
 }
 
-QVector3D* Light::getKd()
+QString Light::getLightSource(int i)
 {
-    return KdRGB;
+    if (lightPos[i].w() == 0.0) {
+        return "Directional";
+    }
+    else {
+        return "Point";
+    }
 }
 
-QVector3D* Light::getKs()
-{
-    return KsRGB;
-}
-*/
 QVector3D Light::getIaRGB()
 {
     return IaRGB;
@@ -63,6 +57,16 @@ QVector3D *Light::getIdRGB()
 QVector3D *Light::getIsRGB()
 {
     return IsRGB;
+}
+
+QVector3D Light::getIdRGB(int i)
+{
+    return IdRGB[i];
+}
+
+QVector3D Light::getIsRGB(int i)
+{
+    return IsRGB[i];
 }
 
 GLfloat Light::getIa()
@@ -81,12 +85,6 @@ GLfloat *Light::getIs()
     return Is;
 }
 
-/*
-float Light::getIa(int i)
-{
-    return Ia[i];
-}
-*/
 float Light::getId(int i)
 {
     return Id[i];
@@ -97,9 +95,9 @@ float Light::getIs(int i)
     return Is[i];
 }
 
-float Light::getAttenuationFactor(int i)
+QVector3D Light::getAttenuationFactors(int i)
 {
-    return attenuation[i];
+    return attenuationFactors[i];
 }
 
 float Light::getLightDistance(int i)
@@ -107,21 +105,21 @@ float Light::getLightDistance(int i)
     return lightDistance[i];
 }
 
-GLfloat *Light::getAttenuationFactor()
+QVector3D *Light::getAttenuationFactors()
 {
-    return attenuation;
+    return attenuationFactors;
 }
 
 GLfloat *Light::getLightDistance()
 {
     return lightDistance;
 }
-
+/*
 float *Light::getn()
 {
     return n;
 }
-
+*/
 void Light::setIaValue(float val)
 {
     Ia = val;
@@ -158,55 +156,24 @@ void Light::setIsRGBValues(int i, qreal r, qreal g, qreal b)
     IsRGB[i].setY((float)g);
     IsRGB[i].setZ((float)b);
 }
-/*
-void Light::setKaRGBValues(int i, int r, int g, int b)
+
+void Light::setQuadAtten(int i, float val)
 {
-    KaRGB[i].setX(((float)r / 255.0));
-    KaRGB[i].setY(((float)g / 255.0));
-    KaRGB[i].setZ(((float)b / 255.0));
+    attenuationFactors[i].setZ(val);
 }
 
-void Light::setKdRGBValues(int i, int r, int g, int b)
+void Light::setLinearAtten(int i, float val)
 {
-    KdRGB[i].setX(((float)r / 255.0));
-    KdRGB[i].setY(((float)g / 255.0));
-    KdRGB[i].setZ(((float)b / 255.0));
+    attenuationFactors[i].setY(val);
 }
 
-void Light::setKsRGBValues(int i, int r, int g, int b)
+void Light::setConstantAtten(int i, float val)
 {
-    KsRGB[i].setX(((float)r / 255.0));
-    KsRGB[i].setY(((float)g / 255.0));
-    KsRGB[i].setZ(((float)b / 255.0));
-}
-*/
-void Light::setN(int i, float val)
-{
-    n[i] = val;
+    attenuationFactors[i].setX(val);
 }
 
-void Light::setAttenuationFactor(int i, float val)
-{
-    attenuation[i] = val;
-}
 
 void Light::setLightDistance(int i, float val)
 {
     lightDistance[i] = val;
 }
-/*
-void Light::setKa(int i, float val)
-{
-    Ka[i] = val;
-}
-
-void Light::setKd(int i, float val)
-{
-    Kd[i] = val;
-}
-
-void Light::setKs(int i, float val)
-{
-    Ks[i] = val;
-}
-*/

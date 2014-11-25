@@ -23,7 +23,25 @@ struct Model : public Node
     QVector3D rotate;
     QVector3D scale;
 
+    QVector3D kConsts;
 
+    float shine;
+
+};
+
+struct Lights : public Node
+{
+    QString name;
+    QString source;
+    QVector4D lightPosition;
+
+    QVector3D ambientColor;
+    QVector3D diffuseColor;
+    QVector3D specColor;
+    QVector3D intensityLevel;
+
+    QVector3D attenuationFactors;
+    float distance;
 };
 
 struct Scene
@@ -42,6 +60,7 @@ public:
     void scenedemo();
     Model* parseModel(const QJsonObject& model);
     Node* parseNode(const QJsonObject& parentNode) ;
+    Lights* parseLight(const QJsonObject& light);
     void scenedemoRead(const QString& filename, QVector<Scene *> &scenes);
 
     QJsonObject writeNode(Node* node);

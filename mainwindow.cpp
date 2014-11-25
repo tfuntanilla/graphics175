@@ -203,6 +203,7 @@ void MainWindow::handleScene(QString filename)
 
     QVector<Scene*> scenes;
     QVector<Model*> models;
+    QVector<Lights*> lightSettings;
 
     scene.scenedemoRead(filename, scenes);
 
@@ -210,18 +211,21 @@ void MainWindow::handleScene(QString filename)
         if (scenes[0]->root[i]->type == "model") {
             models.push_back(static_cast<Model*>(scenes[0]->root[i]->children[0]));
         }
+        else if (scenes[0]->root[i]->type == "light") {
+            lightSettings.push_back(static_cast<Lights*>(scenes[0]->root[i]->children[0]));
+        }
     }
 
-    QVector<QString> names;
+    qDebug() << "After loading scene...";
+    QVector<QString> names, lNames, lSources;
     QVector<QString> filenames;
     QVector<QMatrix4x4> matrices;
 
-    QVector<QVector3D> t;
-    QVector<QVector3D> r;
-    QVector<QVector3D> s;
+    QVector<float> n, d;
+    QVector<QVector3D> t, r, s, k, ac, dc, sc, il, af;
+    QVector<QVector4D> lp;
 
     QVector<std::string> objectFiles;
-
 
     // Store contents of JSON file in appropriate vectors
     for (int i = 0; i < models.size(); i++) {
@@ -231,11 +235,37 @@ void MainWindow::handleScene(QString filename)
         t.push_back(models[i]->translate);
         r.push_back(models[i]->rotate);
         s.push_back(models[i]->scale);
+        k.push_back(models[i]->kConsts);
+        n.push_back(models[i]->shine);
 
         ui->listWidget->insertItem(i, models[i]->name);
     }
 
+    for (int i = 0; i < lightSettings.size(); i++) {
+        lNames.push_back(lightSettings[i]->name);
+        qDebug() << "Names:" << lNames;
+        lSources.push_back(lightSettings[i]->source);
+        qDebug() << "Sources:" << lSources;
+        lp.push_back(lightSettings[i]->lightPosition);
+        qDebug() << "Light Position:" << lp;
+        ac.push_back(lightSettings[i]->ambientColor);
+        qDebug() << "Ambient:" << ac;
+        dc.push_back(lightSettings[i]->diffuseColor);
+        qDebug() << "Diffuse:" << dc;
+        sc.push_back(lightSettings[i]->specColor);
+        qDebug() << "Specular:" << sc;
+        il.push_back(lightSettings[i]->intensityLevel);
+        qDebug() << "Intensities:" << il;
+        af.push_back(lightSettings[i]->attenuationFactors);
+        qDebug() << "Attenuation Factors:" << af;
+        d.push_back(lightSettings[i]->distance);
+        qDebug() << "Distance:" << d;
+
+        ui->listWidget_lights->insertItem(i, lightSettings[i]->name);
+    }
+
     ui->listWidget->setCurrentRow(0);
+    ui->listWidget_lights->setCurrentRow(0);
 
     // Convert QString filenames to const char *
     // Necessary for loading the OBJ files in tinyobj parser
@@ -248,7 +278,8 @@ void MainWindow::handleScene(QString filename)
     ui->renderwindowwidget->GetRenderWindow()->setFilePath(pathOfFile);
     std::cout << pathOfFile << std::endl;
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, filenames, objectFiles, matrices);
-    ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s);
+    ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s, k, n);
+    ui->renderwindowwidget->GetRenderWindow()->updateLightProperties(lightSettings.size(), lp, af, ac, dc, sc, il, d);
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
 }
@@ -330,11 +361,14 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
         QString qss = QString("background-color: %1").arg(color.name());
         ui->colorButton_Mat->setStyleSheet(qss);
     }
+
+    int nVal = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].getN();
+    ui->horizontalSlider_n->setValue(nVal);
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-    qDebug() << "Start saving file...";
+    //qDebug() << "Start saving file...";
 
     QString out = QFileDialog::getSaveFileName(this, "Save As");
 
@@ -346,15 +380,15 @@ void MainWindow::on_actionSave_triggered()
     scenes.push_back(s);
 
     QString type = "model";
-    QVector<QString> names;
+    QString lightType = "light";
+    QVector<QString> names, lightNames, lightSources;
     QVector<QString> files;
     QVector<QString> qfiles;
     QVector<QMatrix4x4> models;
 
-    QVector<QVector3D> tr;
-    QVector<QVector3D> ro;
-    QVector<QVector3D> sc;
-
+    QVector<QVector4D> lpos;
+    QVector<QVector3D> tr, ro, sc, K, ambC, diffC, specC, iLevel, attenF;
+    QVector<float> n, d;
 
     int totalModels = ui->renderwindowwidget->GetRenderWindow()->objectmodels.size();
 
@@ -372,6 +406,27 @@ void MainWindow::on_actionSave_triggered()
         sc.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].xScale,
                                ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].yScale,
                                ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].zScale));
+        K.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getKa(),
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getKd(),
+                               ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getKs()));
+        n.push_back(ui->renderwindowwidget->GetRenderWindow()->objectmodels[i].getN());
+    }
+
+    int lightsTotal = ui->renderwindowwidget->GetRenderWindow()->totalLights;
+    for (int i = 0; i < lightsTotal; i++) {
+        QString lightN = "light_";
+        QString lightID;
+        lightNames.push_back(lightN.append(lightID.setNum(i+1)));
+        lightSources.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getLightSource(i));
+        lpos.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.lightPos[i]);
+        ambC.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB());
+        diffC.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB(i));
+        specC.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getIsRGB(i));
+        iLevel.push_back(QVector3D(ui->renderwindowwidget->GetRenderWindow()->lighting.getIa(),
+                                   ui->renderwindowwidget->GetRenderWindow()->lighting.getId(i),
+                                   ui->renderwindowwidget->GetRenderWindow()->lighting.getIs(i)));
+        attenF.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getAttenuationFactors(i));
+        d.push_back(ui->renderwindowwidget->GetRenderWindow()->lighting.getLightDistance(i));
     }
 
     for (int i = 0; i < files.size(); i++) {
@@ -387,11 +442,31 @@ void MainWindow::on_actionSave_triggered()
         m->translate = tr[i];
         m->rotate = ro[i];
         m->scale = sc[i];
+        m->kConsts = K[i];
+        m->shine = n[i];
 
         scenes[0]->root.push_back(new Node());
         scenes[0]->root[i]->type = type;
         scenes[0]->root[i]->children.push_back(new Node());
         scenes[0]->root[i]->children[0] = m;
+    }
+
+    for (int i = 0; i < lightsTotal; i++) {
+        Lights* l = new Lights();
+        l->name = lightNames[i];
+        l->source = lightSources[i];
+        l->lightPosition = lpos[i];
+        l->ambientColor = ambC[i];
+        l->diffuseColor = diffC[i];
+        l->specColor = specC[i];
+        l->intensityLevel = iLevel[i];
+        l->attenuationFactors = attenF[i];
+        l->distance = d[i];
+
+        scenes[0]->root.push_back(new Node());
+        scenes[0]->root[i+totalModels]->type = lightType;
+        scenes[0]->root[i+totalModels]->children.push_back(new Node());
+        scenes[0]->root[i+totalModels]->children[0] = l;
     }
 
     const char *c = convertQStringtoString(out);
@@ -400,7 +475,7 @@ void MainWindow::on_actionSave_triggered()
 
     savedScene.scenedemoWrite(out, scenes);
 
-    qDebug() << "File saved!";
+    //qDebug() << "File saved!";
 
 }
 
@@ -567,7 +642,7 @@ void MainWindow::on_comboBox_lightType_activated(const QString &arg1)
 void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    qDebug() << adjustedValue;
+    //qDebug() << adjustedValue;
     ui->renderwindowwidget->GetRenderWindow()->lighting.setIaValue(adjustedValue);
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
@@ -576,7 +651,7 @@ void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 void MainWindow::on_horizontalSlider_Id_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    qDebug() << adjustedValue;
+    //qDebug() << adjustedValue;
     int index = ui->listWidget_lights->currentRow();
     if (index >= 0) {
         ui->renderwindowwidget->GetRenderWindow()->lighting.setIdValues(index, adjustedValue);
@@ -590,7 +665,7 @@ void MainWindow::on_horizontalSlider_Id_valueChanged(int value)
 void MainWindow::on_horizontalSlider_Is_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    qDebug() << adjustedValue;
+    //qDebug() << adjustedValue;
     int index = ui->listWidget_lights->currentRow();
     if (index >= 0) {
         ui->renderwindowwidget->GetRenderWindow()->lighting.setIsValues(index, adjustedValue);
@@ -707,12 +782,18 @@ void MainWindow::on_horizontalSlider_Ks_valueChanged(int value)
 
 void MainWindow::on_horizontalSlider_n_valueChanged(int value)
 {
-    int index = ui->listWidget->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setN(index, (float)value);
+    if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
+        int index = ui->listWidget->currentRow();
+        if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
+            ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].setN((float)value);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
     }
-    else{
-        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
@@ -771,8 +852,10 @@ void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
     float ld = ui->renderwindowwidget->GetRenderWindow()->lighting.getLightDistance(index);
     ui->horizontalSlider_lightDist->setValue(asin(ld) * 180/PI);
 
-    float atten = ui->renderwindowwidget->GetRenderWindow()->lighting.getAttenuationFactor(index);
-    ui->horizontalSlider_lightDist->setValue(asin(atten) * 180/PI);
+    QVector3D atten = ui->renderwindowwidget->GetRenderWindow()->lighting.getAttenuationFactors(index);
+    ui->horizontalSlider_constAtten->setValue(asin(atten.x()) * 180/PI);
+    ui->horizontalSlider_linearAtten->setValue(asin(atten.y()) * 180/PI);
+    ui->horizontalSlider_quadAtten->setValue(asin(atten.z()) * 180/PI);
 
     QVector3D iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
     QVector3D* idrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB();
@@ -784,9 +867,6 @@ void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
             if(color.isValid()) {
                 QString qss = QString("background-color: %1").arg(color.name());
                 ui->colorButton_Light->setStyleSheet(qss);
-            }
-            else {
-                qDebug() << "Not valid";
             }
         }
     }
@@ -810,39 +890,22 @@ void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
     }
 }
 
-void MainWindow::on_comboBox_Kcomponent_activated(const QString &arg1)
+void MainWindow::on_horizontalSlider_constAtten_valueChanged(int value)
 {
-    if (arg1 == "") {
-        QMessageBox::information(this, QString("Alert"), QString("Select component to modify."));
+    if (ui->comboBox_lights->itemText(ui->comboBox_lights->currentIndex()) == "Point") {
+        float adjustedValue = -cos((value + 90) * PI / 180.0);
+        int index = ui->listWidget->currentRow();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setConstantAtten(index, adjustedValue);
+        }
+        else{
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }
-    else if (arg1 == "red") {
-        red = true;
-        green = false;
-        blue = false;
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Disabled for directional light"));
     }
-    else if (arg1 == "green") {
-        red = false;
-        green = true;
-        blue = false;
-    }
-    else if (arg1 == "blue") {
-        red = false;
-        green = false;
-        blue = true;
-    }
-}
-
-void MainWindow::on_horizontalSlider_attenuation_valueChanged(int value)
-{
-    float adjustedValue = -cos((value + 90) * PI / 180.0);
-    int index = ui->listWidget->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setAttenuationFactor(index, adjustedValue);
-    }
-    else{
-        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
-    }
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
 }
 
@@ -857,4 +920,40 @@ void MainWindow::on_horizontalSlider_lightDist_valueChanged(int value)
         QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
     }
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
+}
+
+void MainWindow::on_horizontalSlider_linearAtten_valueChanged(int value)
+{
+    if (ui->comboBox_lights->itemText(ui->comboBox_lights->currentIndex()) == "Point") {
+        float adjustedValue = -cos((value + 90) * PI / 180.0);
+        int index = ui->listWidget->currentRow();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setLinearAtten(index, adjustedValue);
+        }
+        else{
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Disabled for directional light"));
+    }
+}
+
+void MainWindow::on_horizontalSlider_quadAtten_valueChanged(int value)
+{
+    if (ui->comboBox_lights->itemText(ui->comboBox_lights->currentIndex()) == "Point") {
+        float adjustedValue = -cos((value + 90) * PI / 180.0);
+        int index = ui->listWidget->currentRow();
+        if (index >= 0) {
+            ui->renderwindowwidget->GetRenderWindow()->lighting.setQuadAtten(index, adjustedValue);
+        }
+        else{
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("Disabled for directional light"));
+    }
 }

@@ -27,18 +27,18 @@ public:
     void setKa(float val);
     void setKd(float val);
     void setKs(float val);
+    void setN(float val);
     void setMaterialColor(QColor c);
 
     GLfloat getKa();
     GLfloat getKd();
     GLfloat getKs();
+    GLfloat getN();
     QVector3D getKaRGB();
     QVector3D getKdRGB();
     QVector3D getKsRGB();
     QVector3D getColor();
     QColor getActualColor();
-
-
 
     QMatrix4x4 getProjection();
     QMatrix4x4 getView();
@@ -68,7 +68,7 @@ private:
 	QMatrix4x4 view;
     QMatrix4x4 model;
 
-    GLfloat Ka, Kd, Ks;
+    GLfloat Ka, Kd, Ks, n;
 
     QColor mtlColor;
 

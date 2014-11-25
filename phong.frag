@@ -18,8 +18,8 @@ uniform vec3 Ka;
 uniform vec3 Kd;
 uniform vec3 Ks;
 
-uniform float n[10];
-uniform float attenuationFactor[10];
+uniform float n;
+uniform vec3 attenuationFactors[10];
 uniform float lightDistance[10];
 
 in vec4 modelViewPos;
@@ -35,7 +35,13 @@ void main()
     for (int i = 0; i < numOfLights; i++) {
 
         // light direction
-        vec3 L = normalize(vec3(lightPos[i] - modelViewPos));
+        vec3 L = vec3(0.0, 0.0, 0.0);
+        if (lightPos[i].w == 0.0) {
+            L = normalize(vec3(lightPos[i]));
+        }
+        else {
+            L = normalize(vec3(lightPos[i] - modelViewPos));
+        }
 
         // N dot L
         float NdotL = max(0.0, dot(N, L));     
@@ -52,13 +58,22 @@ void main()
         // specular term
         vec3 specular = vec3(0.0, 0.0, 0.0);
         if (NdotL > 0.0) {
-            specular = Is[i] * IsRGB[i] * Ks * pow(max(0.0, dot(R, V)), n[i]);
+            specular = Is[i] * IsRGB[i] * Ks * pow(max(0.0, dot(R, V)), n);
         }
 
-        float lightAttenuation = 1.0 / (1.0 + attenuationFactor[i] * pow(lightDistance[i], 2));
+        if (lightPos[i].w == 0.0) {
+            lightIntensity += (ambient + diffuse + specular);
+        }
+        else {
+            float lightAttenuation = 1.0 / (attenuationFactors[i].x +
+                                            lightDistance[i] * attenuationFactors[i].y +
+                                            lightDistance[i] * lightDistance[i] * attenuationFactors[i].z);
 
-        // sum up light intensities
-        lightIntensity += (ambient + (lightAttenuation * (diffuse + specular)));
+            // sum up light intensities
+            lightIntensity += (ambient + (lightAttenuation * (diffuse + specular)));
+        }
+
+
     }
 
     fragColor = vec4(lightIntensity, 1.0);

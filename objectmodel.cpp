@@ -10,6 +10,7 @@ ObjectModel::ObjectModel()
     xScale = 30.0; yScale = 30.0; zScale = 30.0;
 
     Ka = 1.0; Kd = 1.0; Ks = 1.0;
+    n = 50.0;
     mtlColor = QColor("white");
 
 }
@@ -66,6 +67,11 @@ void ObjectModel::setKs(float val)
     Ks = val;
 }
 
+void ObjectModel::setN(float val)
+{
+    n = val;
+}
+
 void ObjectModel::setMaterialColor(QColor c)
 {
     mtlColor = c;
@@ -84,6 +90,11 @@ GLfloat ObjectModel::getKd()
 GLfloat ObjectModel::getKs()
 {
     return Ks;
+}
+
+GLfloat ObjectModel::getN()
+{
+    return n;
 }
 
 QVector3D ObjectModel::getKaRGB()

@@ -49,14 +49,7 @@ RenderWindow::RenderWindow()
     m_gouraudShadeOn = false;
     m_phongShadeOn = false;
 
-    totalLights = 1;
-/*
-    Ka = 1.0; Ka_r = 0.45; Ka_g = 0.0; Ka_b = 0.0;
-    Kd = 1.0; Kd_r = 0.55; Kd_g = 0.0; Kd_b = 0.0;
-    Ks = 1.0; Ks_r = 1.0; Ks_g = 1.0; Ks_b = 1.0;
-
-
-*/
+    totalLights = 0;
 }
 
 void RenderWindow::checkError(const QString &prefix)
@@ -134,7 +127,7 @@ void RenderWindow::linkShaderPrograms()
         m_KsUniform = m_flatShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_flatShaderProgram->uniformLocation("n");
 
-        m_attenuation = m_flatShaderProgram->uniformLocation("attenuationFactor");
+        m_attenuation = m_flatShaderProgram->uniformLocation("attenuationFactors");
         m_lightDistance = m_flatShaderProgram->uniformLocation("lightDistance");
     }
     else if (m_gouraudShadeOn) {
@@ -166,7 +159,7 @@ void RenderWindow::linkShaderPrograms()
         m_KsUniform = m_gouraudShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_gouraudShaderProgram->uniformLocation("n");
 
-        m_attenuation = m_gouraudShaderProgram->uniformLocation("attenuationFactor");
+        m_attenuation = m_gouraudShaderProgram->uniformLocation("attenuationFactors");
         m_lightDistance = m_gouraudShaderProgram->uniformLocation("lightDistance");
     }
     else if (m_phongShadeOn) {
@@ -197,7 +190,7 @@ void RenderWindow::linkShaderPrograms()
         m_KsUniform = m_phongShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_phongShaderProgram->uniformLocation("n");
 
-        m_attenuation = m_phongShaderProgram->uniformLocation("attenuationFactor");
+        m_attenuation = m_phongShaderProgram->uniformLocation("attenuationFactors");
         m_lightDistance = m_phongShaderProgram->uniformLocation("lightDistance");
     }
     else {
@@ -401,6 +394,7 @@ void RenderWindow::render()
 
             QMatrix4x4 view = camera.returnView();
 
+
             if (m_flatShadeOn) {
                 m_flatShaderProgram->setUniformValue(m_matrixUniform, projection * view * model);
 
@@ -421,8 +415,8 @@ void RenderWindow::render()
                 m_flatShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
                 m_flatShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
                 m_flatShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
-                m_flatShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
-                m_flatShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_flatShaderProgram->setUniformValue(m_shineUniform, objectmodels[i].getN());
+                m_flatShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactors(), 10);
                 m_flatShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
 
             }
@@ -445,8 +439,8 @@ void RenderWindow::render()
                 m_gouraudShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
                 m_gouraudShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
                 m_gouraudShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
-                m_gouraudShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
-                m_gouraudShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_gouraudShaderProgram->setUniformValue(m_shineUniform, objectmodels[i].getN());
+                m_gouraudShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactors(), 10);
                 m_gouraudShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
             }
             else if (m_phongShadeOn) {
@@ -468,8 +462,8 @@ void RenderWindow::render()
                 m_phongShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
                 m_phongShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
                 m_phongShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
-                m_phongShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
-                m_phongShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_phongShaderProgram->setUniformValue(m_shineUniform, objectmodels[i].getN());
+                m_phongShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactors(), 10);
                 m_phongShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
 
             }
@@ -543,7 +537,7 @@ void RenderWindow::getFileAndMatrices(QVector<QString> typeNames, QVector<QStrin
 
 }
 
-void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale)
+void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale, QVector<QVector3D> kvec, QVector<float> nvec)
 {
     objectmodels.resize(size);
 
@@ -556,6 +550,11 @@ void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVe
                                             rot[i].x(), rot[i].y(), rot[i].z(),
                                             scale[i].x(), scale[i].y(),scale[i].z());
 
+        objectmodels[i].setKa(kvec[i].x());
+        objectmodels[i].setKd(kvec[i].y());
+        objectmodels[i].setKs(kvec[i].z());
+        objectmodels[i].setN(nvec[i]);
+        //qDebug() << nvec[i];
         objectmodels[i].setModel(matrices[i]);
     }
 }
@@ -563,6 +562,38 @@ void RenderWindow::updateModelProperties(int size, QVector<QVector3D> trans, QVe
 void RenderWindow::setFilePath(std::string p)
 {
     path.append(p);
+}
+
+void RenderWindow::updateLightProperties
+(int size, QVector<QVector4D> lPos, QVector<QVector3D> atten,
+ QVector<QVector3D> ambient, QVector<QVector3D> diffuse, QVector<QVector3D> specular,
+ QVector<QVector3D> intensities, QVector<float> dist)
+{
+    setTotalLights(size);
+    for (int i = 0; i < size; i++) {
+        lighting.lightPos[i] = lPos[i];
+        qDebug() << "From render:" << lighting.lightPos[i];
+        lighting.setConstantAtten(i, atten[i].x());
+        lighting.setLinearAtten(i, atten[i].y());
+        lighting.setQuadAtten(i, atten[i].z());
+        qDebug() << "From render:" << lighting.getAttenuationFactors(i);
+
+
+        lighting.setIaRGBValues((qreal)ambient[i].x(), (qreal)ambient[i].y(), (qreal)ambient[i].z());
+        lighting.setIdRGBValues(i, (qreal)diffuse[i].x(), (qreal)diffuse[i].y(), (qreal)diffuse[i].z());
+        lighting.setIsRGBValues(i, (qreal)specular[i].x(), (qreal)specular[i].y(), (qreal)specular[i].z());
+        qDebug() << "From render:" << lighting.getIaRGB();
+        qDebug() << "From render:" << lighting.getIdRGB(i);
+        qDebug() << "From render:" << lighting.getIsRGB(i);
+
+        lighting.setIaValue(intensities[i].x());
+        lighting.setIdValues(i, intensities[i].y());
+        lighting.setIsValues(i, intensities[i].z());
+        qDebug() << "From render:" << lighting.getIa() << lighting.getId(i) << lighting.getIs(i);
+
+        lighting.setLightDistance(i, dist[i]);
+        qDebug() << "From render:" << lighting.getLightDistance(i);
+    }
 }
 
 void RenderWindow::calculateSurfaceNormals(QVector3D v1, QVector3D v2, QVector3D v3)
@@ -577,7 +608,7 @@ void RenderWindow::calculateSurfaceNormals(QVector3D v1, QVector3D v2, QVector3D
 
     QVector3D normal(xNormal, yNormal, zNormal);
     //qDebug() << normal;
-
+    normal.normalize();
     normals.push_back(normal);
 
 }
