@@ -94,6 +94,10 @@ private slots:
 
     void on_comboBox_Kcomponent_activated(const QString &arg1);
 
+    void on_horizontalSlider_attenuation_valueChanged(int value);
+
+    void on_horizontalSlider_lightDist_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 

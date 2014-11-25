@@ -23,6 +23,7 @@ struct Model : public Node
     QVector3D rotate;
     QVector3D scale;
 
+
 };
 
 struct Scene

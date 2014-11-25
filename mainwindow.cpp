@@ -317,6 +317,19 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     ui->yScaleSlider->setValue(currYScale);
     ui->zScaleSlider->setValue(currZScale);
 
+    int kaVal = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].getKa();
+    int kdVal = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].getKd();
+    int ksVal = ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].getKs();
+
+    ui->horizontalSlider_Ka->setValue(asin(kaVal) * 180/PI);
+    ui->horizontalSlider_Kd->setValue(asin(kdVal) * 180/PI);
+    ui->horizontalSlider_Ks->setValue(asin(ksVal) * 180/PI);
+
+    QColor color =ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].getActualColor();
+    if(color.isValid()) {
+        QString qss = QString("background-color: %1").arg(color.name());
+        ui->colorButton_Mat->setStyleSheet(qss);
+    }
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -506,7 +519,7 @@ void MainWindow::on_horizontalSlider_lightPosZ_valueChanged(int value)
 void MainWindow::on_comboBox_lightType_activated(const QString &arg1)
 {
     int index = ui->listWidget_lights->currentRow();
-    QVector3D* iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
+    QVector3D iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
     QVector3D* idrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB();
     QVector3D* isrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIsRGB();
 
@@ -516,7 +529,7 @@ void MainWindow::on_comboBox_lightType_activated(const QString &arg1)
         specSelected = false;
 
         if (index >= 0) {
-            QColor color(iargb[index].x()*255, iargb[index].y()*255, iargb[index].z()*255, 255);
+            QColor color(iargb.x()*255, iargb.y()*255, iargb.z()*255, 255);
             if(color.isValid()) {
                 QString qss = QString("background-color: %1").arg(color.name());
                 ui->colorButton_Light->setStyleSheet(qss);
@@ -555,14 +568,8 @@ void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
     qDebug() << adjustedValue;
-    int index = ui->listWidget_lights->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setIaValues(index, adjustedValue);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
-    }
-    else {
-        QMessageBox::information(this, QString("Alert"), QString("Select light from list."));
-    }
+    ui->renderwindowwidget->GetRenderWindow()->lighting.setIaValue(adjustedValue);
+    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
 }
 
@@ -606,7 +613,7 @@ void MainWindow::on_colorButton_Light_clicked()
 
         if (index >= 0) {
             if (ambSelected) {
-                ui->renderwindowwidget->GetRenderWindow()->lighting.setIaRGBValues(index, color.redF(), color.greenF(), color.blueF());
+                ui->renderwindowwidget->GetRenderWindow()->lighting.setIaRGBValues(color.redF(), color.greenF(), color.blueF());
             }
             else if (diffSelected) {
                 ui->renderwindowwidget->GetRenderWindow()->lighting.setIdRGBValues(index, color.redF(), color.greenF(), color.blueF());
@@ -628,56 +635,74 @@ void MainWindow::on_colorButton_Mat_clicked()
         QString qss = QString("background-color: %1").arg(color.name());
         ui->colorButton_Mat->setStyleSheet(qss);
 
-        int index = ui->listWidget->currentRow();
-        if (index >= 0) {
-            ui->renderwindowwidget->GetRenderWindow()->lighting.setKaRGBValues(index, color.red(), color.green(), color.blue());
-            ui->renderwindowwidget->GetRenderWindow()->lighting.setKdRGBValues(index, color.red(), color.green(), color.blue());
-            ui->renderwindowwidget->GetRenderWindow()->lighting.setKsRGBValues(index, color.red(), color.green(), color.blue());
+        if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
+            int index = ui->listWidget->currentRow();
+            if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
+                ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].setMaterialColor(color);
+                ui->renderwindowwidget->GetRenderWindow()->renderLater();
+            }
+            else {
+                QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+            }
         }
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
+        }
     }
 }
 
 void MainWindow::on_horizontalSlider_Ka_valueChanged(int value)
 {
-    float adjustedValue = (float)value / 100.0;
-    int index = ui->listWidget->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setKa(index, adjustedValue);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
+        int index = ui->listWidget->currentRow();
+        if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
+            ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].setKa(adjustedValue);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
     }
-    else{
-        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_Kd_valueChanged(int value)
 {
-    float adjustedValue = (float)value / 100.0;
-    int index = ui->listWidget->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setKd(index, adjustedValue);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
+        int index = ui->listWidget->currentRow();
+        if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
+            ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].setKd(adjustedValue);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
     }
-    else{
-        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_Ks_valueChanged(int value)
 {
-    float adjustedValue = (float)value / 100.0;
-    int index = ui->listWidget->currentRow();
-    if (index >= 0) {
-        ui->renderwindowwidget->GetRenderWindow()->lighting.setKs(index, adjustedValue);
-        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    if (!ui->renderwindowwidget->GetRenderWindow()->objectmodels.empty()) {
+        int index = ui->listWidget->currentRow();
+        if ((index >= 0) && (index < ui->renderwindowwidget->GetRenderWindow()->objectmodels.size())) {
+            ui->renderwindowwidget->GetRenderWindow()->objectmodels[index].setKs(adjustedValue);
+            ui->renderwindowwidget->GetRenderWindow()->renderLater();
+        }
+        else {
+            QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+        }
     }
-    else{
-        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    else {
+        QMessageBox::information(this, QString("Alert"), QString("No file loaded. Load scene file first."));
     }
-    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }
 
 void MainWindow::on_horizontalSlider_n_valueChanged(int value)
@@ -735,22 +760,27 @@ void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
         ui->comboBox_lights->setCurrentIndex(1);
     }
 
-    int ia = ui->renderwindowwidget->GetRenderWindow()->lighting.getIa(index);
-    qDebug() << "ia" << ia;
-    int id = ui->renderwindowwidget->GetRenderWindow()->lighting.getId(index);
-    int is = ui->renderwindowwidget->GetRenderWindow()->lighting.getIs(index);
+    float ia = ui->renderwindowwidget->GetRenderWindow()->lighting.getIa();
+    float id = ui->renderwindowwidget->GetRenderWindow()->lighting.getId(index);
+    float is = ui->renderwindowwidget->GetRenderWindow()->lighting.getIs(index);
 
     ui->horizontalSlider_Ia->setValue(asin(ia) * 180/PI);
     ui->horizontalSlider_Id->setValue(asin(id) * 180/PI);
     ui->horizontalSlider_Is->setValue(asin(is) * 180/PI);
 
-    QVector3D* iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
+    float ld = ui->renderwindowwidget->GetRenderWindow()->lighting.getLightDistance(index);
+    ui->horizontalSlider_lightDist->setValue(asin(ld) * 180/PI);
+
+    float atten = ui->renderwindowwidget->GetRenderWindow()->lighting.getAttenuationFactor(index);
+    ui->horizontalSlider_lightDist->setValue(asin(atten) * 180/PI);
+
+    QVector3D iargb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIaRGB();
     QVector3D* idrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIdRGB();
     QVector3D* isrgb = ui->renderwindowwidget->GetRenderWindow()->lighting.getIsRGB();
 
     if (ambSelected) {
         if (index >= 0) {
-            QColor color(iargb[index].x()*255, iargb[index].y()*255, iargb[index].z()*255, 255);
+            QColor color(iargb.x()*255, iargb.y()*255, iargb.z()*255, 255);
             if(color.isValid()) {
                 QString qss = QString("background-color: %1").arg(color.name());
                 ui->colorButton_Light->setStyleSheet(qss);
@@ -778,7 +808,6 @@ void MainWindow::on_listWidget_lights_itemClicked(QListWidgetItem *item)
             }
         }
     }
-
 }
 
 void MainWindow::on_comboBox_Kcomponent_activated(const QString &arg1)
@@ -801,4 +830,31 @@ void MainWindow::on_comboBox_Kcomponent_activated(const QString &arg1)
         green = false;
         blue = true;
     }
+}
+
+void MainWindow::on_horizontalSlider_attenuation_valueChanged(int value)
+{
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setAttenuationFactor(index, adjustedValue);
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
+    ui->renderwindowwidget->GetRenderWindow()->renderLater();
+
+}
+
+void MainWindow::on_horizontalSlider_lightDist_valueChanged(int value)
+{
+    float adjustedValue = -cos((value + 90) * PI / 180.0);
+    int index = ui->listWidget->currentRow();
+    if (index >= 0) {
+        ui->renderwindowwidget->GetRenderWindow()->lighting.setLightDistance(index, adjustedValue);
+    }
+    else{
+        QMessageBox::information(this, QString("Alert"), QString("Select object from list."));
+    }
+    ui->renderwindowwidget->GetRenderWindow()->renderLater();
 }

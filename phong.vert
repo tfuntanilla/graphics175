@@ -14,6 +14,7 @@ void main()
 {
     // position in model view
     modelViewPos = modelViewMatrix * posAttr;
+
     // normals in model view
     N = normalize(normalMatrix * normAttr);
 

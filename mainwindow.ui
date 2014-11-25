@@ -36,20 +36,27 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>-510</y>
+       <y>-251</y>
        <width>325</width>
-       <height>2025</height>
+       <height>2141</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="60" column="0">
+      <item row="48" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Light Distance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="64" column="0">
        <widget class="QLabel" name="label_n">
         <property name="text">
          <string>n</string>
         </property>
        </widget>
       </item>
-      <item row="77" column="0">
+      <item row="81" column="0">
        <widget class="QLabel" name="label_scale">
         <property name="font">
          <font>
@@ -61,7 +68,7 @@
         </property>
        </widget>
       </item>
-      <item row="64" column="0">
+      <item row="68" column="0">
        <widget class="QLabel" name="xTransLabel">
         <property name="font">
          <font>
@@ -73,7 +80,7 @@
         </property>
        </widget>
       </item>
-      <item row="75" column="0">
+      <item row="79" column="0">
        <widget class="QLabel" name="zRotLabel">
         <property name="font">
          <font>
@@ -126,7 +133,7 @@
         </property>
        </widget>
       </item>
-      <item row="70" column="0">
+      <item row="74" column="0">
        <widget class="QLabel" name="label_rotate">
         <property name="font">
          <font>
@@ -166,7 +173,7 @@
         </property>
        </widget>
       </item>
-      <item row="66" column="0">
+      <item row="70" column="0">
        <widget class="QLabel" name="yTransLabel">
         <property name="font">
          <font>
@@ -178,7 +185,7 @@
         </property>
        </widget>
       </item>
-      <item row="65" column="0">
+      <item row="69" column="0">
        <widget class="QSlider" name="xTransSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -253,7 +260,7 @@
         </property>
        </widget>
       </item>
-      <item row="63" column="0">
+      <item row="67" column="0">
        <widget class="QLabel" name="label_translate">
         <property name="font">
          <font>
@@ -267,6 +274,12 @@
       </item>
       <item row="19" column="0">
        <widget class="QSlider" name="horizontalSlider_lightPosY">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -310,6 +323,12 @@
       </item>
       <item row="17" column="0">
        <widget class="QSlider" name="horizontalSlider_lightPosX">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -322,7 +341,7 @@
         </property>
        </widget>
       </item>
-      <item row="57" column="0">
+      <item row="61" column="0">
        <widget class="QSlider" name="horizontalSlider_Kd">
         <property name="maximum">
          <number>100</number>
@@ -332,7 +351,7 @@
         </property>
        </widget>
       </item>
-      <item row="54" column="0">
+      <item row="58" column="0">
        <widget class="QLabel" name="label_Ka">
         <property name="text">
          <string>Ka</string>
@@ -342,7 +361,7 @@
         </property>
        </widget>
       </item>
-      <item row="49" column="0">
+      <item row="53" column="0">
        <widget class="QLabel" name="label_colorMat">
         <property name="text">
          <string>Material Color:</string>
@@ -397,7 +416,7 @@
         </property>
        </widget>
       </item>
-      <item row="79" column="0">
+      <item row="83" column="0">
        <widget class="QSlider" name="xScaleSlider">
         <property name="minimum">
          <number>-150</number>
@@ -419,7 +438,7 @@
         </property>
        </widget>
       </item>
-      <item row="80" column="0">
+      <item row="84" column="0">
        <widget class="QLabel" name="yScaleLabel">
         <property name="font">
          <font>
@@ -431,7 +450,7 @@
         </property>
        </widget>
       </item>
-      <item row="81" column="0">
+      <item row="85" column="0">
        <widget class="QSlider" name="yScaleSlider">
         <property name="minimum">
          <number>-150</number>
@@ -453,7 +472,7 @@
         </property>
        </widget>
       </item>
-      <item row="73" column="0">
+      <item row="77" column="0">
        <widget class="QLabel" name="yRotLabel">
         <property name="font">
          <font>
@@ -516,7 +535,7 @@
         </property>
        </widget>
       </item>
-      <item row="69" column="0">
+      <item row="73" column="0">
        <widget class="QSlider" name="zTransSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -535,7 +554,7 @@
         </property>
        </widget>
       </item>
-      <item row="68" column="0">
+      <item row="72" column="0">
        <widget class="QLabel" name="zTransLabel">
         <property name="font">
          <font>
@@ -547,7 +566,7 @@
         </property>
        </widget>
       </item>
-      <item row="67" column="0">
+      <item row="71" column="0">
        <widget class="QSlider" name="yTransSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -569,7 +588,7 @@
         </property>
        </widget>
       </item>
-      <item row="62" column="0">
+      <item row="66" column="0">
        <widget class="QLabel" name="label_transformation">
         <property name="text">
          <string>Transformation</string>
@@ -579,7 +598,7 @@
         </property>
        </widget>
       </item>
-      <item row="74" column="0">
+      <item row="78" column="0">
        <widget class="QSlider" name="yRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -604,7 +623,7 @@
         </property>
        </widget>
       </item>
-      <item row="72" column="0">
+      <item row="76" column="0">
        <widget class="QSlider" name="xRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -648,7 +667,7 @@
         </property>
        </widget>
       </item>
-      <item row="78" column="0">
+      <item row="82" column="0">
        <widget class="QLabel" name="xScaleLabel">
         <property name="font">
          <font>
@@ -669,6 +688,12 @@
       </item>
       <item row="21" column="0">
        <widget class="QSlider" name="horizontalSlider_lightPosZ">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -681,7 +706,7 @@
         </property>
        </widget>
       </item>
-      <item row="56" column="0">
+      <item row="60" column="0">
        <widget class="QLabel" name="label_Kd">
         <property name="text">
          <string>Kd</string>
@@ -702,7 +727,7 @@
         </property>
        </widget>
       </item>
-      <item row="59" column="0">
+      <item row="63" column="0">
        <widget class="QSlider" name="horizontalSlider_Ks">
         <property name="maximum">
          <number>100</number>
@@ -712,7 +737,7 @@
         </property>
        </widget>
       </item>
-      <item row="47" column="0">
+      <item row="51" column="0">
        <widget class="QListWidget" name="listWidget">
         <property name="frameShadow">
          <enum>QFrame::Sunken</enum>
@@ -722,7 +747,17 @@
         </property>
        </widget>
       </item>
-      <item row="53" column="0">
+      <item row="49" column="0">
+       <widget class="QSlider" name="horizontalSlider_lightDist">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="57" column="0">
        <widget class="QComboBox" name="comboBox_Kcomponent">
         <item>
          <property name="text">
@@ -772,7 +807,7 @@
         </property>
        </widget>
       </item>
-      <item row="51" column="0">
+      <item row="55" column="0">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -785,7 +820,7 @@
         </property>
        </spacer>
       </item>
-      <item row="50" column="0">
+      <item row="54" column="0">
        <widget class="QPushButton" name="colorButton_Mat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -819,14 +854,14 @@
         </property>
        </widget>
       </item>
-      <item row="58" column="0">
+      <item row="62" column="0">
        <widget class="QLabel" name="label_Ks">
         <property name="text">
          <string>Ks</string>
         </property>
        </widget>
       </item>
-      <item row="55" column="0">
+      <item row="59" column="0">
        <widget class="QSlider" name="horizontalSlider_Ka">
         <property name="inputMethodHints">
          <set>Qt::ImhNone</set>
@@ -848,7 +883,7 @@
         </property>
        </widget>
       </item>
-      <item row="48" column="0">
+      <item row="52" column="0">
        <widget class="QLabel" name="label_materialParameters">
         <property name="text">
          <string>Material Parameters</string>
@@ -858,7 +893,7 @@
         </property>
        </widget>
       </item>
-      <item row="71" column="0">
+      <item row="75" column="0">
        <widget class="QLabel" name="xRotLabel">
         <property name="font">
          <font>
@@ -870,7 +905,7 @@
         </property>
        </widget>
       </item>
-      <item row="83" column="0">
+      <item row="87" column="0">
        <widget class="QSlider" name="zScaleSlider">
         <property name="minimum">
          <number>-150</number>
@@ -889,7 +924,7 @@
         </property>
        </widget>
       </item>
-      <item row="82" column="0">
+      <item row="86" column="0">
        <widget class="QLabel" name="zScaleLabel">
         <property name="font">
          <font>
@@ -915,7 +950,7 @@
         </item>
        </widget>
       </item>
-      <item row="61" column="0">
+      <item row="65" column="0">
        <widget class="QSlider" name="horizontalSlider_n">
         <property name="minimum">
          <number>1</number>
@@ -931,7 +966,7 @@
         </property>
        </widget>
       </item>
-      <item row="76" column="0">
+      <item row="80" column="0">
        <widget class="QSlider" name="zRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -959,7 +994,24 @@
         </property>
        </widget>
       </item>
-      <item row="46" column="0">
+      <item row="56" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Select component:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="47" column="0">
+       <widget class="QSlider" name="horizontalSlider_attenuation">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="50" column="0">
        <widget class="QLabel" name="label_objects">
         <property name="text">
          <string>Objects</string>
@@ -969,10 +1021,10 @@
         </property>
        </widget>
       </item>
-      <item row="52" column="0">
-       <widget class="QLabel" name="label">
+      <item row="46" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Select component:</string>
+         <string>Attenuation</string>
         </property>
        </widget>
       </item>

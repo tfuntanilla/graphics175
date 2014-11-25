@@ -51,15 +51,6 @@ RenderWindow::RenderWindow()
 
     totalLights = 1;
 /*
-    for (int i = 0; i < 10; i++) {
-        lightPos[i].setX(0.0); lightPos[i].setY(0.0); lightPos[i].setZ(0.0); lightPos[i].setW(1.0);
-        Ia[i] = 1.0; Id[i] = 1.0; Is[i] = 1.0;
-        IaRGB[i].setX(1.0); IaRGB[i].setY(1.0); IaRGB[i].setZ(1.0);
-        IdRGB[i].setX(1.0); IdRGB[i].setY(1.0); IdRGB[i].setZ(1.0);
-        IsRGB[i].setX(1.0); IsRGB[i].setY(1.0); IsRGB[i].setZ(1.0);
-
-    }
-
     Ka = 1.0; Ka_r = 0.45; Ka_g = 0.0; Ka_b = 0.0;
     Kd = 1.0; Kd_r = 0.55; Kd_g = 0.0; Kd_b = 0.0;
     Ks = 1.0; Ks_r = 1.0; Ks_g = 1.0; Ks_b = 1.0;
@@ -142,6 +133,9 @@ void RenderWindow::linkShaderPrograms()
         m_KdUniform = m_flatShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_flatShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_flatShaderProgram->uniformLocation("n");
+
+        m_attenuation = m_flatShaderProgram->uniformLocation("attenuationFactor");
+        m_lightDistance = m_flatShaderProgram->uniformLocation("lightDistance");
     }
     else if (m_gouraudShadeOn) {
         m_gouraudShaderProgram = new QOpenGLShaderProgram(this);
@@ -171,6 +165,9 @@ void RenderWindow::linkShaderPrograms()
         m_KdUniform = m_gouraudShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_gouraudShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_gouraudShaderProgram->uniformLocation("n");
+
+        m_attenuation = m_gouraudShaderProgram->uniformLocation("attenuationFactor");
+        m_lightDistance = m_gouraudShaderProgram->uniformLocation("lightDistance");
     }
     else if (m_phongShadeOn) {
         m_phongShaderProgram = new QOpenGLShaderProgram(this);
@@ -199,6 +196,9 @@ void RenderWindow::linkShaderPrograms()
         m_KdUniform = m_phongShaderProgram->uniformLocation("Kd");
         m_KsUniform = m_phongShaderProgram->uniformLocation("Ks");
         m_shineUniform = m_phongShaderProgram->uniformLocation("n");
+
+        m_attenuation = m_phongShaderProgram->uniformLocation("attenuationFactor");
+        m_lightDistance = m_phongShaderProgram->uniformLocation("lightDistance");
     }
     else {
         m_program = new QOpenGLShaderProgram(this);
@@ -355,8 +355,8 @@ void RenderWindow::render()
 
             int clen = vlen;
             GLfloat colors[clen];
-            std::fill_n(colors, clen, 0.0f);
-            for (int i = 0; i < clen; i+=9) {
+            std::fill_n(colors, clen, 1.0f);
+            /*for (int i = 0; i < clen; i+=9) {
                colors[i] = 1.0f;
                if ((i+4) <= clen) {
                     colors[i+4] = 1.0f;
@@ -364,7 +364,7 @@ void RenderWindow::render()
                if ((i+4) <= clen) {
                     colors[i+8] = 1.0f;
                 }
-            }
+            }*/
 
             m_vbo[i]->bind();
             m_vbo[i]->allocate((vlen + nlen)*sizeof(GLfloat));
@@ -412,16 +412,18 @@ void RenderWindow::render()
 
                 m_flatShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_flatShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_flatShaderProgram->setUniformValue(m_IaUniform, lighting.getIa());
                 m_flatShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
                 m_flatShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
-                m_flatShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_flatShaderProgram->setUniformValue(m_IaRGBUniform, lighting.getIaRGB());
                 m_flatShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
                 m_flatShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
-                m_flatShaderProgram->setUniformValueArray(m_KaUniform, lighting.getKa(), 10);
-                m_flatShaderProgram->setUniformValueArray(m_KdUniform, lighting.getKd(), 10);
-                m_flatShaderProgram->setUniformValueArray(m_KsUniform, lighting.getKs(), 10);
+                m_flatShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
+                m_flatShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
+                m_flatShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
                 m_flatShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
+                m_flatShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_flatShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
 
             }
             else if (m_gouraudShadeOn) {
@@ -434,16 +436,18 @@ void RenderWindow::render()
                 m_gouraudShaderProgram->setUniformValueArray(m_lightPosition, lighting.lightPos, 10);
                 m_gouraudShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_gouraudShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_gouraudShaderProgram->setUniformValue(m_IaUniform, lighting.getIa());
                 m_gouraudShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
                 m_gouraudShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
-                m_gouraudShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_gouraudShaderProgram->setUniformValue(m_IaRGBUniform, lighting.getIaRGB());
                 m_gouraudShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
                 m_gouraudShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
-                m_gouraudShaderProgram->setUniformValue(m_KaUniform, QVector3D(1.0, 1.0, 1.0));
-                m_gouraudShaderProgram->setUniformValue(m_KdUniform, QVector3D(1.0, 1.0, 1.0));
-                m_gouraudShaderProgram->setUniformValue(m_KsUniform, QVector3D(1.0, 1.0, 1.0));
+                m_gouraudShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
+                m_gouraudShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
+                m_gouraudShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
                 m_gouraudShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
+                m_gouraudShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_gouraudShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
             }
             else if (m_phongShadeOn) {
                 m_phongShaderProgram->setUniformValue(m_matrixUniform, projection * view * model);
@@ -455,16 +459,18 @@ void RenderWindow::render()
                 m_phongShaderProgram->setUniformValueArray(m_lightPosition, lighting.lightPos, 10);
                 m_phongShaderProgram->setUniformValue(m_eyePosition, QVector3D(camera.returnEye()));
 
-                m_phongShaderProgram->setUniformValueArray(m_IaUniform, lighting.getIa(), 10, 1);
+                m_phongShaderProgram->setUniformValue(m_IaUniform, lighting.getIa());
                 m_phongShaderProgram->setUniformValueArray(m_IdUniform, lighting.getId(), 10, 1);
                 m_phongShaderProgram->setUniformValueArray(m_IsUniform, lighting.getIs(), 10, 1);
-                m_phongShaderProgram->setUniformValueArray(m_IaRGBUniform, lighting.getIaRGB(), 10);
+                m_phongShaderProgram->setUniformValue(m_IaRGBUniform, lighting.getIaRGB());
                 m_phongShaderProgram->setUniformValueArray(m_IdRGBUniform, lighting.getIdRGB(), 10);
                 m_phongShaderProgram->setUniformValueArray(m_IsRGBUniform, lighting.getIsRGB(), 10);
-                m_phongShaderProgram->setUniformValueArray(m_KaUniform, lighting.getKa(), 10);
-                m_phongShaderProgram->setUniformValueArray(m_KdUniform, lighting.getKd(), 10);
-                m_phongShaderProgram->setUniformValueArray(m_KsUniform, lighting.getKs(), 10);
+                m_phongShaderProgram->setUniformValue(m_KaUniform, objectmodels[i].getKaRGB());
+                m_phongShaderProgram->setUniformValue(m_KdUniform, objectmodels[i].getKdRGB());
+                m_phongShaderProgram->setUniformValue(m_KsUniform, objectmodels[i].getKsRGB());
                 m_phongShaderProgram->setUniformValueArray(m_shineUniform, lighting.getn(), 10, 1);
+                m_phongShaderProgram->setUniformValueArray(m_attenuation, lighting.getAttenuationFactor(), 10, 1);
+                m_phongShaderProgram->setUniformValueArray(m_lightDistance, lighting.getLightDistance(), 10, 1);
 
             }
             else {

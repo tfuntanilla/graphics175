@@ -49,18 +49,8 @@ public:
     void calculateSurfaceNormals(QVector3D v1, QVector3D v2, QVector3D v3);
     void setShader(bool flat, bool gouraud, bool phong);
 
-    QVector4D lightPos[10];
-    QVector3D IaRGB[10], IdRGB[10], IsRGB[10];
-
     Light lighting;
     int totalLights;
-
-    //GLfloat Ia[10], Id[10], Is[10];
-
-    //GLfloat Ka, Ka_r, Ka_g, Ka_b,
-    //        Kd, Kd_r, Kd_g, Kd_b,
-    //        Ks, Ks_r, Ks_g, Ks_b;
-    //GLfloat n;
     void setTotalLights(int i);
 
 
@@ -88,6 +78,9 @@ private:
     GLuint m_KdUniform;
     GLuint m_KsUniform;
     GLuint m_shineUniform;
+
+    GLuint m_attenuation;
+    GLuint m_lightDistance;
 
     QOpenGLShaderProgram *m_program;
     QOpenGLShaderProgram *m_flatShaderProgram;
