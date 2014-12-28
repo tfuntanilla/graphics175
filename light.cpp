@@ -4,18 +4,15 @@
 
 Light::Light()
 {
+    // initialize values
     Ia = 1.0;
     IaRGB.setX(1.0); IaRGB.setY(1.0); IaRGB.setZ(1.0);
     for (int i = 0; i < 10; i++) {
 
-        // initialize to point light source
         lightPos[i].setX(0.0); lightPos[i].setY(0.0); lightPos[i].setZ(0.0); lightPos[i].setW(1.0);
 
-        // initialize intensity factors
         Id[i] = 0.0; Is[i] = 0.0;
 
-        // initialize color components of ambient, diffuse, and specular illumination
-        // X is the red component, Y is green, and Z is blue
         IaRGB.setX(1.0); IaRGB.setY(1.0); IaRGB.setZ(1.0);
         IdRGB[i].setX(1.0); IdRGB[i].setY(1.0); IdRGB[i].setZ(1.0);
         IsRGB[i].setX(1.0); IsRGB[i].setY(1.0); IsRGB[i].setZ(1.0);
@@ -114,12 +111,7 @@ GLfloat *Light::getLightDistance()
 {
     return lightDistance;
 }
-/*
-float *Light::getn()
-{
-    return n;
-}
-*/
+
 void Light::setIaValue(float val)
 {
     Ia = val;
@@ -140,7 +132,6 @@ void Light::setIaRGBValues(qreal r, qreal g, qreal b)
     IaRGB.setX((float)r);
     IaRGB.setY((float)g);
     IaRGB.setZ((float)b);
-    //qDebug() << IaRGB[i];
 }
 
 void Light::setIdRGBValues(int i, qreal r, qreal g, qreal b)
@@ -171,7 +162,6 @@ void Light::setConstantAtten(int i, float val)
 {
     attenuationFactors[i].setX(val);
 }
-
 
 void Light::setLightDistance(int i, float val)
 {

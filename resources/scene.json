@@ -1,0 +1,177 @@
+[
+    {
+        "description": "This is /Users/trishamariefuntanilla/Desktop/test.json",
+        "name": "/Users/trishamariefuntanilla/Desktop/test.json",
+        "root": [
+            {
+                "Ka,Kd,Ks": [
+                    1,
+                    1,
+                    1
+                ],
+                "filename": "sphere.obj",
+                "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "name": "sphere",
+                "rotation": [
+                    -333,
+                    93,
+                    527
+                ],
+                "scale": [
+                    5,
+                    5,
+                    5
+                ],
+                "shine": 44,
+                "translation": [
+                    -13,
+                    0,
+                    -13
+                ],
+                "type": "model"
+            },
+            {
+                "Ka,Kd,Ks": [
+                    1,
+                    1,
+                    1
+                ],
+                "filename": "quad.obj",
+                "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "name": "quad",
+                "rotation": [
+                    -1000,
+                    0,
+                    0
+                ],
+                "scale": [
+                    25,
+                    21,
+                    0
+                ],
+                "shine": 1,
+                "translation": [
+                    -23,
+                    -13,
+                    -20
+                ],
+                "type": "model"
+            },
+            {
+                "Ka,Kd,Ks": [
+                    1,
+                    1,
+                    1
+                ],
+                "filename": "box.obj",
+                "matrix": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "name": "box",
+                "rotation": [
+                    -1000,
+                    874,
+                    -754
+                ],
+                "scale": [
+                    16,
+                    12,
+                    14
+                ],
+                "shine": 1,
+                "translation": [
+                    -30,
+                    18,
+                    -32
+                ],
+                "type": "model"
+            },
+            {
+                "Attenuation: constant, linear, quadratic": [
+                    1,
+                    1,
+                    1
+                ],
+                "Ia, Id, Is": [
+                    0.39073112607002258,
+                    0.57357645034790039,
+                    -1.7948967867553733e-09
+                ],
+                "ambient color rgb": [
+                    1,
+                    0.028351262211799622,
+                    0
+                ],
+                "diffuse color rgb": [
+                    1,
+                    1,
+                    1
+                ],
+                "light distance": 0,
+                "light position": [
+                    0,
+                    -1,
+                    0,
+                    1
+                ],
+                "name": "light_1",
+                "source": "Point",
+                "specular color rgb": [
+                    1,
+                    1,
+                    1
+                ],
+                "type": "light"
+            }
+        ]
+    }
+]

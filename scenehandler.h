@@ -44,6 +44,15 @@ struct Lights : public Node
     float distance;
 };
 
+struct Textures : public Node
+{
+    QString mapping;
+    QString wrap_mode;
+    QString interpolation;
+    QString bump_mode;
+
+};
+
 struct Scene
 {
     QString name;
@@ -61,10 +70,12 @@ public:
     Model* parseModel(const QJsonObject& model);
     Node* parseNode(const QJsonObject& parentNode) ;
     Lights* parseLight(const QJsonObject& light);
+    Textures *parseTexture(const QJsonObject &texture);
     void scenedemoRead(const QString& filename, QVector<Scene *> &scenes);
 
     QJsonObject writeNode(Node* node);
     void scenedemoWrite(const QString& filename, QVector<Scene *> &scenes);
+
 
 };
 

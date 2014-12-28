@@ -36,31 +36,21 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>-1396</y>
-       <width>325</width>
-       <height>2227</height>
+       <y>0</y>
+       <width>340</width>
+       <height>2445</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="69" column="0">
-       <widget class="QLabel" name="label_transformation">
-        <property name="text">
-         <string>Transformation</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="22" column="0" alignment="Qt::AlignHCenter">
+      <item row="28" column="0" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="label_lightParameters">
         <property name="text">
          <string>Light Parameters</string>
         </property>
        </widget>
       </item>
-      <item row="89" column="0">
-       <widget class="QLabel" name="zScaleLabel">
+      <item row="88" column="0">
+       <widget class="QLabel" name="zRotLabel">
         <property name="font">
          <font>
           <pointsize>13</pointsize>
@@ -71,7 +61,34 @@
         </property>
        </widget>
       </item>
-      <item row="78" column="0">
+      <item row="52" column="0" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Attenuation (for point lights only)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QComboBox" name="polygonMode_comboBox">
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+        <property name="currentText">
+         <string>Solid Face</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Solid Face</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Wire Frame</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="84" column="0">
        <widget class="QLabel" name="xRotLabel">
         <property name="font">
          <font>
@@ -83,41 +100,7 @@
         </property>
        </widget>
       </item>
-      <item row="77" column="0">
-       <widget class="QLabel" name="label_rotate">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Rotate</string>
-        </property>
-       </widget>
-      </item>
-      <item row="88" column="0">
-       <widget class="QSlider" name="yScaleSlider">
-        <property name="minimum">
-         <number>-150</number>
-        </property>
-        <property name="maximum">
-         <number>150</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="83" column="0">
+      <item row="89" column="0">
        <widget class="QSlider" name="zRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -145,175 +128,59 @@
         </property>
        </widget>
       </item>
-      <item row="61" column="0">
-       <widget class="QLabel" name="label_Ka">
-        <property name="text">
-         <string>Ka</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="52" column="0">
-       <widget class="QSlider" name="horizontalSlider_quadAtten">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="47" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Constant Factor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="40" column="0">
-       <widget class="QSlider" name="horizontalSlider_Ia">
-        <property name="minimum">
-         <number>0</number>
-        </property>
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="value">
-         <number>1</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="invertedAppearance">
-         <bool>false</bool>
-        </property>
-        <property name="invertedControls">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="56" column="0">
-       <widget class="QListWidget" name="listWidget">
-        <property name="frameShadow">
-         <enum>QFrame::Sunken</enum>
-        </property>
-        <property name="lineWidth">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="25" column="0">
-       <widget class="QComboBox" name="comboBox_lightType">
-        <item>
-         <property name="text">
-          <string>Ambient</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Diffuse</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Specular</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="67" column="0">
-       <widget class="QLabel" name="label_n">
-        <property name="text">
-         <string>n</string>
-        </property>
-       </widget>
-      </item>
-      <item row="65" column="0">
-       <widget class="QLabel" name="label_Ks">
-        <property name="text">
-         <string>Ks</string>
-        </property>
-       </widget>
-      </item>
-      <item row="53" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Light Distance</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QComboBox" name="comboBox_shading">
-        <item>
-         <property name="text">
-          <string>No Shading</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Flat</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gouraud</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Phong</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="71" column="0">
-       <widget class="QLabel" name="xTransLabel">
+      <item row="83" column="0">
+       <widget class="QLabel" name="label_rotate">
         <property name="font">
          <font>
           <pointsize>13</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>X</string>
+         <string>Rotate</string>
         </property>
        </widget>
       </item>
-      <item row="17" column="0">
-       <widget class="QSlider" name="horizontalSlider_lightPosX">
+      <item row="53" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Constant Factor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QComboBox" name="comboBox_projectionMode">
+        <item>
+         <property name="text">
+          <string>Perspective</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Orthogonal</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="96" column="0">
+       <widget class="QSlider" name="zScaleSlider">
         <property name="minimum">
-         <number>-1000</number>
+         <number>-150</number>
         </property>
         <property name="maximum">
-         <number>1000</number>
+         <number>150</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
-      </item>
-      <item row="57" column="0">
-       <widget class="QLabel" name="label_materialParameters">
-        <property name="text">
-         <string>Material Parameters</string>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
+        <property name="tickInterval">
+         <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_General">
-        <property name="text">
-         <string>General</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="81" column="0">
+      <item row="87" column="0">
        <widget class="QSlider" name="yRotSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -338,102 +205,26 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QComboBox" name="polygonMode_comboBox">
-        <property name="editable">
-         <bool>false</bool>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_polygonMode">
+        <property name="text">
+         <string>Polygon Mode:</string>
         </property>
-        <property name="currentText">
-         <string>Solid Face</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Solid Face</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Wire Frame</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="16" column="0">
-       <widget class="QLabel" name="label_lightPosX">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
+       <widget class="QListWidget" name="listWidget_lights"/>
       </item>
-      <item row="42" column="0">
-       <widget class="QSlider" name="horizontalSlider_Id">
-        <property name="maximum">
-         <number>90</number>
+      <item row="94" column="0">
+       <widget class="QSlider" name="yScaleSlider">
+        <property name="minimum">
+         <number>-150</number>
         </property>
-        <property name="pageStep">
-         <number>10</number>
+        <property name="maximum">
+         <number>150</number>
         </property>
         <property name="value">
          <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="invertedControls">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="87" column="0">
-       <widget class="QLabel" name="yScaleLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="85" column="0">
-       <widget class="QLabel" name="xScaleLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-      <item row="28" column="0">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="79" column="0">
-       <widget class="QSlider" name="xRotSlider">
-        <property name="minimum">
-         <number>-1000</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-        <property name="pageStep">
-         <number>10</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -446,110 +237,81 @@
         </property>
        </widget>
       </item>
-      <item row="12" column="0">
-       <widget class="QPushButton" name="pushButton_removeLight">
-        <property name="text">
-         <string>Remove</string>
-        </property>
-       </widget>
-      </item>
-      <item row="27" column="0">
-       <widget class="QPushButton" name="colorButton_Light">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="0">
-       <widget class="QPushButton" name="pushButton_newLight">
-        <property name="text">
-         <string>New</string>
-        </property>
-       </widget>
-      </item>
-      <item row="15" column="0">
-       <widget class="QLabel" name="label_lightPosition">
-        <property name="text">
-         <string>Position:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="58" column="0">
-       <widget class="QLabel" name="label_colorMat">
-        <property name="text">
-         <string>Material Color:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="43" column="0">
+      <item row="49" column="0">
        <widget class="QLabel" name="label_Is">
         <property name="text">
          <string>Is</string>
         </property>
        </widget>
       </item>
-      <item row="66" column="0">
-       <widget class="QSlider" name="horizontalSlider_Ks">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="57" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Quadratic Factor</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QComboBox" name="comboBox_projectionMode">
+      <item row="75" column="0">
+       <widget class="QLabel" name="label_transformation">
+        <property name="text">
+         <string>Transformation</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="63" column="0">
+       <widget class="QLabel" name="label_materialParameters">
+        <property name="text">
+         <string>Material Parameters</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="30" column="0">
+       <widget class="QLabel" name="label_lightType">
+        <property name="text">
+         <string>Type:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="76" column="0">
+       <widget class="QLabel" name="label_translate">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Translate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="47" column="0">
+       <widget class="QLabel" name="label_Id">
+        <property name="text">
+         <string>Id</string>
+        </property>
+       </widget>
+      </item>
+      <item row="20" column="0">
+       <widget class="QComboBox" name="comboBox_lights">
         <item>
          <property name="text">
-          <string>Perspective</string>
+          <string>Point</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Orthogonal</string>
+          <string>Directional</string>
          </property>
         </item>
        </widget>
       </item>
-      <item row="54" column="0">
-       <widget class="QSlider" name="horizontalSlider_lightDist">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="55" column="0">
+      <item row="61" column="0">
        <widget class="QLabel" name="label_objects">
         <property name="text">
          <string>Objects</string>
@@ -559,40 +321,119 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_projectionMode">
+      <item row="17" column="0">
+       <widget class="QPushButton" name="pushButton_newLight">
         <property name="text">
-         <string>Projection Mode:</string>
+         <string>New</string>
         </property>
        </widget>
       </item>
-      <item row="18" column="0">
-       <widget class="QLabel" name="label_lightPosY">
+      <item row="22" column="0">
+       <widget class="QLabel" name="label_lightPosX">
         <property name="text">
-         <string>Y</string>
+         <string>X</string>
         </property>
        </widget>
       </item>
-      <item row="84" column="0">
-       <widget class="QLabel" name="label_scale">
+      <item row="86" column="0">
+       <widget class="QLabel" name="yRotLabel">
         <property name="font">
          <font>
           <pointsize>13</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Scale</string>
+         <string>Y</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_shading">
+      <item row="23" column="0">
+       <widget class="QSlider" name="horizontalSlider_lightPosX">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="77" column="0">
+       <widget class="QLabel" name="xTransLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Shading:</string>
+         <string>X</string>
         </property>
        </widget>
       </item>
-      <item row="72" column="0">
+      <item row="67" column="0">
+       <widget class="QLabel" name="label_Ka">
+        <property name="text">
+         <string>Ka</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="92" column="0">
+       <widget class="QSlider" name="xScaleSlider">
+        <property name="minimum">
+         <number>-150</number>
+        </property>
+        <property name="maximum">
+         <number>150</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="79" column="0">
+       <widget class="QLabel" name="yTransLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="0">
+       <widget class="QLabel" name="label_lightsMain">
+        <property name="text">
+         <string>Lights</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="71" column="0">
+       <widget class="QLabel" name="label_Ks">
+        <property name="text">
+         <string>Ks</string>
+        </property>
+       </widget>
+      </item>
+      <item row="78" column="0">
        <widget class="QSlider" name="xTransSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -626,14 +467,130 @@
         </property>
        </widget>
       </item>
-      <item row="38" column="0">
+      <item row="81" column="0">
+       <widget class="QLabel" name="zTransLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Z</string>
+        </property>
+       </widget>
+      </item>
+      <item row="95" column="0">
+       <widget class="QLabel" name="zScaleLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Z</string>
+        </property>
+       </widget>
+      </item>
+      <item row="82" column="0">
+       <widget class="QSlider" name="zTransSlider">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="54" column="0">
+       <widget class="QSlider" name="horizontalSlider_constAtten">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="27" column="0">
+       <widget class="QSlider" name="horizontalSlider_lightPosZ">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="51" column="0">
+       <widget class="QSlider" name="horizontalSlider_Is">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Bump Mapping:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="44" column="0">
        <widget class="QLabel" name="label_Ia">
         <property name="text">
          <string>Ia</string>
         </property>
        </widget>
       </item>
-      <item row="74" column="0">
+      <item row="10" column="0">
+       <widget class="QComboBox" name="comboBox_textureWrapMode">
+        <item>
+         <property name="text">
+          <string>Repeat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Mirrored Repeat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Clamp to Edge</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Clamp to Border</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="80" column="0">
        <widget class="QSlider" name="yTransSlider">
         <property name="minimum">
          <number>-1000</number>
@@ -655,49 +612,7 @@
         </property>
        </widget>
       </item>
-      <item row="48" column="0">
-       <widget class="QSlider" name="horizontalSlider_constAtten">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="19" column="0">
-       <widget class="QSlider" name="horizontalSlider_lightPosY">
-        <property name="minimum">
-         <number>-1000</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="26" column="0">
-       <widget class="QLabel" name="label_colorLight">
-        <property name="text">
-         <string>Light Color:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="80" column="0">
-       <widget class="QLabel" name="yRotLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="59" column="0">
+      <item row="65" column="0">
        <widget class="QPushButton" name="colorButton_Mat">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -731,236 +646,7 @@
         </property>
        </widget>
       </item>
-      <item row="70" column="0">
-       <widget class="QLabel" name="label_translate">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Translate</string>
-        </property>
-       </widget>
-      </item>
-      <item row="20" column="0">
-       <widget class="QLabel" name="label_lightPosZ">
-        <property name="text">
-         <string>Z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="63" column="0">
-       <widget class="QLabel" name="label_Kd">
-        <property name="text">
-         <string>Kd</string>
-        </property>
-       </widget>
-      </item>
-      <item row="46" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Attenuation (for point lights only)</string>
-        </property>
-       </widget>
-      </item>
       <item row="68" column="0">
-       <widget class="QSlider" name="horizontalSlider_n">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>50</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="45" column="0">
-       <widget class="QSlider" name="horizontalSlider_Is">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="pageStep">
-         <number>10</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="invertedControls">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="14" column="0">
-       <widget class="QComboBox" name="comboBox_lights">
-        <item>
-         <property name="text">
-          <string>Point</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Directional</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="label_lightsMain">
-        <property name="text">
-         <string>Lights</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="13" column="0">
-       <widget class="QLabel" name="label_lights">
-        <property name="text">
-         <string>Source:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="82" column="0">
-       <widget class="QLabel" name="zRotLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="76" column="0">
-       <widget class="QSlider" name="zTransSlider">
-        <property name="minimum">
-         <number>-1000</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="41" column="0">
-       <widget class="QLabel" name="label_Id">
-        <property name="text">
-         <string>Id</string>
-        </property>
-       </widget>
-      </item>
-      <item row="75" column="0">
-       <widget class="QLabel" name="zTransLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="64" column="0">
-       <widget class="QSlider" name="horizontalSlider_Kd">
-        <property name="maximum">
-         <number>90</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="73" column="0">
-       <widget class="QLabel" name="yTransLabel">
-        <property name="font">
-         <font>
-          <pointsize>13</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Y</string>
-        </property>
-       </widget>
-      </item>
-      <item row="86" column="0">
-       <widget class="QSlider" name="xScaleSlider">
-        <property name="minimum">
-         <number>-150</number>
-        </property>
-        <property name="maximum">
-         <number>150</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="24" column="0">
-       <widget class="QLabel" name="label_lightType">
-        <property name="text">
-         <string>Type:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_polygonMode">
-        <property name="text">
-         <string>Polygon Mode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QListWidget" name="listWidget_lights"/>
-      </item>
-      <item row="90" column="0">
-       <widget class="QSlider" name="zScaleSlider">
-        <property name="minimum">
-         <number>-150</number>
-        </property>
-        <property name="maximum">
-         <number>150</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="62" column="0">
        <widget class="QSlider" name="horizontalSlider_Ka">
         <property name="inputMethodHints">
          <set>Qt::ImhNone</set>
@@ -982,20 +668,294 @@
         </property>
        </widget>
       </item>
-      <item row="21" column="0">
-       <widget class="QSlider" name="horizontalSlider_lightPosZ">
-        <property name="minimum">
-         <number>-1000</number>
+      <item row="59" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Light Distance</string>
         </property>
+       </widget>
+      </item>
+      <item row="32" column="0">
+       <widget class="QLabel" name="label_colorLight">
+        <property name="text">
+         <string>Light Color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="55" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Linear Factor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="70" column="0">
+       <widget class="QSlider" name="horizontalSlider_Kd">
         <property name="maximum">
-         <number>1000</number>
+         <number>90</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="60" column="0">
+      <item row="56" column="0">
+       <widget class="QSlider" name="horizontalSlider_linearAtten">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QComboBox" name="comboBox_shading">
+        <item>
+         <property name="text">
+          <string>Phong</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No Shading</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Flat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Gouraud</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="93" column="0">
+       <widget class="QLabel" name="yScaleLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_General">
+        <property name="text">
+         <string>General</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="91" column="0">
+       <widget class="QLabel" name="xScaleLabel">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>X</string>
+        </property>
+       </widget>
+      </item>
+      <item row="24" column="0">
+       <widget class="QLabel" name="label_lightPosY">
+        <property name="text">
+         <string>Y</string>
+        </property>
+       </widget>
+      </item>
+      <item row="18" column="0">
+       <widget class="QPushButton" name="pushButton_removeLight">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+       </widget>
+      </item>
+      <item row="31" column="0">
+       <widget class="QComboBox" name="comboBox_lightType">
+        <item>
+         <property name="text">
+          <string>Ambient</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Diffuse</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Specular</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="33" column="0">
+       <widget class="QPushButton" name="colorButton_Light">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="85" column="0">
+       <widget class="QSlider" name="xRotSlider">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="34" column="0">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="72" column="0">
+       <widget class="QSlider" name="horizontalSlider_Ks">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="26" column="0">
+       <widget class="QLabel" name="label_lightPosZ">
+        <property name="text">
+         <string>Z</string>
+        </property>
+       </widget>
+      </item>
+      <item row="21" column="0">
+       <widget class="QLabel" name="label_lightPosition">
+        <property name="text">
+         <string>Position:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="73" column="0">
+       <widget class="QLabel" name="label_n">
+        <property name="text">
+         <string>n</string>
+        </property>
+       </widget>
+      </item>
+      <item row="69" column="0">
+       <widget class="QLabel" name="label_Kd">
+        <property name="text">
+         <string>Kd</string>
+        </property>
+       </widget>
+      </item>
+      <item row="90" column="0">
+       <widget class="QLabel" name="label_scale">
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Scale</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="0">
+       <widget class="QLabel" name="label_lights">
+        <property name="text">
+         <string>Source:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="48" column="0">
+       <widget class="QSlider" name="horizontalSlider_Id">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="pageStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_shading">
+        <property name="text">
+         <string>Shading:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="66" column="0">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -1008,15 +968,8 @@
         </property>
        </spacer>
       </item>
-      <item row="49" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Linear Factor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="50" column="0">
-       <widget class="QSlider" name="horizontalSlider_linearAtten">
+      <item row="60" column="0">
+       <widget class="QSlider" name="horizontalSlider_lightDist">
         <property name="maximum">
          <number>90</number>
         </property>
@@ -1025,11 +978,162 @@
         </property>
        </widget>
       </item>
-      <item row="51" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Quadratic Factor</string>
+      <item row="62" column="0">
+       <widget class="QListWidget" name="listWidget">
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
         </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QComboBox" name="comboBox_textureMapping">
+        <item>
+         <property name="text">
+          <string>Sphere</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cylinder</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>UV</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Box</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Texture Mapping:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="58" column="0">
+       <widget class="QSlider" name="horizontalSlider_quadAtten">
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="46" column="0">
+       <widget class="QSlider" name="horizontalSlider_Ia">
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>90</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="invertedAppearance">
+         <bool>false</bool>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="25" column="0">
+       <widget class="QSlider" name="horizontalSlider_lightPosY">
+        <property name="minimum">
+         <number>-1000</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="64" column="0">
+       <widget class="QLabel" name="label_colorMat">
+        <property name="text">
+         <string>Material Color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="74" column="0">
+       <widget class="QSlider" name="horizontalSlider_n">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_projectionMode">
+        <property name="text">
+         <string>Projection Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Texture Wrap Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0">
+       <widget class="QComboBox" name="comboBox_textureInterpolation">
+        <item>
+         <property name="text">
+          <string>Nearest</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Linear</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Interpolation:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="0">
+       <widget class="QComboBox" name="comboBox_textureBumpMapping">
+        <item>
+         <property name="text">
+          <string>Off</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

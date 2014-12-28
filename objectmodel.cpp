@@ -12,7 +12,6 @@ ObjectModel::ObjectModel()
     Ka = 1.0; Kd = 1.0; Ks = 1.0;
     n = 50.0;
     mtlColor = QColor("white");
-
 }
 
 ObjectModel::~ObjectModel()
@@ -27,8 +26,8 @@ void ObjectModel::setNameAndIndex(QString n, QString f, int i)
     index = i;
 }
 
-void ObjectModel::setPropertiesValues(float xT, float yT, float zT, float xR, float yR, float zR,
-                                      float xS, float yS, float zS)
+void ObjectModel::setPropertiesValues
+(float xT, float yT, float zT, float xR, float yR, float zR, float xS, float yS, float zS)
 {
 
     xTrans = xT; yTrans = yT; zTrans = zT;

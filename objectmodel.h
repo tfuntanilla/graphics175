@@ -19,8 +19,7 @@ public:
     void setNameAndIndex(QString n, QString f, int i);
     void setPropertiesValues(float xT, float yT, float zT,
                              float xR, float yR, float zR,
-                             float xS, float yS, float zS
-                             );
+                             float xS, float yS, float zS);
     void setModel(QMatrix4x4 matrix);
     void setProjection(QMatrix4x4 matrix);
     void setView(QMatrix4x4 matrix);
@@ -34,6 +33,7 @@ public:
     GLfloat getKd();
     GLfloat getKs();
     GLfloat getN();
+
     QVector3D getKaRGB();
     QVector3D getKdRGB();
     QVector3D getKsRGB();
@@ -69,7 +69,6 @@ private:
     QMatrix4x4 model;
 
     GLfloat Ka, Kd, Ks, n;
-
     QColor mtlColor;
 
 	

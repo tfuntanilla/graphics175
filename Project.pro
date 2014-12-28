@@ -23,7 +23,6 @@ SOURCES += \
     scenehandler.cpp \
     camera.cpp \
     objectmodel.cpp \
-    shapes.cpp \
     light.cpp
 
 HEADERS  += mainwindow.h \
@@ -33,7 +32,6 @@ HEADERS  += mainwindow.h \
     scenehandler.h \
     camera.h \
     objectmodel.h \
-    shapes.h \
     light.h
 
 FORMS    += mainwindow.ui
@@ -47,4 +45,6 @@ OTHER_FILES += \
     flat.frag \
     flat.vert \
     phong.frag \
-    phong.vert
+    phong.vert \
+    simple.frag \
+    simple.vert

@@ -30,16 +30,19 @@ public:
     void render();
     void checkError(const QString& prefix);
     void linkShaderPrograms();
-    void enableAttr(int vlen);
+    void enableAttr(int vlen, int nlen);
 
     void toggleWireFrame(bool on);
-    void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles, QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
-    void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot, QVector<QVector3D> scale, QVector<QVector3D> kvec, QVector<float> nvec);
+    void getFileAndMatrices(QVector<QString> typeNames, QVector<QString> actualFiles,
+                            QVector<std::string> objFiles, QVector<QMatrix4x4> transformMatrices);
+    void updateModelProperties(int size, QVector<QVector3D> trans, QVector<QVector3D> rot,
+                               QVector<QVector3D> scale, QVector<QVector3D> kvec, QVector<float> nvec);
     void setFilePath(std::string p);
 
     void updateLightProperties(int size, QVector<QVector4D> lPos, QVector<QVector3D> atten,
-                               QVector<QVector3D> ambient, QVector<QVector3D> diffuse, QVector<QVector3D> specular,
-                               QVector<QVector3D> intensities, QVector<float> dist);
+                               QVector<QVector3D> ambient, QVector<QVector3D> diffuse,
+                               QVector<QVector3D> specular, QVector<QVector3D> intensities,
+                               QVector<float> dist);
 
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
@@ -50,7 +53,7 @@ public:
 
     QVector<ObjectModel> objectmodels;
 
-    void calculateSurfaceNormals(QVector3D v1, QVector3D v2, QVector3D v3);
+    void calculateSurfaceNormals(std::vector<QVector3D> v, std::vector<QVector2D> t, int a, int b, int c);
     void setShader(bool flat, bool gouraud, bool phong);
 
     Light lighting;
@@ -58,15 +61,26 @@ public:
     int totalLights;
     void setTotalLights(int i);
 
+    bool boxMapOn, sphereMapOn, cylinderMapOn, UVOn;
+    int wrapMode;
+    bool texInterpolation;
+    int normalMap;
 
+    void computeTangentBasis(std::vector<QVector3D> &vertices, std::vector<QVector3D> &uvs,
+                             std::vector<QVector3D> &normals, std::vector<QVector3D> &tangents,
+                             std::vector<QVector3D> &bitangents);
 private:
 
     GLuint m_posAttr;
     GLuint m_colAttr;
     GLuint m_normAttr;
+    GLuint m_texAttr;
+    GLuint m_tanAttr;
+    GLuint m_bitanAttr;
     GLuint m_matrixUniform;
 
     GLuint m_modelViewUniform;
+    GLuint m_modelUniform;
     GLuint m_normalMatrixUniform;
 
     GLuint m_numOfLights;
@@ -114,10 +128,13 @@ private:
     QPoint lastPos;
     std::string path;
 
-    std::vector<QVector3D> normals;
+    QVector<QVector3D> normalVectors;
     bool m_flatShadeOn;
     bool m_gouraudShadeOn;
     bool m_phongShadeOn;
+
+    QVector<QVector3D> tangentVectors;
+    QVector<QVector3D> bitangentVectors;
 
 };
 

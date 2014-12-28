@@ -112,7 +112,9 @@ SceneHandler::parseNode(const QJsonObject& parentNode) {
     if(out->type == "model") {
         out->children.push_back(parseModel(parentNode));
     } else if (out->type == "light") {
-      out->children.push_back(parseLight(parentNode));
+        out->children.push_back(parseLight(parentNode));
+    } else if(out->type == "texture") {
+        out->children.push_back(parseTexture(parentNode));
     } else if(out->type == "node") {
 
         QJsonArray nodeArray = parentNode["children"].toArray();
@@ -220,6 +222,23 @@ Lights *SceneHandler::parseLight(const QJsonObject &light)
              << " intensity levels: " << out->intensityLevel
              << " attenuation factors: " << out->attenuationFactors
              << " distance: " << out->distance;
+
+    return out;
+}
+
+Textures *SceneHandler::parseTexture(const QJsonObject &texture)
+{
+    Textures* out = new Textures();
+
+    out->mapping = texture["mapping"].toString();
+    out->wrap_mode = texture["wrap_mode"].toString();
+    out->interpolation = texture["interpolation"].toString();
+    out->bump_mode = texture["bump_mode"].toString();
+
+    qDebug() << "mapping :" << out->mapping
+             << " wrap_mode: " << out->wrap_mode
+             << " interpolation: " << out->interpolation
+             << " bump_mode: " << out->bump_mode;
 
     return out;
 }
@@ -339,8 +358,6 @@ SceneHandler::writeNode(Node* node) {
         aF.push_back((float)l->attenuationFactors.y());
         aF.push_back((float)l->attenuationFactors.z());
 
-
-
         out["light position"] = lP;
         out["ambient color rgb"] = aC;
         out["diffuse color rgb"] = dC;
@@ -349,6 +366,14 @@ SceneHandler::writeNode(Node* node) {
         out["Attenuation: constant, linear, quadratic"] = aF;
         out["light distance"] = l->distance;
 
+
+    } else if(node->type == "texture") {
+        Textures* t = static_cast<Textures*>(node->children[0]);
+
+        out["mapping"] = t->mapping;
+        out["wrap_mode"] = t->wrap_mode;
+        out["interpolaton"] = t->interpolation;
+        out["bump_mode"] = t->bump_mode;
 
     } else if(node->type == "node") {
         QJsonArray children;

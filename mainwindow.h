@@ -100,6 +100,14 @@ private slots:
 
     void on_horizontalSlider_quadAtten_valueChanged(int value);
 
+    void on_comboBox_textureMapping_activated(const QString &arg1);
+
+    void on_comboBox_textureWrapMode_activated(const QString &arg1);
+
+    void on_comboBox_textureInterpolation_activated(const QString &arg1);
+
+    void on_comboBox_textureBumpMapping_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
 

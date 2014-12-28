@@ -216,7 +216,6 @@ void MainWindow::handleScene(QString filename)
         }
     }
 
-    qDebug() << "After loading scene...";
     QVector<QString> names, lNames, lSources;
     QVector<QString> filenames;
     QVector<QMatrix4x4> matrices;
@@ -243,23 +242,23 @@ void MainWindow::handleScene(QString filename)
 
     for (int i = 0; i < lightSettings.size(); i++) {
         lNames.push_back(lightSettings[i]->name);
-        qDebug() << "Names:" << lNames;
+        //qDebug() << "Names:" << lNames;
         lSources.push_back(lightSettings[i]->source);
-        qDebug() << "Sources:" << lSources;
+        //qDebug() << "Sources:" << lSources;
         lp.push_back(lightSettings[i]->lightPosition);
-        qDebug() << "Light Position:" << lp;
+        //qDebug() << "Light Position:" << lp;
         ac.push_back(lightSettings[i]->ambientColor);
-        qDebug() << "Ambient:" << ac;
+        //qDebug() << "Ambient:" << ac;
         dc.push_back(lightSettings[i]->diffuseColor);
-        qDebug() << "Diffuse:" << dc;
+        //qDebug() << "Diffuse:" << dc;
         sc.push_back(lightSettings[i]->specColor);
-        qDebug() << "Specular:" << sc;
+        //qDebug() << "Specular:" << sc;
         il.push_back(lightSettings[i]->intensityLevel);
-        qDebug() << "Intensities:" << il;
+        //qDebug() << "Intensities:" << il;
         af.push_back(lightSettings[i]->attenuationFactors);
-        qDebug() << "Attenuation Factors:" << af;
+        //qDebug() << "Attenuation Factors:" << af;
         d.push_back(lightSettings[i]->distance);
-        qDebug() << "Distance:" << d;
+        //qDebug() << "Distance:" << d;
 
         ui->listWidget_lights->insertItem(i, lightSettings[i]->name);
     }
@@ -276,7 +275,7 @@ void MainWindow::handleScene(QString filename)
 
     // Send attributes of the JSON file to the render
     ui->renderwindowwidget->GetRenderWindow()->setFilePath(pathOfFile);
-    std::cout << pathOfFile << std::endl;
+    //std::cout << pathOfFile << std::endl;
     ui->renderwindowwidget->GetRenderWindow()->getFileAndMatrices(names, filenames, objectFiles, matrices);
     ui->renderwindowwidget->GetRenderWindow()->updateModelProperties(models.size(), t, r, s, k, n);
     ui->renderwindowwidget->GetRenderWindow()->updateLightProperties(lightSettings.size(), lp, af, ac, dc, sc, il, d);
@@ -291,7 +290,6 @@ void MainWindow::on_actionOpen_triggered()
         QString file = QFileDialog::getOpenFileName(ui->renderwindowwidget, "Open File", "../Project1/", tr("JSON (*.json)"));
 
         if(!file.isEmpty()) {
-
             // get file path - needed to load .obj files in renderwindow.cpp
             QFileInfo filepath(file);
             QString fp = filepath.absoluteFilePath();
@@ -302,7 +300,6 @@ void MainWindow::on_actionOpen_triggered()
             base.append(stuff);
             fp.remove(base);
 
-            //qDebug() << fp;
             pathOfFile = convertQStringtoString(fp);
 
             fileOnLoad = true;
@@ -368,8 +365,6 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 
 void MainWindow::on_actionSave_triggered()
 {
-    //qDebug() << "Start saving file...";
-
     QString out = QFileDialog::getSaveFileName(this, "Save As");
 
     SceneHandler savedScene;
@@ -381,7 +376,8 @@ void MainWindow::on_actionSave_triggered()
 
     QString type = "model";
     QString lightType = "light";
-    QVector<QString> names, lightNames, lightSources;
+    QString texType = "texture";
+    QVector<QString> names, lightNames, lightSources, mappings, wrapModes, interpolations, bumpModes;
     QVector<QString> files;
     QVector<QString> qfiles;
     QVector<QMatrix4x4> models;
@@ -474,9 +470,6 @@ void MainWindow::on_actionSave_triggered()
     scenes[0]->description = QString("This is ").append(c);
 
     savedScene.scenedemoWrite(out, scenes);
-
-    //qDebug() << "File saved!";
-
 }
 
 void MainWindow::on_polygonMode_comboBox_activated(const QString &arg1)
@@ -642,7 +635,6 @@ void MainWindow::on_comboBox_lightType_activated(const QString &arg1)
 void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    //qDebug() << adjustedValue;
     ui->renderwindowwidget->GetRenderWindow()->lighting.setIaValue(adjustedValue);
     ui->renderwindowwidget->GetRenderWindow()->renderLater();
 
@@ -651,7 +643,6 @@ void MainWindow::on_horizontalSlider_Ia_valueChanged(int value)
 void MainWindow::on_horizontalSlider_Id_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    //qDebug() << adjustedValue;
     int index = ui->listWidget_lights->currentRow();
     if (index >= 0) {
         ui->renderwindowwidget->GetRenderWindow()->lighting.setIdValues(index, adjustedValue);
@@ -665,7 +656,6 @@ void MainWindow::on_horizontalSlider_Id_valueChanged(int value)
 void MainWindow::on_horizontalSlider_Is_valueChanged(int value)
 {
     float adjustedValue = -cos((value + 90) * PI / 180.0);
-    //qDebug() << adjustedValue;
     int index = ui->listWidget_lights->currentRow();
     if (index >= 0) {
         ui->renderwindowwidget->GetRenderWindow()->lighting.setIsValues(index, adjustedValue);
@@ -800,23 +790,33 @@ void MainWindow::on_horizontalSlider_n_valueChanged(int value)
 
 void MainWindow::on_pushButton_newLight_clicked()
 {
-    ui->renderwindowwidget->GetRenderWindow()->setTotalLights(1);
-    int lights = ui->renderwindowwidget->GetRenderWindow()->totalLights;
-    QString newlight = "light_";
-    QString totalLights;
-    ui->listWidget_lights->addItem(newlight.append(totalLights.setNum(lights)));
+    if (ui->renderwindowwidget->GetRenderWindow()->totalLights == 10) {
+        QMessageBox::information(this, QString("Alert"), QString("Max number of light sources reached."));
+    }
+    else {
+        ui->renderwindowwidget->GetRenderWindow()->setTotalLights(1);
+        int lights = ui->renderwindowwidget->GetRenderWindow()->totalLights;
+        QString newlight = "light_";
+        QString totalLights;
+        ui->listWidget_lights->addItem(newlight.append(totalLights.setNum(lights)));
+    }
 }
 
 void MainWindow::on_pushButton_removeLight_clicked()
 {
-    int index = ui->listWidget_lights->currentRow();
-    if (index < 0 || index > ui->listWidget_lights->count()) {
-        QMessageBox::information(this, QString("Alert"), QString("Select light to be removed from list."));
+    if (ui->listWidget_lights->count() == 0) {
+        QMessageBox::information(this, QString("Alert"), QString("Nothing to be removed."));
     }
     else {
-        ui->renderwindowwidget->GetRenderWindow()->setTotalLights(-1);
-        QListWidgetItem* item = ui->listWidget_lights->takeItem(index);
-        delete item;
+        int index = ui->listWidget_lights->currentRow();
+        if (index < 0 || index > ui->listWidget_lights->count()) {
+            QMessageBox::information(this, QString("Alert"), QString("Select light to be removed from list."));
+        }
+        else {
+            ui->renderwindowwidget->GetRenderWindow()->setTotalLights(-1);
+            QListWidgetItem* item = ui->listWidget_lights->takeItem(index);
+            delete item;
+        }
     }
 }
 
@@ -955,5 +955,81 @@ void MainWindow::on_horizontalSlider_quadAtten_valueChanged(int value)
     }
     else {
         QMessageBox::information(this, QString("Alert"), QString("Disabled for directional light"));
+    }
+}
+
+void MainWindow::on_comboBox_textureMapping_activated(const QString &arg1)
+{
+    if (arg1 == "Box") {
+        ui->renderwindowwidget->GetRenderWindow()->boxMapOn = true;
+        ui->renderwindowwidget->GetRenderWindow()->UVOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->sphereMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->cylinderMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "Sphere") {
+        ui->renderwindowwidget->GetRenderWindow()->boxMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->UVOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->sphereMapOn = true;
+        ui->renderwindowwidget->GetRenderWindow()->cylinderMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "Cylinder") {
+        ui->renderwindowwidget->GetRenderWindow()->boxMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->UVOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->cylinderMapOn = true;
+        ui->renderwindowwidget->GetRenderWindow()->sphereMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "UV") {
+        ui->renderwindowwidget->GetRenderWindow()->boxMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->UVOn = true;
+        ui->renderwindowwidget->GetRenderWindow()->cylinderMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->sphereMapOn = false;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+}
+
+void MainWindow::on_comboBox_textureWrapMode_activated(const QString &arg1)
+{
+    if (arg1 == "Repeat") {
+        ui->renderwindowwidget->GetRenderWindow()->wrapMode = 0;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "Mirrored") {
+        ui->renderwindowwidget->GetRenderWindow()->wrapMode = 1;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "Clamp to Edge") {
+        ui->renderwindowwidget->GetRenderWindow()->wrapMode = 2;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else if (arg1 == "Clamp to Border") {
+        ui->renderwindowwidget->GetRenderWindow()->wrapMode = 3;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+}
+
+void MainWindow::on_comboBox_textureInterpolation_activated(const QString &arg1)
+{
+    if (arg1 == "Nearest") {
+        ui->renderwindowwidget->GetRenderWindow()->texInterpolation = 0;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        ui->renderwindowwidget->GetRenderWindow()->texInterpolation = 1;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+}
+
+void MainWindow::on_comboBox_textureBumpMapping_activated(const QString &arg1)
+{
+    if (arg1 == "Normal") {
+        ui->renderwindowwidget->GetRenderWindow()->normalMap = 1;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
+    }
+    else {
+        ui->renderwindowwidget->GetRenderWindow()->normalMap = 0;
+        ui->renderwindowwidget->GetRenderWindow()->renderLater();
     }
 }
